@@ -1,0 +1,15 @@
+{
+  "name": "shonen-mart-api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@hono/trpc-server": "latest",
+    "@shonen-mart/trpc": "workspace:*",
+    "@trpc/server": "latest",
+    "hono": "latest"
+  }
+}

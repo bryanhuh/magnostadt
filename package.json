@@ -1,0 +1,16 @@
+{
+  "name": "shonen-mart",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun --filter \"shonen-mart-api\" dev & bun --filter \"web\" dev",
+    "build": "bun --filter \"*\" run build",
+    "test": "bun --filter \"*\" run test"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
