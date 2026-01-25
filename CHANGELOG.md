@@ -14,3 +14,8 @@ All notable changes to this project will be documented in this file.
 - **Database Seeding**: Created `seed.ts` with mock data (Naruto, One Piece, etc.).
 - **Documentation**: Added `docs/PROJECT_STRUCTURE.md` and `docs/MVP_CHECKLIST.md`.
 - Architecture documentation and implementation plan.
+- **Phase 2 Features**:
+    - implemented `react-router-dom` for client-side routing.
+    - Added Product Details page (`/product/:id`).
+    - Added Category and Anime Series filtering to Product List.
+    - Enhanced tRPC router with filtering and single-product queries.

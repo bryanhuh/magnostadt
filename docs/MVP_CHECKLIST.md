@@ -7,15 +7,15 @@
 - [x] **Frontend Core**: React + Vite + Tailwind v4.
 - [x] **Type Safety**: End-to-end tRPC integration.
 
-## 🟡 Phase 2: Data & Core Browsing (Next)
-- [ ] **Seed Script**: Populate database with dummy anime products, categories, and series.
-- [ ] **Enhanced Product List**:
-    - [ ] Display real images.
-    - [ ] Filter by Category (Manga, Figures).
-    - [ ] Filter by Anime Series (Naruto, One Piece).
-- [ ] **Product Details Page**:
-    - [ ] Dynamic route `/product/:id`.
-    - [ ] `getProductById` tRPC procedure.
+## 🟡 Phase 2: Data & Core Browsing (Completed)
+- [x] **Seed Script**: Populate database with dummy anime products, categories, and series.
+- [x] **Enhanced Product List**:
+    - [x] Display real images.
+    - [x] Filter by Category (Manga, Figures).
+    - [x] Filter by Anime Series (Naruto, One Piece).
+- [x] **Product Details Page**:
+    - [x] Dynamic route `/product/:id`.
+    - [x] `getProductById` tRPC procedure.
 
 ## 🟠 Phase 3: Shopping Cart
 - [ ] **Cart State**: Global state management (Zustand or React Context) for the cart.

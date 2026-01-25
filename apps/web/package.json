@@ -10,15 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@shonen-mart/trpc": "workspace:*",
+    "@tanstack/react-query": "latest",
     "@trpc/client": "latest",
     "@trpc/react-query": "latest",
     "@trpc/server": "latest",
-    "@tanstack/react-query": "latest",
-    "@shonen-mart/trpc": "workspace:*",
-    "zod": "latest",
-    "lucide-react": "latest"
+    "lucide-react": "latest",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.13.0",
+    "zod": "latest"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
