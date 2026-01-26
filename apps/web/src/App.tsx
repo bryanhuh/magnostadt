@@ -7,6 +7,8 @@ import { trpc } from './utils/trpc';
 import { ProductList } from './components/ProductList';
 import { ProductDetails } from './components/ProductDetails';
 import { CartDrawer } from './components/CartDrawer';
+import { CheckoutPage } from './components/CheckoutPage';
+import { OrderConfirmationPage } from './components/OrderConfirmationPage';
 import { useCartStore } from './store/useCartStore';
 
 function Header() {
@@ -59,6 +61,8 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<ProductList />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/order/:id" element={<OrderConfirmationPage />} />
               </Routes>
             </main>
           </div>

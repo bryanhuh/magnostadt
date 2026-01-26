@@ -1,4 +1,5 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 
 export function CartDrawer() {
@@ -113,9 +114,13 @@ export function CartDrawer() {
                 ${getSubtotal().toFixed(2)}
               </span>
             </div>
-            <button className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] active:scale-95">
-              Checkout
-            </button>
+              <Link 
+                to="/checkout"
+                onClick={closeCart}
+                className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] active:scale-95 block text-center"
+              >
+                Checkout
+              </Link>
             <p className="text-center text-xs text-gray-500 mt-4">
               Shipping and taxes calculated at next step.
             </p>

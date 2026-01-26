@@ -22,10 +22,10 @@
 - [x] **Add to Cart**: Connect the "Add to Cart" button.
 - [x] **Cart Drawer/Page**: View selected items, update quantities, remove items.
 
-## 🔴 Phase 4: Checkout & Orders
-- [ ] **Create Order API**: mutation `createOrder` to save order to DB.
-- [ ] **Checkout UI**: Simple form (Shipping info + "Pay").
-- [ ] **Order Confirmation**: Success page showing Order ID.
+## 🔴 Phase 4: Checkout & Orders (Completed)
+- [x] **Create Order API**: mutation `createOrder` to save order to DB.
+- [x] **Checkout UI**: Simple form (Shipping info + "Pay").
+- [x] **Order Confirmation**: Success page showing Order ID.
 
 ## 🔵 Phase 5: Polish & Analytics
 - [ ] **PostHog**: Integrate analytics.

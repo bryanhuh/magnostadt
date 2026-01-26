@@ -24,3 +24,8 @@ All notable changes to this project will be documented in this file.
     - Implemented `CartDrawer` component for managing items.
     - Integrated "Add to Cart" flow in Product List and Details pages.
     - Added persistence (cart items survive page refreshes).
+- **Phase 4 Features**:
+    - Implemented secure Checkout Flow with shipping form.
+    - Added `Order` and `OrderItem` models with shipping details suitable for MVP.
+    - Created `OrderConfirmation` page with order summary.
+    - Connected Frontend to Backend via `createOrder` tRPC mutation.
