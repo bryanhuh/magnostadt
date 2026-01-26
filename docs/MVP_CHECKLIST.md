@@ -17,10 +17,10 @@
     - [x] Dynamic route `/product/:id`.
     - [x] `getProductById` tRPC procedure.
 
-## 🟠 Phase 3: Shopping Cart
-- [ ] **Cart State**: Global state management (Zustand or React Context) for the cart.
-- [ ] **Add to Cart**: Connect the "Add to Cart" button.
-- [ ] **Cart Drawer/Page**: View selected items, update quantities, remove items.
+## 🟠 Phase 3: Shopping Cart (Completed)
+- [x] **Cart State**: Global state management (Zustand or React Context) for the cart.
+- [x] **Add to Cart**: Connect the "Add to Cart" button.
+- [x] **Cart Drawer/Page**: View selected items, update quantities, remove items.
 
 ## 🔴 Phase 4: Checkout & Orders
 - [ ] **Create Order API**: mutation `createOrder` to save order to DB.

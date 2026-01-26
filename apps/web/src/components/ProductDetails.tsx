@@ -1,9 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { Loader2, ArrowLeft, ShoppingCart, Star } from 'lucide-react';
+import { useCartStore } from '../store/useCartStore';
 
 export function ProductDetails() {
   const { id } = useParams<{ id: string }>();
+  const { addItem } = useCartStore();
   // Use non-null assertion or check for id being undefined, but route matching ensures it.
   const { data: product, isLoading, error } = trpc.getProductById.useQuery(
     { id: id! },
@@ -96,7 +98,16 @@ export function ProductDetails() {
             )}
           </div>
 
-          <button className="w-full max-w-md bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl flex items-center justify-center gap-3 transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] active:scale-95 text-lg">
+          <button 
+            onClick={() => addItem({
+              id: product.id,
+              name: product.name,
+              price: Number(product.price),
+              imageUrl: product.imageUrl,
+              anime: { name: product.anime.name }
+            })}
+            className="w-full max-w-md bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl flex items-center justify-center gap-3 transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] active:scale-95 text-lg"
+          >
             <ShoppingCart className="w-6 h-6" />
             ADD TO CART
           </button>

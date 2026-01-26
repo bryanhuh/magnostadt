@@ -19,3 +19,8 @@ All notable changes to this project will be documented in this file.
     - Added Product Details page (`/product/:id`).
     - Added Category and Anime Series filtering to Product List.
     - Enhanced tRPC router with filtering and single-product queries.
+- **Phase 3 Features**:
+    - Added Shopping Cart functionality with `zustand` for state management.
+    - Implemented `CartDrawer` component for managing items.
+    - Integrated "Add to Cart" flow in Product List and Details pages.
+    - Added persistence (cart items survive page refreshes).

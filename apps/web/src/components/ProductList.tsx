@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { Loader2, ShoppingCart, Filter, X } from 'lucide-react';
+import { useCartStore } from '../store/useCartStore';
 
 export function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const { addItem } = useCartStore();
 
   const { data: products, isLoading: isProductsLoading, error } = trpc.getProducts.useQuery({
     categoryId: selectedCategory,
@@ -168,7 +170,19 @@ export function ProductList() {
                 
                 <div className="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between">
                   <span className="text-yellow-500 font-black text-xl">${product.price.toString()}</span>
-                  <button className="bg-yellow-500 hover:bg-yellow-400 text-black p-2 rounded-lg transition-transform active:scale-95">
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent navigation to details
+                      addItem({
+                        id: product.id,
+                        name: product.name,
+                        price: Number(product.price),
+                        imageUrl: product.imageUrl,
+                        anime: { name: product.anime.name }
+                      });
+                    }}
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black p-2 rounded-lg transition-transform active:scale-95"
+                  >
                     <ShoppingCart className="w-5 h-5" />
                   </button>
                 </div>
