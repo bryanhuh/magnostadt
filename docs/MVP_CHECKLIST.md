@@ -27,7 +27,7 @@
 - [x] **Checkout UI**: Simple form (Shipping info + "Pay").
 - [x] **Order Confirmation**: Success page showing Order ID.
 
-## 🔵 Phase 5: Polish & Analytics
-- [ ] **PostHog**: Integrate analytics.
-- [ ] **Sentry**: Error tracking.
-- [ ] **UI Polish**: Loading skeletons, toasts (notifications) for actions.
+## 🔵 Phase 5: Polish & Analytics (Completed)
+- [x] **PostHog**: Integrate analytics.
+- [x] **Sentry**: Error tracking.
+- [x] **UI Polish**: Loading skeletons, toasts (notifications) for actions.

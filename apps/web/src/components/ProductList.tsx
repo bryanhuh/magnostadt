@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { trpc } from '../utils/trpc';
-import { Loader2, ShoppingCart, Filter, X } from 'lucide-react';
+import { ShoppingCart, Filter, X } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
+import { captureEvent } from '../utils/analytics';
 
 export function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
@@ -22,9 +24,40 @@ export function ProductList() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-12 h-12 animate-spin text-yellow-500" />
-        <p className="mt-4 text-gray-400 animate-pulse">Summoning products...</p>
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Skeleton Sidebar */}
+        <div className="hidden lg:block w-64 space-y-8">
+          {[1, 2].map((i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-6 w-32 bg-gray-800 rounded mb-4" />
+              <div className="space-y-2">
+                {[1, 2, 3, 4].map((j) => (
+                  <div key={j} className="h-10 w-full bg-gray-900 rounded" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Skeleton Grid */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-2xl overflow-hidden h-[400px] animate-pulse">
+              <div className="h-[250px] bg-gray-800" />
+              <div className="p-5 space-y-3">
+                <div className="h-6 w-3/4 bg-gray-800 rounded" />
+                <div className="flex gap-2">
+                   <div className="h-4 w-16 bg-gray-800 rounded" />
+                   <div className="h-4 w-16 bg-gray-800 rounded" />
+                </div>
+                <div className="pt-4 flex justify-between">
+                   <div className="h-8 w-20 bg-gray-800 rounded" />
+                   <div className="h-8 w-8 bg-gray-800 rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -179,6 +212,12 @@ export function ProductList() {
                         price: Number(product.price),
                         imageUrl: product.imageUrl,
                         anime: { name: product.anime.name }
+                      });
+                      toast.success(`Added ${product.name} to cart`);
+                      captureEvent('add_to_cart', {
+                        product_id: product.id,
+                        product_name: product.name,
+                        price: Number(product.price),
                       });
                     }}
                     className="bg-yellow-500 hover:bg-yellow-400 text-black p-2 rounded-lg transition-transform active:scale-95"

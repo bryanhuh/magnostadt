@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { Loader2, CheckCircle, Home } from 'lucide-react';
+import { captureEvent } from '../utils/analytics';
 
 export function OrderConfirmationPage() {
   const { id } = useParams<{ id: string }>();
@@ -8,6 +10,15 @@ export function OrderConfirmationPage() {
     { id: id! },
     { enabled: !!id }
   );
+
+  useEffect(() => {
+    if (order) {
+      captureEvent('order_confirmation_viewed', {
+        order_id: order.id,
+        status: order.status
+      });
+    }
+  }, [order]);
 
   if (isLoading) {
     return (

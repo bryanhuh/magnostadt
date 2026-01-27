@@ -4,7 +4,27 @@ import { httpBatchLink } from '@trpc/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { trpc } from './utils/trpc';
+import * as Sentry from '@sentry/react';
+import { Toaster } from 'sonner';
+import { initAnalytics } from './utils/analytics';
 import { ProductList } from './components/ProductList';
+
+// Initialize Analytics
+initAnalytics();
+
+// Initialize Sentry
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+    ],
+    tracesSampleRate: 1.0,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+}
 import { ProductDetails } from './components/ProductDetails';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutPage } from './components/CheckoutPage';
@@ -67,6 +87,7 @@ export default function App() {
             </main>
           </div>
           <CartDrawer />
+          <Toaster position="bottom-right" theme="dark" />
         </BrowserRouter>
       </QueryClientProvider>
     </trpc.Provider>

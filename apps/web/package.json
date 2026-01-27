@@ -10,15 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sentry/react": "^10.36.0",
     "@shonen-mart/trpc": "workspace:*",
     "@tanstack/react-query": "latest",
     "@trpc/client": "latest",
     "@trpc/react-query": "latest",
     "@trpc/server": "latest",
     "lucide-react": "latest",
+    "posthog-js": "^1.335.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.13.0",
+    "sonner": "^2.0.7",
     "zod": "latest",
     "zustand": "^5.0.10"
   },

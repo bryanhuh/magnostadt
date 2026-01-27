@@ -29,3 +29,9 @@ All notable changes to this project will be documented in this file.
     - Added `Order` and `OrderItem` models with shipping details suitable for MVP.
     - Created `OrderConfirmation` page with order summary.
     - Connected Frontend to Backend via `createOrder` tRPC mutation.
+- **Phase 5 Features**:
+    - **Analytics**: Integrated PostHog for event tracking (Add to Cart, Checkout, **Order Completion**).
+    - **Error Tracking**: Integrated Sentry for frontend error monitoring.
+    - **UI Polish**: Added Skeleton loaders for smoother initial load.
+    - **UX**: Added Toast notifications (`sonner`) for immediate feedback on user actions.
+    - **Fixes**: Resolved TSConfig collisions in `apps/web` build.

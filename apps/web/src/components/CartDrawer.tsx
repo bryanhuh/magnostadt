@@ -1,6 +1,7 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
+import { captureEvent } from '../utils/analytics';
 
 export function CartDrawer() {
   const { 
@@ -92,7 +93,10 @@ export function CartDrawer() {
                          ${(item.price * item.quantity).toFixed(2)}
                        </p>
                        <button 
-                         onClick={() => removeItem(item.id)}
+                         onClick={() => {
+                           removeItem(item.id);
+                           captureEvent('remove_from_cart', { product_id: item.id });
+                         }}
                          className="text-xs text-red-500 hover:text-red-400 flex items-center gap-1 mt-1"
                        >
                          <Trash2 className="w-3 h-3" /> Remove
@@ -116,7 +120,13 @@ export function CartDrawer() {
             </div>
               <Link 
                 to="/checkout"
-                onClick={closeCart}
+                onClick={() => {
+                  closeCart();
+                  captureEvent('checkout_started', { 
+                    cart_value: getSubtotal(),
+                    item_count: items.length
+                  });
+                }}
                 className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] active:scale-95 block text-center"
               >
                 Checkout

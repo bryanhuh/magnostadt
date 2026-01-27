@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 import { trpc } from '../utils/trpc';
 import { Loader2, ArrowLeft } from 'lucide-react';
+import { captureEvent } from '../utils/analytics';
 
 export function CheckoutPage() {
   const navigate = useNavigate();
@@ -15,8 +16,21 @@ export function CheckoutPage() {
     zipCode: '',
   });
 
+  const subtotal = getSubtotal();
+  const shipping = 10; // Flat rate for MVP
+
   const createOrderMutation = trpc.createOrder.useMutation({
     onSuccess: (data) => {
+      // Capture order completion event
+      captureEvent('order_completed', {
+        order_id: data.id,
+        subtotal: subtotal,
+        shipping: shipping,
+        total: subtotal + shipping,
+        item_count: items.reduce((acc, item) => acc + item.quantity, 0),
+        currency: 'USD'
+      });
+
       clearCart();
       navigate(`/order/${data.id}`);
     },
@@ -51,8 +65,6 @@ export function CheckoutPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const subtotal = getSubtotal();
-  const shipping = 10; // Flat rate for MVP
   const total = subtotal + shipping;
 
   return (
