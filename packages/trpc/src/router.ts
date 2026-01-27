@@ -78,6 +78,88 @@ export const appRouter = t.router({
         }
       });
     }),
+  // Admin Procedures
+  createProduct: t.procedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        price: z.number(),
+        stock: z.number(),
+        categoryId: z.string(),
+        animeId: z.string(),
+        imageUrl: z.string().optional(),
+        isSale: z.boolean().optional(),
+        salePrice: z.number().optional().nullable(),
+        isPreorder: z.boolean().optional(),
+        featured: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return await prisma.product.create({
+        data: {
+          ...input,
+          price: input.price, // Ensure decimal handling if needed, but Prisma handles number -> Decimal usually
+          salePrice: input.salePrice,
+        },
+      });
+    }),
+
+  updateProduct: t.procedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          name: z.string().optional(),
+          description: z.string().optional(),
+          price: z.number().optional(),
+          stock: z.number().optional(),
+          categoryId: z.string().optional(),
+          animeId: z.string().optional(),
+          imageUrl: z.string().optional(),
+          isSale: z.boolean().optional(),
+          salePrice: z.number().optional().nullable(),
+          isPreorder: z.boolean().optional(),
+          featured: z.boolean().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { id, data } = input;
+      return await prisma.product.update({
+        where: { id },
+        data,
+      });
+    }),
+
+  deleteProduct: t.procedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      return await prisma.product.delete({
+        where: { id: input.id },
+      });
+    }),
+
+  getOrders: t.procedure
+    .query(async () => {
+      return await prisma.order.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: { items: { include: { product: true } } }
+      });
+    }),
+
+  updateOrderStatus: t.procedure
+    .input(z.object({
+      id: z.string(),
+      status: z.enum(['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+    }))
+    .mutation(async ({ input }) => {
+      return await prisma.order.update({
+        where: { id: input.id },
+        data: { status: input.status },
+      });
+    }),
+
   createOrder: t.procedure
     .input(
       z.object({

@@ -56,6 +56,7 @@ model Order {
   address       String
   city          String
   zipCode       String
+  userId        String?     // Link to Clerk User ID (Optional for guest checkout/backwards compatibility)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }

@@ -32,6 +32,8 @@ import { OrderConfirmationPage } from './components/OrderConfirmationPage';
 import { HomePage } from './components/HomePage';
 import { useCartStore } from './store/useCartStore';
 
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+
 function Header() {
   const { toggleCart, getTotalItems } = useCartStore();
   const totalItems = getTotalItems();
@@ -45,17 +47,45 @@ function Header() {
         <p className="text-gray-400 mt-2">Professional Anime E-Commerce</p>
       </div>
       
-      <button 
-        onClick={toggleCart}
-        className="relative bg-gray-900 border border-gray-800 hover:border-yellow-500 text-white p-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] group"
-      >
-        <ShoppingBag className="w-6 h-6 group-hover:text-yellow-500 transition-colors" />
-        {totalItems > 0 && (
-          <span className="absolute -top-2 -right-2 bg-yellow-500 text-black font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full border-2 border-gray-950">
-            {totalItems}
-          </span>
-        )}
-      </button>
+      <div className="flex items-center gap-4">
+        {/* Auth Buttons */}
+        <div className="flex items-center gap-4">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="text-white hover:text-yellow-500 font-bold transition-colors">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-lg font-bold transition-colors">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton 
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10 border-2 border-yellow-500"
+                }
+              }}
+            />
+          </SignedIn>
+        </div>
+
+        <button 
+          onClick={toggleCart}
+          className="relative bg-gray-900 border border-gray-800 hover:border-yellow-500 text-white p-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] group"
+        >
+          <ShoppingBag className="w-6 h-6 group-hover:text-yellow-500 transition-colors" />
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-yellow-500 text-black font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full border-2 border-gray-950">
+              {totalItems}
+            </span>
+          )}
+        </button>
+      </div>
     </header>
   );
 }
@@ -63,6 +93,12 @@ function Header() {
 function MainLayout({ children }: { children: React.ReactNode }) {
   return <div className="max-w-[1400px] mx-auto px-4 md:px-8">{children}</div>;
 }
+
+import { AdminLayout } from './layouts/AdminLayout';
+import { Dashboard } from './pages/admin/Dashboard';
+import { AdminProducts } from './pages/admin/Products';
+import { AdminProductForm } from './pages/admin/ProductForm';
+import { AdminOrders } from './pages/admin/Orders';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -81,44 +117,60 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <div className="min-h-screen bg-gray-950 text-white">
-            <Header />
-            <main>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route 
-                  path="/shop" 
-                  element={
-                    <MainLayout>
-                      <ProductList />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/product/:id" 
-                  element={
-                    <MainLayout>
-                      <ProductDetails />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/checkout" 
-                  element={
-                    <MainLayout>
-                      <CheckoutPage />
-                    </MainLayout>
-                  } 
-                />
-                <Route 
-                  path="/order/:id" 
-                  element={
-                    <MainLayout>
-                      <OrderConfirmationPage />
-                    </MainLayout>
-                  } 
-                />
-              </Routes>
-            </main>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={
+                 <>
+                   <Header />
+                   <main><HomePage /></main>
+                 </>
+              } />
+              <Route 
+                path="/shop" 
+                element={
+                  <>
+                    <Header />
+                    <MainLayout><ProductList /></MainLayout>
+                  </>
+                } 
+              />
+              <Route 
+                path="/product/:id" 
+                element={
+                  <>
+                    <Header />
+                    <MainLayout><ProductDetails /></MainLayout>
+                  </>
+                } 
+              />
+              <Route 
+                path="/checkout" 
+                element={
+                  <>
+                    <Header />
+                    <MainLayout><CheckoutPage /></MainLayout>
+                  </>
+                } 
+              />
+              <Route 
+                path="/order/:id" 
+                element={
+                  <>
+                    <Header />
+                    <MainLayout><OrderConfirmationPage /></MainLayout>
+                  </>
+                } 
+              />
+
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="products/new" element={<AdminProductForm />} />
+                <Route path="products/:id/edit" element={<AdminProductForm />} />
+                <Route path="orders" element={<AdminOrders />} />
+              </Route>
+            </Routes>
           </div>
           <CartDrawer />
           <Toaster position="bottom-right" theme="dark" />

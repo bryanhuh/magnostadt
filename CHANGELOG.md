@@ -21,8 +21,17 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - **Routing**: Moved original product list to `/shop` and set `HomePage` as the default route `/`.
 - **Layout**: Refactored application layout to remove global constraints.
+- **Layout**: Refactored application layout to remove global constraints.
   - Implemented full-width homepage sections for Showcase, Category Grid, and Series Grid.
   - Created constrained layout wrapper for all other pages.
+- **Admin**: Introduced Admin Dashboard at `/admin`.
+  - Added secure `AdminLayout` and navigation.
+  - Implemented Product Management (Create, Edit, Delete, List).
+  - Implemented Order Management (List, Status Update).
+- **Authentication**: Integrated Clerk for user authentication.
+  - Added Sigin/Signup UI to Header.
+  - Configured `ClerkProvider` in main application entry.
+- **Database**: Updated `Order` model to link orders to users.
 
 ## [0.0.1] - 2026-01-24
 ### Changed
