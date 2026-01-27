@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+### Added
+- **UI Overhaul**: Implemented a new premium Homepage design inspired by Crunchyroll Store.
+- **New Sections**: 
+  - Showcase Hero Section (featured series).
+  - Sale Products Carousel.
+  - Pre-order Showcase & Items.
+  - Shop by Series.
+  - Latest Drops & Popular Series.
+- **Components**: Added `ProductCarousel`, `SeriesCarousel`, `SectionHeader`, and `Showcase` components.
+- **Backend**: 
+  - Updated `Product` and `AnimeSeries` schema with `isSale`, `isPreorder`, `featured`, etc.
+  - Enhanced `getProducts` tRPC query with filters and sorting.
+  - Added `getFeaturedAnime` query capability.
+
+### Changed
+- **Routing**: Moved original product list to `/shop` and set `HomePage` as the default route `/`.
+
+## [0.0.1] - 2026-01-24
 ### Changed
 - Switched database provider to Neon.tech (PostgreSQL) for native IPv4 support and ease of use.
 - Downgraded Prisma to stable v6.x to resolve configuration breaking changes in v7.

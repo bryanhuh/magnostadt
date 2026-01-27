@@ -29,6 +29,7 @@ import { ProductDetails } from './components/ProductDetails';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutPage } from './components/CheckoutPage';
 import { OrderConfirmationPage } from './components/OrderConfirmationPage';
+import { HomePage } from './components/HomePage';
 import { useCartStore } from './store/useCartStore';
 
 function Header() {
@@ -79,7 +80,8 @@ export default function App() {
             <Header />
             <main className="max-w-6xl mx-auto">
               <Routes>
-                <Route path="/" element={<ProductList />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/shop" element={<ProductList />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/order/:id" element={<OrderConfirmationPage />} />

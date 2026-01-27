@@ -10,15 +10,37 @@ export const appRouter = t.router({
       z.object({
         categoryId: z.string().optional(),
         animeId: z.string().optional(),
+        isSale: z.boolean().optional(),
+        isPreorder: z.boolean().optional(),
+        featured: z.boolean().optional(),
+        limit: z.number().optional(),
+        orderBy: z.enum(['newest', 'price_asc', 'price_desc']).optional(),
       }).optional()
     )
     .query(async ({ input }) => {
-      const { categoryId, animeId } = input || {};
+      const { categoryId, animeId, isSale, isPreorder, featured, limit, orderBy } = input || {};
+      
+      let orderByClause = {};
+      if (orderBy === 'newest') {
+        orderByClause = { createdAt: 'desc' };
+      } else if (orderBy === 'price_asc') {
+        orderByClause = { price: 'asc' };
+      } else if (orderBy === 'price_desc') {
+        orderByClause = { price: 'desc' };
+      } else {
+        orderByClause = { createdAt: 'desc' }; // Default to newest
+      }
+
       return await prisma.product.findMany({
         where: {
           categoryId,
           animeId,
+          isSale,
+          isPreorder,
+          featured,
         },
+        take: limit,
+        orderBy: orderByClause,
         include: {
           category: true,
           anime: true,
@@ -42,9 +64,20 @@ export const appRouter = t.router({
     return await prisma.category.findMany();
   }),
 
-  getAnimeSeries: t.procedure.query(async () => {
-    return await prisma.animeSeries.findMany();
-  }),
+  getAnimeSeries: t.procedure
+    .input(z.object({ featured: z.boolean().optional() }).optional())
+    .query(async ({ input }) => {
+      return await prisma.animeSeries.findMany({
+        where: {
+          featured: input?.featured,
+        },
+        include: {
+           products: {
+             take: 3, // Preview products
+           }
+        }
+      });
+    }),
   createOrder: t.procedure
     .input(
       z.object({

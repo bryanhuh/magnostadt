@@ -19,6 +19,14 @@ model Product {
   animeId     String
   anime       AnimeSeries @relation(fields: [animeId], references: [id])
   items       OrderItem[]
+  
+  // New fields for UI Homepage
+  isSale      Boolean  @default(false)
+  salePrice   Decimal? @db.Decimal(10, 2)
+  isPreorder  Boolean  @default(false)
+  releaseDate DateTime?
+  featured    Boolean  @default(false)
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -30,9 +38,12 @@ model Category {
 }
 
 model AnimeSeries {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  products Product[]
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?   @db.Text
+  coverImage  String?
+  featured    Boolean   @default(false)
+  products    Product[]
 }
 
 model Order {
