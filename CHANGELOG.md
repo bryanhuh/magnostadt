@@ -20,6 +20,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Routing**: Moved original product list to `/shop` and set `HomePage` as the default route `/`.
+- **Layout**: Refactored application layout to remove global constraints.
+  - Implemented full-width homepage sections for Showcase, Category Grid, and Series Grid.
+  - Created constrained layout wrapper for all other pages.
 
 ## [0.0.1] - 2026-01-24
 ### Changed

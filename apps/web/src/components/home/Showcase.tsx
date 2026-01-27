@@ -14,7 +14,7 @@ export function Showcase() {
   };
 
   return (
-    <section className="relative h-[600px] w-full overflow-hidden rounded-3xl mb-16 group">
+    <section className="relative h-[600px] w-full overflow-hidden mb-16 group">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img 
@@ -26,30 +26,32 @@ export function Showcase() {
       </div>
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-center px-8 md:px-16 max-w-3xl">
-        <span className="text-yellow-500 font-bold tracking-widest uppercase mb-4 animate-fade-in-up">
-          Featured Series
-        </span>
-        
-        <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter mb-6 leading-[0.9] drop-shadow-2xl">
-          {showcaseItem.name}
-        </h1>
-        
-        <p className="text-gray-200 text-lg md:text-xl mb-8 line-clamp-3 max-w-xl font-medium drop-shadow-md">
-          {showcaseItem.description ?? "Experience the latest merchandise from this incredible series. detailed figures, apparel, and more available now."}
-        </p>
-
-        <div className="flex flex-wrap gap-4">
-          <Link 
-            to={`/?animeId=${showcaseItem.id}`}
-            className="bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-black uppercase tracking-wider flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(234,179,8,0.4)]"
-          >
-            Shop Collection <ShoppingBag className="w-5 h-5" />
-          </Link>
+      <div className="relative h-full flex items-center w-full max-w-[1400px] mx-auto px-4 md:px-8">
+        <div className="max-w-3xl">
+          <span className="text-yellow-500 font-bold tracking-widest uppercase mb-4 animate-fade-in-up block">
+            Featured Series
+          </span>
           
-          <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-wider flex items-center gap-2 transition-colors">
-            View Trailer <ArrowRight className="w-5 h-5" />
-          </button>
+          <h1 className="text-5xl md:text-7xl font-black text-white italic uppercase tracking-tighter mb-6 leading-[0.9] drop-shadow-2xl">
+            {showcaseItem.name}
+          </h1>
+          
+          <p className="text-gray-200 text-lg md:text-xl mb-8 line-clamp-3 max-w-xl font-medium drop-shadow-md">
+            {showcaseItem.description ?? "Experience the latest merchandise from this incredible series. detailed figures, apparel, and more available now."}
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            <Link 
+              to={`/?animeId=${showcaseItem.id}`}
+              className="bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-black uppercase tracking-wider flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(234,179,8,0.4)]"
+            >
+              Shop Collection <ShoppingBag className="w-5 h-5" />
+            </Link>
+            
+            <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold uppercase tracking-wider flex items-center gap-2 transition-colors">
+              View Trailer <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </section>

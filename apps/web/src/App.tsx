@@ -37,7 +37,7 @@ function Header() {
   const totalItems = getTotalItems();
 
   return (
-    <header className="mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+    <header className="max-w-[1400px] mx-auto px-4 md:px-8 py-8 mb-4 flex flex-col md:flex-row items-center justify-between gap-6">
       <div className="text-center md:text-left">
         <h1 className="text-5xl font-black tracking-tighter text-yellow-500 uppercase italic">
           Shonen-Mart
@@ -60,6 +60,10 @@ function Header() {
   );
 }
 
+function MainLayout({ children }: { children: React.ReactNode }) {
+  return <div className="max-w-[1400px] mx-auto px-4 md:px-8">{children}</div>;
+}
+
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
@@ -76,15 +80,43 @@ export default function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <div className="min-h-screen bg-gray-950 text-white p-8">
+          <div className="min-h-screen bg-gray-950 text-white">
             <Header />
-            <main className="max-w-6xl mx-auto">
+            <main>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/shop" element={<ProductList />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/order/:id" element={<OrderConfirmationPage />} />
+                <Route 
+                  path="/shop" 
+                  element={
+                    <MainLayout>
+                      <ProductList />
+                    </MainLayout>
+                  } 
+                />
+                <Route 
+                  path="/product/:id" 
+                  element={
+                    <MainLayout>
+                      <ProductDetails />
+                    </MainLayout>
+                  } 
+                />
+                <Route 
+                  path="/checkout" 
+                  element={
+                    <MainLayout>
+                      <CheckoutPage />
+                    </MainLayout>
+                  } 
+                />
+                <Route 
+                  path="/order/:id" 
+                  element={
+                    <MainLayout>
+                      <OrderConfirmationPage />
+                    </MainLayout>
+                  } 
+                />
               </Routes>
             </main>
           </div>
