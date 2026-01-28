@@ -85,6 +85,21 @@ async function main() {
     ],
   });
 
+  // 5. Create Admin User
+  // We pre-seed the admin with a placeholder ID. 
+  // When the real user logs in, the `sync` mutation will link them by email and update the ID.
+  const adminEmail = 'breelagrama@gmail.com';
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: { role: 'ADMIN' },
+    create: {
+      id: `preseeded_admin_${Date.now()}`, // Temporary ID
+      email: adminEmail,
+      role: 'ADMIN',
+    },
+  });
+  console.log(`👤 Created/Updated Admin User: ${adminEmail}`);
+
   console.log('✅ Seed completed successfully!');
 }
 

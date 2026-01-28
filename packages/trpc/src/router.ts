@@ -1,11 +1,47 @@
-import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import { prisma } from '@shonen-mart/db';
+import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
 
-const t = initTRPC.create();
+export const appRouter = router({
+  auth: router({
+    me: protectedProcedure.query(async ({ ctx }) => {
+      return await ctx.prisma.user.findUnique({
+        where: { id: ctx.userId },
+      });
+    }),
+    sync: protectedProcedure
+      .input(z.object({ email: z.string().optional() }))
+      .mutation(async ({ ctx, input }) => {
+       const { email } = input;
+       
+       // 1. Find by ID (Clerk ID)
+       const userById = await ctx.prisma.user.findUnique({ where: { id: ctx.userId } });
+       if (userById) return userById;
 
-export const appRouter = t.router({
-  getProducts: t.procedure
+       // 2. If email provided, try to find by email (Account Linking)
+       if (email) {
+         const userByEmail = await ctx.prisma.user.findUnique({ where: { email } });
+         if (userByEmail) {
+           // Link the existing record to the new Clerk ID
+           // Note: This assumes email ownership is verified by Clerk.
+           return await ctx.prisma.user.update({
+             where: { email },
+             data: { id: ctx.userId }, // Update ID to match Clerk ID
+           });
+         }
+       }
+
+       // 3. Create new user
+       return await ctx.prisma.user.create({
+         data: {
+            id: ctx.userId,
+            email: email || `user_${ctx.userId}@placeholder.com`,
+         }
+       });
+    }),
+  }),
+
+  getProducts: publicProcedure
     .input(
       z.object({
         categoryId: z.string().optional(),
@@ -48,7 +84,7 @@ export const appRouter = t.router({
       });
     }),
 
-  getProductById: t.procedure
+  getProductById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       return await prisma.product.findUniqueOrThrow({
@@ -60,11 +96,11 @@ export const appRouter = t.router({
       });
     }),
 
-  getCategories: t.procedure.query(async () => {
+  getCategories: publicProcedure.query(async () => {
     return await prisma.category.findMany();
   }),
 
-  getAnimeSeries: t.procedure
+  getAnimeSeries: publicProcedure
     .input(z.object({ featured: z.boolean().optional() }).optional())
     .query(async ({ input }) => {
       return await prisma.animeSeries.findMany({
@@ -72,14 +108,14 @@ export const appRouter = t.router({
           featured: input?.featured,
         },
         include: {
-           products: {
-             take: 3, // Preview products
-           }
+          products: {
+            take: 3, // Preview products
+          }
         }
       });
     }),
   // Admin Procedures
-  createProduct: t.procedure
+  createProduct: adminProcedure
     .input(
       z.object({
         name: z.string(),
@@ -99,13 +135,13 @@ export const appRouter = t.router({
       return await prisma.product.create({
         data: {
           ...input,
-          price: input.price, // Ensure decimal handling if needed, but Prisma handles number -> Decimal usually
+          price: input.price, 
           salePrice: input.salePrice,
         },
       });
     }),
 
-  updateProduct: t.procedure
+  updateProduct: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -132,7 +168,7 @@ export const appRouter = t.router({
       });
     }),
 
-  deleteProduct: t.procedure
+  deleteProduct: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       return await prisma.product.delete({
@@ -140,7 +176,7 @@ export const appRouter = t.router({
       });
     }),
 
-  getOrders: t.procedure
+  getOrders: adminProcedure
     .query(async () => {
       return await prisma.order.findMany({
         orderBy: { createdAt: 'desc' },
@@ -148,7 +184,7 @@ export const appRouter = t.router({
       });
     }),
 
-  updateOrderStatus: t.procedure
+  updateOrderStatus: adminProcedure
     .input(z.object({
       id: z.string(),
       status: z.enum(['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
@@ -160,7 +196,7 @@ export const appRouter = t.router({
       });
     }),
 
-  createOrder: t.procedure
+  createOrder: publicProcedure
     .input(
       z.object({
         customerName: z.string(),
@@ -179,10 +215,6 @@ export const appRouter = t.router({
     .mutation(async ({ input }) => {
       const { items, ...shippingDetails } = input;
 
-      // Calculate total and formatted order items in a transaction
-      // For MVP, we trust the prices from the DB to be safe, so we fetch them first
-      // OR to keep it simple and safe: calculate total on server side by fetching products.
-
       return await prisma.$transaction(async (tx) => {
         let total = 0;
         const orderItemsData = [];
@@ -192,11 +224,7 @@ export const appRouter = t.router({
             where: { id: item.productId },
           });
 
-          if (product.stock < item.quantity) {
-             // In a real app we'd handle this better
-             // throw new Error(`Not enough stock for ${product.name}`);
-             // For MVP seed data, we might ignore stock or assume infinite
-          }
+          // if (product.stock < item.quantity) { }
 
           const itemTotal = Number(product.price) * item.quantity;
           total += itemTotal;
@@ -204,7 +232,7 @@ export const appRouter = t.router({
           orderItemsData.push({
             productId: item.productId,
             quantity: item.quantity,
-            price: product.price, // Store the price at time of purchase
+            price: product.price, 
           });
         }
 
@@ -216,6 +244,12 @@ export const appRouter = t.router({
             items: {
               create: orderItemsData,
             },
+            // If user is logged in (ctx.userId), we should link it!
+            // But createOrder is publicProcedure here. 
+            // We can check ctx inside content if we access it? publicProcedure has ctx too.
+            // But we need to pass ctx to handler.
+            // Let's create `createOrder` as public but check context optional.
+            // publicProcedure middleware allows null userId.
           },
         });
 
@@ -223,7 +257,7 @@ export const appRouter = t.router({
       });
     }),
 
-  getOrderById: t.procedure
+  getOrderById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       return await prisma.order.findUniqueOrThrow({

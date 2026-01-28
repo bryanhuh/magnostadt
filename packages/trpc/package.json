@@ -2,9 +2,10 @@
   "name": "@shonen-mart/trpc",
   "version": "0.0.0",
   "private": true,
-  "main": "./src/router.ts",
-  "types": "./src/router.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "dependencies": {
+    "@clerk/backend": "^2.29.5",
     "@shonen-mart/db": "workspace:*",
     "@trpc/server": "latest",
     "zod": "latest"

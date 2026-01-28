@@ -25,13 +25,21 @@ All notable changes to this project will be documented in this file.
   - Implemented full-width homepage sections for Showcase, Category Grid, and Series Grid.
   - Created constrained layout wrapper for all other pages.
 - **Admin**: Introduced Admin Dashboard at `/admin`.
-  - Added secure `AdminLayout` and navigation.
+  - Added secure `AdminLayout` and navigation with RBAC protection.
   - Implemented Product Management (Create, Edit, Delete, List).
   - Implemented Order Management (List, Status Update).
 - **Authentication**: Integrated Clerk for user authentication.
   - Added Sigin/Signup UI to Header.
   - Configured `ClerkProvider` in main application entry.
-- **Database**: Updated `Order` model to link orders to users.
+  - Implemented `AuthCallback` for role-based redirection.
+- **Database**: 
+  - Updated `Order` model to link orders to users.
+  - Added `User` model and `Role` enum.
+  - Seeded Admin User (`breelagrama@gmail.com`).
+- **Backend**:
+  - Enhanced tRPC context with Clerk authentication (`verifyToken`).
+  - Added `protectedProcedure` and `adminProcedure` middleware.
+  - Implemented `auth.me` and `auth.sync` procedures.
 
 ## [0.0.1] - 2026-01-24
 ### Changed

@@ -56,9 +56,24 @@ model Order {
   address       String
   city          String
   zipCode       String
-  userId        String?     // Link to Clerk User ID (Optional for guest checkout/backwards compatibility)
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+}
+
+model User {
+  id        String   @id // Managed by Clerk
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model OrderItem {

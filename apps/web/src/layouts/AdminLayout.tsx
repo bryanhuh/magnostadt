@@ -1,10 +1,30 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingCart, Users, LogOut } from 'lucide-react';
-import { useClerk } from '@clerk/clerk-react';
+import { Link, Outlet, useLocation, Navigate } from 'react-router-dom';
+import { LayoutDashboard, Package, ShoppingCart, Users, LogOut, Loader2 } from 'lucide-react';
+import { useClerk, useUser } from '@clerk/clerk-react';
+import { trpc } from '../utils/trpc';
 
 export function AdminLayout() {
   const location = useLocation();
   const { signOut } = useClerk();
+  const { isLoaded, isSignedIn } = useUser();
+  
+  // Fetch user role from DB
+  const { data: dbUser, isLoading: isDbLoading } = trpc.auth.me.useQuery(undefined, {
+    enabled: !!isSignedIn,
+    retry: false,
+  });
+
+  if (!isLoaded || (isSignedIn && isDbLoading)) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-gray-950">
+        <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isSignedIn || dbUser?.role !== 'ADMIN') {
+    return <Navigate to="/" replace />;
+  }
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },

@@ -30,6 +30,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutPage } from './components/CheckoutPage';
 import { OrderConfirmationPage } from './components/OrderConfirmationPage';
 import { HomePage } from './components/HomePage';
+import { AuthCallback } from './pages/AuthCallback';
 import { useCartStore } from './store/useCartStore';
 
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
@@ -51,12 +52,12 @@ function Header() {
         {/* Auth Buttons */}
         <div className="flex items-center gap-4">
           <SignedOut>
-            <SignInButton mode="modal">
+            <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
               <button className="text-white hover:text-yellow-500 font-bold transition-colors">
                 Sign In
               </button>
             </SignInButton>
-            <SignUpButton mode="modal">
+            <SignUpButton mode="modal" forceRedirectUrl="/auth-callback">
               <button className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-lg font-bold transition-colors">
                 Sign Up
               </button>
@@ -161,6 +162,7 @@ export default function App() {
                   </>
                 } 
               />
+              <Route path="/auth-callback" element={<AuthCallback />} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminLayout />}>
