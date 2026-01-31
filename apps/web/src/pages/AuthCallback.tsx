@@ -6,10 +6,11 @@ import { trpc } from '../utils/trpc';
 
 export function AuthCallback() {
   const navigate = useNavigate();
-  const { isLoaded, isSignedIn } = useUser();
+  const useUserResult = useUser();
+  const { isLoaded, isSignedIn } = useUserResult;
   
   // We force a refetch to ensure we get the latest role, possibly after a sync
-  const { data: user, isError } = trpc.auth.me.useQuery(undefined, {
+  const { data: user, isError, isLoading } = trpc.auth.me.useQuery(undefined, {
     enabled: isLoaded && isSignedIn,
     retry: 1,
   });
@@ -25,19 +26,23 @@ export function AuthCallback() {
   }, [isLoaded, isSignedIn, navigate]);
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (user) {
       if (user.role === 'ADMIN') {
         navigate('/admin');
       } else {
         navigate('/');
       }
-    } else if (isError) {
-      // If error (e.g. user not found in DB), try syncing
+    } else if (isError || user === null) {
+      // If error or user is null (authenticated in Clerk but not in DB), try syncing
       if (!syncMutation.isPending && !syncMutation.isSuccess) {
-         syncMutation.mutate({ email: undefined }); // Email will be inferred or we can pass it if we mapped it
+         // Pass the email so the backend can link to the pre-seeded admin user if it exists
+         const userEmail = useUserResult.user?.primaryEmailAddress?.emailAddress;
+         syncMutation.mutate({ email: userEmail }); 
       }
     }
-  }, [user, isError, navigate, syncMutation]);
+  }, [user, isError, isLoading, navigate, syncMutation, useUserResult.user]);
 
   // Handle sync success
   useEffect(() => {

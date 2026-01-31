@@ -108,6 +108,13 @@ export default function App() {
       links: [
         httpBatchLink({
           url: 'http://localhost:3000/trpc',
+          async headers() {
+            // @ts-ignore - Clerk attaches to window
+            const token = await window.Clerk?.session?.getToken();
+            return {
+              Authorization: token ? `Bearer ${token}` : undefined,
+            };
+          },
         }),
       ],
     })

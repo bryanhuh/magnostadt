@@ -41,6 +41,13 @@ All notable changes to this project will be documented in this file.
   - Added `protectedProcedure` and `adminProcedure` middleware.
   - Implemented `auth.me` and `auth.sync` procedures.
 
+### Fixed
+- **Authentication**: Resolved infinite loop on `/auth-callback` for new users.
+  - Patched `AuthCallback.tsx` to correctly trigger account creation when user is not found in DB.
+  - Fixed missing API environment variables (`CLERK_SECRET_KEY`).
+  - Fixed Admin redirection failure by passing user email to `auth.sync` for proper account linking.
+- **Data**: Seeded initial database with products to fix empty dashboard state.
+
 ## [0.0.1] - 2026-01-24
 ### Changed
 - Switched database provider to Neon.tech (PostgreSQL) for native IPv4 support and ease of use.
