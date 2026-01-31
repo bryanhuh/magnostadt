@@ -42,10 +42,10 @@ function Header() {
   return (
     <header className="max-w-[1400px] mx-auto px-4 md:px-8 py-8 mb-4 flex flex-col md:flex-row items-center justify-between gap-6">
       <div className="text-center md:text-left">
-        <h1 className="text-5xl font-black tracking-tighter text-yellow-500 uppercase italic">
+        <h1 className="text-5xl font-black tracking-tighter text-yellow-600 uppercase italic">
           Shonen-Mart
         </h1>
-        <p className="text-gray-400 mt-2">Professional Anime E-Commerce</p>
+        <p className="text-gray-500 mt-2">Professional Anime E-Commerce</p>
       </div>
       
       <div className="flex items-center gap-4">
@@ -53,12 +53,12 @@ function Header() {
         <div className="flex items-center gap-4">
           <SignedOut>
             <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
-              <button className="text-white hover:text-yellow-500 font-bold transition-colors">
+              <button className="text-gray-700 hover:text-yellow-600 font-bold transition-colors">
                 Sign In
               </button>
             </SignInButton>
             <SignUpButton mode="modal" forceRedirectUrl="/auth-callback">
-              <button className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-lg font-bold transition-colors">
+              <button className="bg-gray-900 text-white hover:bg-black px-4 py-2 rounded-lg font-bold transition-colors">
                 Sign Up
               </button>
             </SignUpButton>
@@ -68,7 +68,7 @@ function Header() {
               afterSignOutUrl="/"
               appearance={{
                 elements: {
-                  avatarBox: "w-10 h-10 border-2 border-yellow-500"
+                  avatarBox: "w-10 h-10 border-2 border-yellow-600"
                 }
               }}
             />
@@ -77,11 +77,11 @@ function Header() {
 
         <button 
           onClick={toggleCart}
-          className="relative bg-gray-900 border border-gray-800 hover:border-yellow-500 text-white p-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] group"
+          className="relative bg-white border border-gray-200 hover:border-yellow-600 text-gray-900 p-4 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(234,179,8,0.2)] group"
         >
-          <ShoppingBag className="w-6 h-6 group-hover:text-yellow-500 transition-colors" />
+          <ShoppingBag className="w-6 h-6 group-hover:text-yellow-600 transition-colors" />
           {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-yellow-500 text-black font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full border-2 border-gray-950">
+            <span className="absolute -top-2 -right-2 bg-yellow-600 text-white font-bold text-xs w-6 h-6 flex items-center justify-center rounded-full border-2 border-white">
               {totalItems}
             </span>
           )}
@@ -100,6 +100,7 @@ import { Dashboard } from './pages/admin/Dashboard';
 import { AdminProducts } from './pages/admin/Products';
 import { AdminProductForm } from './pages/admin/ProductForm';
 import { AdminOrders } from './pages/admin/Orders';
+import { AdminCustomers } from './pages/admin/Customers';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -124,7 +125,7 @@ export default function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <div className="min-h-screen bg-gray-950 text-white">
+          <div className="min-h-screen bg-gray-50 text-gray-900">
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={
@@ -178,11 +179,12 @@ export default function App() {
                 <Route path="products/new" element={<AdminProductForm />} />
                 <Route path="products/:id/edit" element={<AdminProductForm />} />
                 <Route path="orders" element={<AdminOrders />} />
+                <Route path="customers" element={<AdminCustomers />} />
               </Route>
             </Routes>
           </div>
           <CartDrawer />
-          <Toaster position="bottom-right" theme="dark" />
+          <Toaster position="bottom-right" theme="light" />
         </BrowserRouter>
       </QueryClientProvider>
     </trpc.Provider>

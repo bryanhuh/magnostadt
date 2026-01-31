@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatPrice } from '../utils/format';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 import { trpc } from '../utils/trpc';
@@ -39,10 +40,10 @@ export function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-        <h2 className="text-2xl font-black text-gray-400">Your cart is empty</h2>
+        <h2 className="text-2xl font-black text-gray-500">Your cart is empty</h2>
         <button
           onClick={() => navigate('/')}
-          className="text-yellow-500 hover:underline"
+          className="text-yellow-600 hover:underline"
         >
           Go back to shopping
         </button>
@@ -71,7 +72,7 @@ export function CheckoutPage() {
     <div className="max-w-4xl mx-auto py-8">
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+        className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Shop
       </button>
@@ -79,69 +80,69 @@ export function CheckoutPage() {
       <div className="grid md:grid-cols-2 gap-12">
         {/* Shipping Form */}
         <div>
-          <h2 className="text-3xl font-black text-yellow-500 italic uppercase mb-8">Shipping Info</h2>
+          <h2 className="text-3xl font-black text-yellow-600 italic uppercase mb-8">Shipping Info</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-gray-400 mb-2">Full Name</label>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Full Name</label>
               <input
                 type="text"
                 name="customerName"
                 required
                 value={formData.customerName}
                 onChange={handleChange}
-                className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+                className="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
                 placeholder="Naruto Uzumaki"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-400 mb-2">Email</label>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Email</label>
               <input
                 type="email"
                 name="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+                className="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
                 placeholder="hokage@konoha.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-400 mb-2">Address</label>
+              <label className="block text-sm font-bold text-gray-500 mb-2">Address</label>
               <input
                 type="text"
                 name="address"
                 required
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+                className="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
                 placeholder="123 Ninja Way"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">City</label>
+                <label className="block text-sm font-bold text-gray-500 mb-2">City</label>
                 <input
                   type="text"
                   name="city"
                   required
                   value={formData.city}
                   onChange={handleChange}
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+                  className="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
                   placeholder="Konoha"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">Zip Code</label>
+                <label className="block text-sm font-bold text-gray-500 mb-2">Zip Code</label>
                 <input
                   type="text"
                   name="zipCode"
                   required
                   value={formData.zipCode}
                   onChange={handleChange}
-                  className="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+                  className="w-full bg-white border border-gray-200 rounded-lg p-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
                   placeholder="10101"
                 />
               </div>
@@ -167,39 +168,39 @@ export function CheckoutPage() {
         </div>
 
         {/* Order Summary */}
-        <div className="bg-gray-900 rounded-2xl p-8 h-fit border border-gray-800">
-          <h2 className="text-2xl font-black text-white italic uppercase mb-6">Order Summary</h2>
+        <div className="bg-white rounded-2xl p-8 h-fit border border-gray-200 shadow-sm">
+          <h2 className="text-2xl font-black text-gray-900 italic uppercase mb-6">Order Summary</h2>
           <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2">
             {items.map((item) => (
               <div key={item.id} className="flex justify-between items-start">
                 <div className="flex gap-3">
-                  <div className="w-12 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
+                  <div className="w-12 h-16 bg-white border border-gray-200 rounded overflow-hidden flex-shrink-0">
                     <img src={item.imageUrl ?? ''} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <p className="font-bold text-sm line-clamp-2">{item.name}</p>
+                    <p className="font-bold text-sm line-clamp-2 text-gray-900">{item.name}</p>
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                   </div>
                 </div>
-                <span className="font-mono text-gray-300">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="font-mono text-gray-500">{formatPrice(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
           
-          <div className="border-t border-gray-800 pt-4 space-y-2">
-            <div className="flex justify-between text-gray-400">
+          <div className="border-t border-gray-200 pt-4 space-y-2">
+            <div className="flex justify-between text-gray-500">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatPrice(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-gray-400">
+            <div className="flex justify-between text-gray-500">
               <span>Shipping</span>
-              <span>${shipping.toFixed(2)}</span>
+              <span>{formatPrice(shipping)}</span>
             </div>
           </div>
           
-          <div className="border-t border-gray-800 pt-4 mt-4 flex justify-between items-center">
-            <span className="font-bold text-xl">Total</span>
-            <span className="font-black text-3xl text-yellow-500">${total.toFixed(2)}</span>
+          <div className="border-t border-gray-200 pt-4 mt-4 flex justify-between items-center">
+            <span className="font-bold text-xl text-gray-900">Total</span>
+            <span className="font-black text-3xl text-yellow-600">{formatPrice(total)}</span>
           </div>
         </div>
       </div>

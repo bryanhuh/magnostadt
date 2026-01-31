@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatPrice } from '../utils/format';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { trpc } from '../utils/trpc';
@@ -32,7 +33,7 @@ export function ProductList() {
               <div className="h-6 w-32 bg-gray-800 rounded mb-4" />
               <div className="space-y-2">
                 {[1, 2, 3, 4].map((j) => (
-                  <div key={j} className="h-10 w-full bg-gray-900 rounded" />
+                  <div key={j} className="h-10 w-full bg-gray-200 rounded" />
                 ))}
               </div>
             </div>
@@ -42,17 +43,17 @@ export function ProductList() {
         {/* Skeleton Grid */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-gray-900/50 border border-gray-800 rounded-2xl overflow-hidden h-[400px] animate-pulse">
-              <div className="h-[250px] bg-gray-800" />
+            <div key={i} className="bg-white border border-gray-200 rounded-2xl overflow-hidden h-[400px] animate-pulse">
+              <div className="h-[250px] bg-gray-200" />
               <div className="p-5 space-y-3">
-                <div className="h-6 w-3/4 bg-gray-800 rounded" />
+                <div className="h-6 w-3/4 bg-gray-200 rounded" />
                 <div className="flex gap-2">
-                   <div className="h-4 w-16 bg-gray-800 rounded" />
-                   <div className="h-4 w-16 bg-gray-800 rounded" />
+                   <div className="h-4 w-16 bg-gray-200 rounded" />
+                   <div className="h-4 w-16 bg-gray-200 rounded" />
                 </div>
                 <div className="pt-4 flex justify-between">
-                   <div className="h-8 w-20 bg-gray-800 rounded" />
-                   <div className="h-8 w-8 bg-gray-800 rounded" />
+                   <div className="h-8 w-20 bg-gray-200 rounded" />
+                   <div className="h-8 w-8 bg-gray-200 rounded" />
                 </div>
               </div>
             </div>
@@ -83,7 +84,7 @@ export function ProductList() {
 
       {/* Sidebar Filters */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-gray-950 p-6 transform transition-transform duration-300 ease-in-out border-r border-gray-800
+        fixed inset-y-0 left-0 z-50 w-64 bg-white p-6 transform transition-transform duration-300 ease-in-out border-r border-gray-200
         lg:static lg:translate-x-0 lg:bg-transparent lg:p-0 lg:border-none lg:w-64 lg:block
         ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
@@ -97,14 +98,14 @@ export function ProductList() {
         <div className="space-y-8">
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-4 uppercase italic tracking-wider border-b border-gray-800 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase italic tracking-wider border-b border-gray-200 pb-2">
               Categories
             </h3>
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedCategory(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                  !selectedCategory ? 'bg-yellow-500 text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  !selectedCategory ? 'bg-yellow-500 text-black font-bold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 All Categories
@@ -116,7 +117,7 @@ export function ProductList() {
                   className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
                     selectedCategory === category.id
                       ? 'bg-yellow-500 text-black font-bold'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   {category.name}
@@ -127,14 +128,14 @@ export function ProductList() {
 
           {/* Anime Series */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-4 uppercase italic tracking-wider border-b border-gray-800 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase italic tracking-wider border-b border-gray-200 pb-2">
               Series
             </h3>
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedAnime(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                  !selectedAnime ? 'bg-yellow-500 text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  !selectedAnime ? 'bg-yellow-500 text-black font-bold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 All Series
@@ -146,7 +147,7 @@ export function ProductList() {
                   className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
                     selectedAnime === anime.id
                       ? 'bg-yellow-500 text-black font-bold'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   {anime.name}
@@ -172,9 +173,9 @@ export function ProductList() {
             <Link
               to={`/product/${product.id}`}
               key={product.id}
-              className="group relative bg-gray-900/50 border border-gray-800 rounded-2xl overflow-hidden hover:border-yellow-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] flex flex-col"
+              className="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
             >
-              <div className="aspect-[4/5] bg-gray-800 relative overflow-hidden">
+              <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
                  <img 
                    src={product.imageUrl ?? undefined} 
                    alt={product.name}
@@ -190,7 +191,7 @@ export function ProductList() {
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-2 gap-2">
-                    <h3 className="text-lg font-bold group-hover:text-yellow-500 transition-colors uppercase italic tracking-wider leading-tight">
+                    <h3 className="text-lg font-bold group-hover:text-yellow-600 transition-colors uppercase italic tracking-wider leading-tight text-gray-900">
                       {product.name}
                     </h3>
                   </div>
@@ -201,8 +202,8 @@ export function ProductList() {
                   </div>
                 </div>
                 
-                <div className="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between">
-                  <span className="text-yellow-500 font-black text-xl">${product.price.toString()}</span>
+                <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+                  <span className="text-yellow-600 font-black text-xl">{formatPrice(Number(product.price))}</span>
                   <button 
                     onClick={(e) => {
                       e.preventDefault(); // Prevent navigation to details
@@ -230,7 +231,7 @@ export function ProductList() {
           ))}
           
           {products?.length === 0 && (
-            <div className="col-span-full text-center py-20 border-2 border-dashed border-gray-800 rounded-3xl">
+            <div className="col-span-full text-center py-20 border-2 border-dashed border-gray-200 rounded-3xl">
               <p className="text-gray-500 text-lg">No products found matching your filters.</p>
               <button 
                 onClick={() => {

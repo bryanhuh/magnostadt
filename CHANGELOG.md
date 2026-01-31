@@ -46,7 +46,29 @@ All notable changes to this project will be documented in this file.
   - Patched `AuthCallback.tsx` to correctly trigger account creation when user is not found in DB.
   - Fixed missing API environment variables (`CLERK_SECRET_KEY`).
   - Fixed Admin redirection failure by passing user email to `auth.sync` for proper account linking.
+- **UI/UX**: Updated currency display to use Philippine Peso (PHP) format (e.g., `2,499.00 PHP`).
 - **Data**: Seeded initial database with products to fix empty dashboard state.
+- **Theme**: Migrated application to a modern **Light Theme**.
+  - Updated global styles to `bg-gray-50`/`text-gray-900`.
+  - Refactored all major components (`HomePage`, `ProductList`, `Checkout`, etc.) for high-contrast light mode.
+  - Fixed dark mode artifacts in `CartDrawer` and input fields.
+  - **Admin**: Updated all Admin pages (`Dashboard`, `Products`, `Orders`) to light theme.
+- **Fixes**:
+  - Resolved crash on `/admin/customers` by implementing missing `Customers` page and `getUsers` API endpoint.
+- **Multi-Image Support & Admin Refinement**:
+  - **Feature**: Added support for multiple images per product.
+    - Updated `Product` schema to include `images String[]`.
+    - Updated Admin `ProductForm` to allow adding/removing multiple image URLs dynamically.
+    - Updated Customer `ProductDetails` to include a Gallery View with thumbnails.
+  - **Admin UI**:
+    - Finalized **Light Theme** migration for `ProductForm` (Edit/Create).
+    - Fixed currency input display ($) to align with PHP context.
+  - **Technical Implementation Guide**:
+    > **How Multi-Image Support Works**:
+    > 1.  **Database**: The `Product` model in Prisma now has an `images` field of type `String[]` (PostgreSQL array). This stores additional image URLs alongside the main `imageUrl`.
+    > 2.  **API**: The tRPC router procedures `createProduct` and `updateProduct` accept an `images` array in their Zod validation schema.
+    > 3.  **Frontend (Admin)**: The `ProductForm` component maintains a state of image strings. When saving, it filters out empty strings and sends the array to the backend.
+    > 4.  **Frontend (Customer)**: The `ProductDetails` component combines `imageUrl` (main) and the `images` array into a single list. It renders a main view and a scrollable thumbnail strip. Clicking a thumbnail updates the `selectedImage` state to change the main view.
 
 ## [0.0.1] - 2026-01-24
 ### Changed

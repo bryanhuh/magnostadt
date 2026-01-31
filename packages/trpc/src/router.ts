@@ -39,6 +39,12 @@ export const appRouter = router({
          }
        });
     }),
+    
+    getUsers: adminProcedure.query(async ({ ctx }) => {
+      return await ctx.prisma.user.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+    }),
   }),
 
   getProducts: publicProcedure
@@ -125,6 +131,7 @@ export const appRouter = router({
         categoryId: z.string(),
         animeId: z.string(),
         imageUrl: z.string().optional(),
+        images: z.array(z.string()).optional(),
         isSale: z.boolean().optional(),
         salePrice: z.number().optional().nullable(),
         isPreorder: z.boolean().optional(),
@@ -153,6 +160,7 @@ export const appRouter = router({
           categoryId: z.string().optional(),
           animeId: z.string().optional(),
           imageUrl: z.string().optional(),
+          images: z.array(z.string()).optional(),
           isSale: z.boolean().optional(),
           salePrice: z.number().optional().nullable(),
           isPreorder: z.boolean().optional(),

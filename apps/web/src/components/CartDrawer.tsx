@@ -1,4 +1,5 @@
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { formatPrice } from '../utils/format';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
@@ -24,18 +25,18 @@ export function CartDrawer() {
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-gray-950 border-l border-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col">
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l border-gray-200 shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <ShoppingBag className="w-6 h-6 text-yellow-500" />
-            <h2 className="text-2xl font-black uppercase italic tracking-wider">Your Cart</h2>
+            <ShoppingBag className="w-6 h-6 text-yellow-600" />
+            <h2 className="text-2xl font-black uppercase italic tracking-wider text-gray-900">Your Cart</h2>
           </div>
           <button 
             onClick={closeCart}
-            className="p-2 hover:bg-gray-800 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
-            <X className="w-6 h-6 text-gray-400 hover:text-white" />
+            <X className="w-6 h-6 text-gray-400 hover:text-gray-900" />
           </button>
         </div>
 
@@ -55,7 +56,7 @@ export function CartDrawer() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex gap-4">
-                <div className="w-24 h-32 bg-gray-900 rounded-lg overflow-hidden border border-gray-800 flex-shrink-0">
+                <div className="w-24 h-32 bg-white rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
                   <img 
                     src={item.imageUrl ?? ''} 
                     alt={item.name}
@@ -72,25 +73,26 @@ export function CartDrawer() {
                   </div>
                   
                   <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-3 bg-gray-900 rounded-lg p-1 border border-gray-800">
+                    <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-200">
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-1 hover:text-yellow-500 transition-colors"
+                        className="p-1 hover:text-yellow-600 transition-colors text-gray-600"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
-                      <span className="font-mono font-bold w-4 text-center">{item.quantity}</span>
+
+                      <span className="font-mono font-bold w-4 text-center text-gray-900">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 hover:text-yellow-500 transition-colors"
+                        className="p-1 hover:text-yellow-600 transition-colors text-gray-600"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
                     
                     <div className="text-right">
-                       <p className="font-bold text-yellow-500 text-lg">
-                         ${(item.price * item.quantity).toFixed(2)}
+                       <p className="font-bold text-yellow-600 text-lg">
+                         {formatPrice(item.price * item.quantity)}
                        </p>
                        <button 
                          onClick={() => {
@@ -111,11 +113,11 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="p-6 border-t border-gray-800 bg-gray-900/50">
+          <div className="p-6 border-t border-gray-200 bg-gray-50">
             <div className="flex justify-between items-center mb-6">
-              <span className="text-gray-400">Subtotal</span>
-              <span className="text-3xl font-black text-white">
-                ${getSubtotal().toFixed(2)}
+              <span className="text-gray-500">Subtotal</span>
+              <span className="text-3xl font-black text-gray-900">
+                {formatPrice(getSubtotal())}
               </span>
             </div>
               <Link 

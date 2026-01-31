@@ -43,11 +43,11 @@ export function HomePage() {
       </div>
 
       {/* 5. Shop Figures and Manga (Grid) - Full Width */}
-      <section className="w-full bg-gray-900 py-20">
+      <section className="w-full bg-gray-100 py-20">
          <div className="max-w-[1400px] mx-auto px-4 md:px-8">
            <SectionHeader title="Shop by Category" className="mb-12" />
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-gray-950 border border-gray-800">
+            <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-white border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent z-10" />
                <img 
                  src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=80&w=2670&auto=format&fit=crop" 
@@ -67,7 +67,9 @@ export function HomePage() {
                </div>
             </div>
 
-            <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-gray-950 border border-gray-800">
+
+
+            <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-white border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent z-10" />
                <img 
                  src="https://images.unsplash.com/photo-1629654153578-18e3a241979b?q=80&w=2692&auto=format&fit=crop" 
@@ -138,7 +140,7 @@ export function HomePage() {
       </div>
 
       {/* 9. Shop By Series Grid - Full width */}
-      <section className="w-full bg-gradient-to-b from-gray-900 to-black py-20">
+      <section className="w-full bg-gradient-to-b from-gray-100 to-white py-20">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8">
           <SectionHeader title="All Series" linkText="View All" />
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -146,16 +148,16 @@ export function HomePage() {
               <Link 
                 key={anime.id} 
                 to={`/?animeId=${anime.id}`}
-                className="group flex flex-col items-center text-center gap-3 p-4 rounded-xl hover:bg-gray-800 transition-colors"
+                className="group flex flex-col items-center text-center gap-3 p-4 rounded-xl hover:bg-white transition-colors"
               >
-                <div className="w-full aspect-square rounded-full overflow-hidden border-2 border-gray-800 group-hover:border-yellow-500 transition-colors">
+                <div className="w-full aspect-square rounded-full overflow-hidden border-2 border-gray-200 group-hover:border-yellow-500 transition-colors">
                    <img 
                      src={anime.coverImage ?? 'https://via.placeholder.com/200'} 
                      alt={anime.name}
                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                    />
                 </div>
-                <span className="font-bold text-gray-400 group-hover:text-white transition-colors uppercase text-sm">
+                <span className="font-bold text-gray-600 group-hover:text-black transition-colors uppercase text-sm">
                   {anime.name}
                 </span>
               </Link>

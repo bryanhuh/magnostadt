@@ -16,8 +16,8 @@ export function AdminLayout() {
 
   if (!isLoaded || (isSignedIn && isDbLoading)) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-950">
-        <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+      <div className="h-screen w-full flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-12 h-12 text-yellow-600 animate-spin" />
       </div>
     );
   }
@@ -34,11 +34,11 @@ export function AdminLayout() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-gray-50 text-gray-900">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-950 border-r border-gray-800 flex flex-col">
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
         <div className="p-6">
-          <h1 className="text-xl font-black text-yellow-500 uppercase italic tracking-tighter">
+          <h1 className="text-xl font-black text-yellow-600 uppercase italic tracking-tighter">
             Shonen Admin
           </h1>
         </div>
@@ -52,21 +52,21 @@ export function AdminLayout() {
                 to={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   isActive 
-                    ? 'bg-yellow-500 text-black font-bold' 
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? 'bg-yellow-50 text-yellow-700 font-bold' 
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >
-                <item.icon className="w-5 h-5" />
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-yellow-600' : 'text-gray-400'}`} />
                 {item.name}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-800">
+        <div className="p-4 border-t border-gray-200">
           <button 
             onClick={() => signOut()}
-            className="flex items-center gap-3 px-4 py-3 w-full text-red-500 hover:bg-red-950/30 rounded-xl transition-colors"
+            className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50 rounded-xl transition-colors"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -75,7 +75,7 @@ export function AdminLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto bg-gray-50">
         <div className="p-8 max-w-7xl mx-auto">
           <Outlet />
         </div>

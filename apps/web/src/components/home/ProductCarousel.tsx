@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { formatPrice } from '../../utils/format';
 import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
@@ -52,7 +53,7 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
       {/* Scroll Controls */}
       <button 
         onClick={() => scroll('left')}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 bg-gray-950 border border-gray-800 text-white rounded-full flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-yellow-500 hover:text-black hover:border-yellow-500 shadow-xl"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 w-12 h-12 bg-white border border-gray-200 text-gray-900 rounded-full flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-yellow-500 hover:text-black hover:border-yellow-500 shadow-xl"
         aria-label="Scroll left"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -60,7 +61,7 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
       
       <button 
         onClick={() => scroll('right')}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 bg-gray-950 border border-gray-800 text-white rounded-full flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-yellow-500 hover:text-black hover:border-yellow-500 shadow-xl"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 w-12 h-12 bg-white border border-gray-200 text-gray-900 rounded-full flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all hover:bg-yellow-500 hover:text-black hover:border-yellow-500 shadow-xl"
         aria-label="Scroll right"
       >
         <ChevronRight className="w-6 h-6" />
@@ -76,10 +77,10 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
           <Link
             to={`/product/${product.id}`}
             key={product.id}
-            className="snap-start min-w-[280px] w-[280px] group relative bg-gray-900/50 border border-gray-800 rounded-2xl overflow-hidden hover:border-yellow-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] flex flex-col"
+            className="snap-start min-w-[280px] w-[280px] group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
           >
             {/* Image */}
-            <div className="aspect-[3/4] bg-gray-800 relative overflow-hidden">
+            <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden">
                <img 
                  src={product.imageUrl ?? undefined} 
                  alt={product.name}
@@ -108,7 +109,7 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
             {/* Content */}
             <div className="p-4 flex flex-col flex-1">
               <div className="flex-1">
-                <h3 className="text-base font-bold text-white group-hover:text-yellow-500 transition-colors line-clamp-2 mb-1">
+                <h3 className="text-base font-bold text-gray-900 group-hover:text-yellow-600 transition-colors line-clamp-2 mb-1">
                   {product.name}
                 </h3>
                 <p className="text-xs text-gray-500 uppercase font-bold">{product.anime.name}</p>
@@ -118,11 +119,11 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
                 <div>
                    {product.isSale && product.salePrice ? (
                      <div className="flex flex-col">
-                       <span className="text-gray-500 line-through text-xs font-bold">${Number(product.price).toFixed(2)}</span>
-                       <span className="text-red-500 font-black text-lg">${Number(product.salePrice).toFixed(2)}</span>
+                       <span className="text-gray-400 line-through text-xs font-bold">{formatPrice(Number(product.price))}</span>
+                       <span className="text-red-500 font-black text-lg">{formatPrice(Number(product.salePrice))}</span>
                      </div>
                    ) : (
-                     <span className="text-yellow-500 font-black text-lg">${Number(product.price).toFixed(2)}</span>
+                     <span className="text-yellow-600 font-black text-lg">{formatPrice(Number(product.price))}</span>
                    )}
                 </div>
                 
