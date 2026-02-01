@@ -69,6 +69,17 @@ All notable changes to this project will be documented in this file.
     > 2.  **API**: The tRPC router procedures `createProduct` and `updateProduct` accept an `images` array in their Zod validation schema.
     > 3.  **Frontend (Admin)**: The `ProductForm` component maintains a state of image strings. When saving, it filters out empty strings and sends the array to the backend.
     > 4.  **Frontend (Customer)**: The `ProductDetails` component combines `imageUrl` (main) and the `images` array into a single list. It renders a main view and a scrollable thumbnail strip. Clicking a thumbnail updates the `selectedImage` state to change the main view.
+  - **Dynamic Featured Series & Admin Improvements**:
+    - **Feature**: Replaced static/product-based "Showcase" with a dynamic **Featured Series** system.
+    - **Admin: Series Management**:
+      - Created `/admin/series` page for full CRUD operations on Anime Series.
+      - Added "Featured" toggle to dynamically control the Home Page Hero Section.
+      - Implemented **Create**, **Edit**, and **Delete** actions for Series, complete with a modal interface.
+    - **Admin: Product Form Cleanup**:
+      - Removed the deprecated "Featured Product" checkbox to decouple individual products from the main showcase.
+    - **Backend**:
+      - Added `createAnimeSeries`, `updateAnimeSeries`, and `deleteAnimeSeries` mutations to tRPC router.
+
 
 ## [0.0.1] - 2026-01-24
 ### Changed

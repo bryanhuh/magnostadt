@@ -43,7 +43,7 @@ export function AdminProductForm() {
     isSale: false,
     salePrice: '',
     isPreorder: false,
-    featured: false,
+    isPreorder: false,
   });
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export function AdminProductForm() {
         isSale: product.isSale,
         salePrice: product.salePrice?.toString() || '',
         isPreorder: product.isPreorder,
-        featured: product.featured,
+        isPreorder: product.isPreorder,
       });
     }
   }, [product]);
@@ -248,16 +248,6 @@ export function AdminProductForm() {
                  className="w-4 h-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
                />
                <span>Is Pre-order?</span>
-             </label>
-
-             <label className="flex items-center gap-2 text-gray-900 cursor-pointer">
-               <input 
-                 type="checkbox"
-                 checked={formData.featured}
-                 onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                 className="w-4 h-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
-               />
-               <span>Featured Product?</span>
              </label>
           </div>
         </div>

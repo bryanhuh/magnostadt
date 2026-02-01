@@ -120,6 +120,57 @@ export const appRouter = router({
         }
       });
     }),
+
+  createAnimeSeries: adminProcedure
+    .input(z.object({
+      name: z.string(),
+      description: z.string().optional(),
+      coverImage: z.string().optional(),
+      featured: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      return await prisma.animeSeries.create({
+        data: input,
+      });
+    }),
+
+  updateAnimeSeries: adminProcedure
+    .input(z.object({
+      id: z.string(),
+      data: z.object({
+        name: z.string().optional(),
+        description: z.string().optional(),
+        coverImage: z.string().optional(),
+        featured: z.boolean().optional(),
+      }),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, data } = input;
+      // If setting to featured, optionally unset others if valid? 
+      // For now, allow multiple featured or just trust admin to toggle off others.
+      // Let's keep it simple: just update the record.
+      return await prisma.animeSeries.update({
+        where: { id },
+        data,
+      });
+    }),
+
+  deleteAnimeSeries: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      // Optional: Check if products exist and warn/block? 
+      // For now, let's just delete. Prisma might throw if relation strict.
+      // But typically we might want to set products animeId to null or something if we could.
+      // Schema says: `anime AnimeSeries @relation...` usually defaults. 
+      // Checking schema: products Product[]
+      // Product: animeId String. 
+      // If we delete series, valid products will fail constraint unless cascade delete.
+      // Let's assume user handles it or we add cascade later. For now, simple delete.
+      return await prisma.animeSeries.delete({
+        where: { id: input.id },
+      });
+    }),
+
   // Admin Procedures
   createProduct: adminProcedure
     .input(

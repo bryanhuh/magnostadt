@@ -101,6 +101,7 @@ import { AdminProducts } from './pages/admin/Products';
 import { AdminProductForm } from './pages/admin/ProductForm';
 import { AdminOrders } from './pages/admin/Orders';
 import { AdminCustomers } from './pages/admin/Customers';
+import { AdminSeries } from './pages/admin/Series';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -178,6 +179,7 @@ export default function App() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/new" element={<AdminProductForm />} />
                 <Route path="products/:id/edit" element={<AdminProductForm />} />
+                <Route path="series" element={<AdminSeries />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="customers" element={<AdminCustomers />} />
               </Route>
