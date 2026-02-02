@@ -3,8 +3,11 @@ import { trpc } from '../../utils/trpc';
 import { Plus, Search, Star, Edit, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+
 export function AdminSeries() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [seriesToDelete, setSeriesToDelete] = useState<string | null>(null);
   const [editingSeries, setEditingSeries] = useState<{id: string, name: string, description: string, coverImage: string} | null>(null);
   const [formData, setFormData] = useState({ name: '', description: '', coverImage: '' });
 
@@ -31,6 +34,7 @@ export function AdminSeries() {
   const deleteMutation = trpc.deleteAnimeSeries.useMutation({
     onSuccess: () => {
       toast.success('Series deleted successfully');
+      setSeriesToDelete(null);
       refetch();
     },
     onError: (error) => toast.error(`Failed to delete: ${error.message}`)
@@ -78,9 +82,7 @@ export function AdminSeries() {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this series? Products associated with it might be affected.')) {
-      deleteMutation.mutate({ id });
-    }
+    setSeriesToDelete(id);
   };
 
   return (
@@ -229,6 +231,20 @@ export function AdminSeries() {
             </div>
         </div>
       )}
+      
+      <ConfirmDialog
+        isOpen={!!seriesToDelete}
+        onClose={() => setSeriesToDelete(null)}
+        onConfirm={() => {
+          if (seriesToDelete) {
+            deleteMutation.mutate({ id: seriesToDelete });
+          }
+        }}
+        title="Delete Series"
+        description="Are you sure you want to delete this series? Products associated with it might be affected."
+        variant="danger"
+        isLoading={deleteMutation.isPending}
+      />
     </div>
   );
 }

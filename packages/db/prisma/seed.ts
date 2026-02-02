@@ -30,6 +30,7 @@ async function main() {
     data: [
       {
         name: 'Naruto Uzumaki "Rasengan" Scale Figure',
+        slug: 'naruto-uzumaki-rasengan-scale-figure',
         description: 'High-quality 1/7 scale figure of Naruto using his signature Rasengan technique. Features dynamic wind effects and detailed base.',
         price: 129.99,
         stock: 50,
@@ -39,6 +40,7 @@ async function main() {
       },
       {
         name: 'Monkey D. Luffy "Gear 5" Statue',
+        slug: 'monkey-d-luffy-gear-5-statue',
         description: 'The Warrior of Liberation! Massive stunning statue of Luffy in his Gear 5 form.',
         price: 249.99,
         stock: 10,
@@ -48,6 +50,7 @@ async function main() {
       },
       {
         name: 'Jujutsu Kaisen Vol. 1',
+        slug: 'jujutsu-kaisen-vol-1',
         description: 'The beginning of the Culling Game arc! Follow Itadori Yuji into the world of curses.',
         price: 9.99,
         stock: 100,
@@ -57,6 +60,7 @@ async function main() {
       },
       {
         name: 'Demon Slayer: Kimetsu no Yaiba Box Set',
+        slug: 'demon-slayer-kimetsu-no-yaiba-box-set',
         description: 'Complete manga box set featuring the entire Demon Slayer saga. Includes exclusive art book.',
         price: 199.99,
         stock: 25,
@@ -66,6 +70,7 @@ async function main() {
       },
       {
         name: 'Anya Forger "Waku Waku" T-Shirt',
+        slug: 'anya-forger-waku-waku-t-shirt',
         description: 'Cute 100% cotton t-shirt featuring Anya Forger iconic expression.',
         price: 24.99,
         stock: 200,
@@ -75,6 +80,7 @@ async function main() {
       },
        {
         name: 'Hidden Leaf Village Headband',
+        slug: 'hidden-leaf-village-headband',
         description: 'Authentic metallic headband worn by shinobi of Konoha.',
         price: 14.99,
         stock: 500,

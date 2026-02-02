@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import { trpc } from '../../utils/trpc';
 import { toast } from 'sonner';
 
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
+
 export function AdminProducts() {
   const [search, setSearch] = useState('');
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const utils = trpc.useUtils();
   
   const { data: products, isLoading } = trpc.getProducts.useQuery({
@@ -15,6 +18,7 @@ export function AdminProducts() {
   const deleteProduct = trpc.deleteProduct.useMutation({
     onSuccess: () => {
       toast.success('Product deleted successfully');
+      setProductToDelete(null);
       utils.getProducts.invalidate();
     },
     onError: (error) => {
@@ -119,11 +123,7 @@ export function AdminProducts() {
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button 
-                          onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this product?')) {
-                              deleteProduct.mutate({ id: product.id });
-                            }
-                          }}
+                          onClick={() => setProductToDelete(product.id)}
                           className="p-2 hover:bg-gray-100 rounded-lg text-red-600 transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -137,6 +137,19 @@ export function AdminProducts() {
           </table>
         </div>
       </div>
+      <ConfirmDialog
+        isOpen={!!productToDelete}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={() => {
+          if (productToDelete) {
+            deleteProduct.mutate({ id: productToDelete });
+          }
+        }}
+        title="Delete Product"
+        description="Are you sure you want to delete this product? This action cannot be undone."
+        variant="danger"
+        isLoading={deleteProduct.isPending}
+      />
     </div>
   );
 }
