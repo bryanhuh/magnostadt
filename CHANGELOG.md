@@ -110,6 +110,14 @@ All notable changes to this project will be documented in this file.
   - **Cascade Delete**: Fixed foreign key constraint violation when deleting Anime Series.
     - Updated Prisma schema with `onDelete: Cascade` for `Product.anime` relation.
     - Series deletion now automatically cleans up associated products.
+- **Showcase Redesign v4 (Cinematic Poster)**:
+    - **Visual Overhaul**: Implemented a "Cinematic Poster" layout for the HomePage hero section.
+    - **Atmospheric Background**: Used a blurred, full-width version of the series cover to create an immersive backdrop without pixelation issues on large screens.
+    - **Floating Elements**:
+      - **Poster**: Displayed the original sharp cover image as a 3D-tilted poster card.
+      - **Spotlight Badge**: Added a "Premium Edition" spotlight capability to the layout.
+    - **Product Integration**: Extracted top 3 products from the series and displayed them as interactive "Glassmorphism" cards floating in the foreground.
+    - **Responsive Design**: Ensured the layout adapts from a stacked mobile view to a complex robust desktop composition.
 
 ## [0.0.1] - 2026-01-24
 ### Changed
