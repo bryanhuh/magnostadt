@@ -27,6 +27,7 @@ model Product {
   items       OrderItem[]
   anime       AnimeSeries @relation(fields: [animeId], references: [id])
   category    Category    @relation(fields: [categoryId], references: [id])
+  slug        String      @unique
 }
 
 model Category {

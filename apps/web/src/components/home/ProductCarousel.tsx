@@ -75,7 +75,7 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
       >
         {products.map((product) => (
           <Link
-            to={`/product/${product.id}`}
+            to={`/product/${product.slug}`}
             key={product.id}
             className="snap-start min-w-[280px] w-[280px] group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
           >

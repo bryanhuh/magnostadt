@@ -50,7 +50,7 @@ export function HomePage() {
             <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-white border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent z-10" />
                <img 
-                 src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=80&w=2670&auto=format&fit=crop" 
+                 src="/figures.png" 
                  alt="Figures"
                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
                />
@@ -72,7 +72,7 @@ export function HomePage() {
             <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-white border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent z-10" />
                <img 
-                 src="https://images.unsplash.com/photo-1629654153578-18e3a241979b?q=80&w=2692&auto=format&fit=crop" 
+                 src="manga.png" 
                  alt="Manga"
                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
                />

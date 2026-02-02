@@ -171,7 +171,7 @@ export function ProductList() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products?.map((product) => (
             <Link
-              to={`/product/${product.id}`}
+              to={`/product/${product.slug}`}
               key={product.id}
               className="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
             >

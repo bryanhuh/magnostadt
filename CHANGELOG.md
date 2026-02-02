@@ -78,7 +78,21 @@ All notable changes to this project will be documented in this file.
     - **Admin: Product Form Cleanup**:
       - Removed the deprecated "Featured Product" checkbox to decouple individual products from the main showcase.
     - **Backend**:
-      - Added `createAnimeSeries`, `updateAnimeSeries`, and `deleteAnimeSeries` mutations to tRPC router.
+  - Added `deleteAnimeSeries` mutation to tRPC router.
+
+- **Product Slugs & UI Redesign**:
+  - **SEO**:
+    - Added `slug` field to `Product` schema (unique index).
+    - Updated URL routing to use SEO-friendly slugs (e.g., `/product/name-of-product`) instead of IDs.
+    - Added `getProductBySlug` query to tRPC router.
+  - **Premium UI**:
+    - Completely redesigned `ProductDetails.tsx` with a cleaner, high-end ecommerce aesthetic.
+    - Improved typography, spacing, and mobile responsiveness.
+    - Added interactive image gallery with thumbnails.
+  - **Related Products**:
+    - Added "More from [Series Name]" section to product details.
+    - Implemented `getRelatedProducts` query (fetching all products from same anime).
+    - Integrated `ProductCarousel` for scrolling through related items.
 
 
 ## [0.0.1] - 2026-01-24

@@ -102,6 +102,38 @@ export const appRouter = router({
       });
     }),
 
+  getProductBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input }) => {
+      // Decode slug just in case, though usually backend handles raw
+      return await prisma.product.findUniqueOrThrow({
+        where: { slug: input.slug },
+        include: {
+          category: true,
+          anime: true,
+        },
+      });
+    }),
+
+  getRelatedProducts: publicProcedure
+    .input(z.object({ productId: z.string() }))
+    .query(async ({ input }) => {
+      const product = await prisma.product.findUniqueOrThrow({
+        where: { id: input.productId },
+      });
+
+      return await prisma.product.findMany({
+        where: {
+          animeId: product.animeId,
+          id: { not: input.productId },
+        },
+        include: {
+          category: true,
+          anime: true,
+        },
+      });
+    }),
+
   getCategories: publicProcedure.query(async () => {
     return await prisma.category.findMany();
   }),
@@ -190,9 +222,11 @@ export const appRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       return await prisma.product.create({
         data: {
           ...input,
+          slug: `${slug}-${Date.now()}`, // Ensure uniqueness with timestamp
           price: input.price, 
           salePrice: input.salePrice,
         },

@@ -8,8 +8,13 @@
   },
   "dependencies": {
     "@hono/trpc-server": "latest",
+    "@shonen-mart/db": "workspace:*",
     "@shonen-mart/trpc": "workspace:*",
     "@trpc/server": "latest",
+    "cheerio": "^1.2.0",
     "hono": "latest"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^1.0.0"
   }
 }
