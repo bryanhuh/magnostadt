@@ -195,9 +195,7 @@ export const appRouter = router({
       // But typically we might want to set products animeId to null or something if we could.
       // Schema says: `anime AnimeSeries @relation...` usually defaults. 
       // Checking schema: products Product[]
-      // Product: animeId String. 
-      // If we delete series, valid products will fail constraint unless cascade delete.
-      // Let's assume user handles it or we add cascade later. For now, simple delete.
+      // Delete series (Cascade delete handles products)
       return await prisma.animeSeries.delete({
         where: { id: input.id },
       });

@@ -95,6 +95,22 @@ All notable changes to this project will be documented in this file.
     - Integrated `ProductCarousel` for scrolling through related items.
 
 
+- **Global Content Expansion**:
+  - **Scraper**: Developed `seed-all.ts` universal scraper for Aniplex USA.
+    - Successfully scraped **69+ Anime Series** and **300+ Products**.
+    - Implemented dynamic category inference.
+    - Added image scraping to automatically populate Series Cover Images.
+- **Series Components & Refactoring**:
+  - **Refactor**: Modularized `HomePage.tsx` by extracting `SeriesGrid` and `PopularSeries` components.
+  - **UI**: Updated "Popular Series" and "All Series" sections to display dynamic cover images instead of placeholders.
+- **Admin UI Modernization**:
+  - **UX**: Replaced native `window.confirm` with custom `ConfirmDialog` component.
+  - **Integration**: Applied new dialog to Product and Series deletion flows.
+- **Bug Fixes**:
+  - **Cascade Delete**: Fixed foreign key constraint violation when deleting Anime Series.
+    - Updated Prisma schema with `onDelete: Cascade` for `Product.anime` relation.
+    - Series deletion now automatically cleans up associated products.
+
 ## [0.0.1] - 2026-01-24
 ### Changed
 - Switched database provider to Neon.tech (PostgreSQL) for native IPv4 support and ease of use.
