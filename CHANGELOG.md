@@ -118,6 +118,11 @@ All notable changes to this project will be documented in this file.
       - **Spotlight Badge**: Added a "Premium Edition" spotlight capability to the layout.
     - **Product Integration**: Extracted top 3 products from the series and displayed them as interactive "Glassmorphism" cards floating in the foreground.
     - **Responsive Design**: Ensured the layout adapts from a stacked mobile view to a complex robust desktop composition.
+- **Showcase v4.5: High-Res Headers & Cinematic Skeleton**:
+    - **Feature**: Added `headerImage` support to `AnimeSeries` schema for true full-width banner images.
+    - **Data**: Updated `seed-all.ts` scraper to fetch high-resolution background art from Aniplex.
+    - **UX**: Implemented **Cinematic Skeleton** loader to eliminate "Flash of Incorrect Content" (FOIC).
+    - **UI**: Added cross-fade transitions (`animate-in fade-in duration-700`) for a premium reveal effect.
 
 ## [0.0.1] - 2026-01-24
 ### Changed

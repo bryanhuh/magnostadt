@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { prisma } from '@shonen-mart/db';
 import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
 
+// Force rebuild for headerImage schema update
 export const appRouter = router({
   auth: router({
     me: protectedProcedure.query(async ({ ctx }) => {

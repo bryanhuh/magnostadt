@@ -1,38 +1,55 @@
 import { Link } from 'react-router-dom';
 import { trpc } from '../../utils/trpc';
 import { ArrowRight, ShoppingBag, Plus, Star } from 'lucide-react';
+import { ShowcaseSkeleton } from './ShowcaseSkeleton';
 
 export function Showcase() {
-  const { data: featuredAnime } = trpc.getAnimeSeries.useQuery({ featured: true });
+  const { data: featuredAnime, isLoading } = trpc.getAnimeSeries.useQuery({ featured: true });
 
-  // Fallback defaults
+  // 1. Loading State: Cinematic Skeleton
+  if (isLoading) {
+      return <ShowcaseSkeleton />;
+  }
+
+  // Fallback defaults (Only used if NOT loading and NO data found)
   const showcaseItem = featuredAnime?.[0] || {
     id: 'placeholder',
     name: 'Demon Slayer: Kimetsu no Yaiba',
     description: 'Tanjiro Kamado lives a modest but blissful life in the mountains with his family.',
     coverImage: 'https://store.aniplexusa.com/demonslayer/images/header.jpg', // Fallback interesting image
+    headerImage: null,
     products: []
   };
 
   const products = showcaseItem.products || [];
 
   return (
-    <section className="relative w-full h-[90vh] min-h-[700px] bg-black overflow-hidden group">
+    <section className="relative w-full h-[90vh] min-h-[700px] bg-black overflow-hidden group animate-in fade-in duration-700">
       
-      {/* --- BACKGROUND LAYER (Atmospheric) --- */}
+      {/* --- BACKGROUND LAYER --- */}
       <div className="absolute inset-0 z-0">
-         {/* Blurry Background Version */}
+         {/* 
+            Background Logic:
+            - If Header Image exists: Use it sharp as a full banner coverage.
+            - If only Cover Image: Use current blurred atmosphere technique.
+         */}
          <img 
-            src={showcaseItem.coverImage ?? ''} 
+            src={showcaseItem.headerImage || showcaseItem.coverImage || ''} 
             alt="Atmosphere" 
-            className="w-full h-full object-cover opacity-40 blur-3xl scale-110"
+            className={`
+                w-full h-full object-cover transition-opacity duration-700
+                ${showcaseItem.headerImage 
+                    ? 'opacity-100 scale-100 object-top' // Use explicit top alignment for Aniplex banners
+                    : 'opacity-40 blur-3xl scale-110' // Fallback atmosphere 
+                }
+            `}
          />
          
-         {/* Darkness Overlays */}
-         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
+         {/* Overlays for Text Readability */}
+         <div className={`absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 ${showcaseItem.headerImage ? 'via-black/10' : 'via-black/50'}`} />
+         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
          
-         {/* Noise Texture */}
+         {/* Noise Texture (Keep consistent) */}
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
@@ -80,20 +97,26 @@ export function Showcase() {
             {/* 2. VISUAL COMPOSITION (Right - 55%) */}
             <div className="relative w-full md:w-[55%] h-full flex items-center justify-center md:justify-end perspective-[2000px]">
                 
-                 {/* The "Cinematic Poster" */}
-                 <div className="hidden md:block relative z-10 w-auto h-[70%] max-h-[800px] aspect-[2/3] transform rotate-y-[-10deg] rotate-x-[5deg] hover:rotate-0 transition-transform duration-700 ease-out preserve-3d group-hover:scale-105">
-                    <img 
-                        src={showcaseItem.coverImage ?? ''} 
-                        alt="Series Poster"
-                        className="w-full h-full object-cover rounded-xl shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.8)] border border-white/10"
-                    />
-                    {/* Gloss / Reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-xl pointer-events-none mix-blend-overlay" />
-                 </div>
+                 {/* 
+                    Poster Logic:
+                    - If we have a Header Image (Full Banner), we generally DON'T need the poster, as it might look redundant or cluttered.
+                    - OR we keep it but maybe smaller?
+                    - Decision: HIDE poster if Header Image exists to let the artwork shine.
+                 */}
+                 {!showcaseItem.headerImage && (
+                     <div className="hidden md:block relative z-10 w-auto h-[70%] max-h-[800px] aspect-[2/3] transform rotate-y-[-10deg] rotate-x-[5deg] hover:rotate-0 transition-transform duration-700 ease-out preserve-3d group-hover:scale-105">
+                        <img 
+                            src={showcaseItem.coverImage ?? ''} 
+                            alt="Series Poster"
+                            className="w-full h-full object-cover rounded-xl shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.8)] border border-white/10"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-xl pointer-events-none mix-blend-overlay" />
+                     </div>
+                 )}
 
-                 {/* Floating Products (Overlapping the Poster) */}
+                 {/* Floating Products (Always Show) */}
                  {products.length > 0 && (
-                    <div className="absolute bottom-20 right-10 md:right-auto md:left-20 z-20 flex gap-4 md:gap-[calc(-3rem)]">
+                    <div className="absolute bottom-20 right-10 md:right-0 z-20 flex gap-4 md:gap-[calc(-3rem)]">
                         {products.slice(0, 3).map((product, idx) => (
                             <Link 
                                 to={`/product/${product.slug}`}
@@ -102,7 +125,7 @@ export function Showcase() {
                                     relative w-40 md:w-48 aspect-[3/4] 
                                     bg-black/60 backdrop-blur-xl border border-white/20 rounded-xl overflow-hidden shadow-2xl
                                     transition-all duration-300 hover:scale-110 hover:z-50 hover:bg-black/80 hover:border-yellow-500/50
-                                    ${idx % 2 === 0 ? '-translate-y-10' : 'translate-y-0'} /* Dynamic staggered look */
+                                    ${idx % 2 === 0 ? '-translate-y-10' : 'translate-y-0'}
                                 `}
                             >
                                 <img 

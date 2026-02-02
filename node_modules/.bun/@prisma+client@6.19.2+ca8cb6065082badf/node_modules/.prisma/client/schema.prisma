@@ -41,6 +41,7 @@ model AnimeSeries {
   name        String    @unique
   description String?
   coverImage  String?
+  headerImage String?
   featured    Boolean   @default(false)
   products    Product[]
 }

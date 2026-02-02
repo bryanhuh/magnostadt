@@ -33,25 +33,37 @@ async function scrapeShow(showName: string, showUrl: string, coverImageUrl?: str
   console.log(`\n📺 Scraping Series: "${showName}" (${showUrl})...`);
   
   try {
-    const series = await prisma.animeSeries.upsert({
-        where: { name: showName },
-        update: {
-            // Update cover image if provided
-            ...(coverImageUrl ? { coverImage: coverImageUrl } : {})
-        },
-        create: {
-            name: showName,
-            description: `Official merchandise for ${showName}`,
-            featured: false,
-            coverImage: coverImageUrl
-        }
-    });
-
     const response = await fetch(showUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${showUrl}: ${response.statusText}`);
     
     const html = await response.text();
     const $ = cheerio.load(html);
+
+    // Extract Header Image
+    // Browser findings: section#slider .container img
+    let headerImage = $('section#slider .container img').attr('src');
+    if (headerImage && !headerImage.startsWith('http')) {
+       // It seems likely relative to the show URL or base
+       // Aniplex usually puts images relative to the page 
+       headerImage = `${showUrl}${headerImage}`; 
+    }
+
+    const series = await prisma.animeSeries.upsert({
+        where: { name: showName },
+        update: {
+            // Update cover image if provided
+            ...(coverImageUrl ? { coverImage: coverImageUrl } : {}),
+            ...(headerImage ? { headerImage } : {})
+        },
+        create: {
+            name: showName,
+            description: `Official merchandise for ${showName}`,
+            featured: false,
+            coverImage: coverImageUrl,
+            headerImage
+        }
+    });
+
     const productCards = $('.iportfolio');
 
     console.log(`   Found ${productCards.length} products.`);
