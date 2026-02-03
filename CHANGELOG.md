@@ -2,158 +2,70 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-
+## [0.0.1] - MVP Launch - 2026-01-24
 ### Added
-- **UI Overhaul**: Implemented a new premium Homepage design inspired by Crunchyroll Store.
-- **New Sections**: 
-  - Showcase Hero Section (featured series).
-  - Sale Products Carousel.
-  - Pre-order Showcase & Items.
-  - Shop by Series.
-  - Latest Drops & Popular Series.
-- **Components**: Added `ProductCarousel`, `SeriesCarousel`, `SectionHeader`, and `Showcase` components.
-- **Backend**: 
-  - Updated `Product` and `AnimeSeries` schema with `isSale`, `isPreorder`, `featured`, etc.
-  - Enhanced `getProducts` tRPC query with filters and sorting.
-  - Added `getFeaturedAnime` query capability.
+- [2026-01-24] **Project Structure**: Initialized Bun Workspaces (`apps/api`, `apps/web`, `packages/db`, `packages/trpc`).
+- [2026-01-24] **Database**: Switched to Neon.tech (PostgreSQL). Defined schema for Product, Category, AnimeSeries, Order.
+- [2026-01-24] **Seeding**: Created `seed.ts` with mock data.
+- [2026-01-24] **Routing**: Implemented client-side routing with `react-router-dom`.
+- [2026-01-25] **Product Features**:
+    - Product Details Page (`/product/:id`).
+    - Filtering by Category and Series.
+    - tRPC integration for filtering.
+- [2026-01-26] **Shopping Cart**:
+    - `CartDrawer` component.
+    - `zustand` state management with persistence.
+- [2026-01-27] **Checkout & Orders**:
+    - Secure Checkout Flow.
+    - Order/OrderItem models.
+    - Order Confirmation page.
+    - `createOrder` mutation.
+- [2026-01-27] **Integration**:
+    - PostHog Analytics (Add to Cart, Checkout).
+    - Sentry Error Tracking.
+    - Toast notifications (`sonner`).
+
+## [0.0.2] - Admin, Auth, & UI Overhaul - 2026-01-31
+### Added
+- [2026-01-28] **UI Overhaul**: Redesigned Homepage with "Crunchyroll Store" aesthetic (Showcase, Hero, Glassmorphism).
+- [2026-01-28] **Admin Dashboard**:
+    - Created secure `/admin` area with `AdminLayout`.
+    - Dashboard for Product, Order, and Series management.
+    - RBAC protection (Role-Based Access Control).
+- [2026-01-29] **Authentication**:
+    - Integrated Clerk (Sign In/Sign Up).
+    - Added `User` model and `auth.sync` procedure.
+- [2026-01-30] **Multi-Image Support**:
+    - Updated schema for `images` array.
+    - Updated Admin `ProductForm` for dynamic image uploads.
+    - Added Gallery View to `ProductDetails`.
+- [2026-01-31] **Series Management**:
+    - Dynamic "Featured Series" system.
+    - Admin CRUD for Series (`/admin/series`).
+- [2026-01-31] **Global Scraper**:
+    - Developed `seed-all.ts` to scrape 69+ series and 300+ products from Aniplex.
 
 ### Changed
-- **Routing**: Moved original product list to `/shop` and set `HomePage` as the default route `/`.
-- **Layout**: Refactored application layout to remove global constraints.
-- **Layout**: Refactored application layout to remove global constraints.
-  - Implemented full-width homepage sections for Showcase, Category Grid, and Series Grid.
-  - Created constrained layout wrapper for all other pages.
-- **Admin**: Introduced Admin Dashboard at `/admin`.
-  - Added secure `AdminLayout` and navigation with RBAC protection.
-  - Implemented Product Management (Create, Edit, Delete, List).
-  - Implemented Order Management (List, Status Update).
-- **Authentication**: Integrated Clerk for user authentication.
-  - Added Sigin/Signup UI to Header.
-  - Configured `ClerkProvider` in main application entry.
-  - Implemented `AuthCallback` for role-based redirection.
-- **Database**: 
-  - Updated `Order` model to link orders to users.
-  - Added `User` model and `Role` enum.
-  - Seeded Admin User (`breelagrama@gmail.com`).
-- **Backend**:
-  - Enhanced tRPC context with Clerk authentication (`verifyToken`).
-  - Added `protectedProcedure` and `adminProcedure` middleware.
-  - Implemented `auth.me` and `auth.sync` procedures.
+- [2026-01-30] **Theme**: Fully migrated to **Light Theme** (gray-50/gray-900).
+- [2026-01-31] **Routing**: Moved product list to `/shop`.
+- [2026-01-31] **SEO**: Implemented `slug` based routing for Products.
 
 ### Fixed
-- **Authentication**: Resolved infinite loop on `/auth-callback` for new users.
-  - Patched `AuthCallback.tsx` to correctly trigger account creation when user is not found in DB.
-  - Fixed missing API environment variables (`CLERK_SECRET_KEY`).
-  - Fixed Admin redirection failure by passing user email to `auth.sync` for proper account linking.
-- **UI/UX**: Updated currency display to use Philippine Peso (PHP) format (e.g., `2,499.00 PHP`).
-- **Data**: Seeded initial database with products to fix empty dashboard state.
-- **Theme**: Migrated application to a modern **Light Theme**.
-  - Updated global styles to `bg-gray-50`/`text-gray-900`.
-  - Refactored all major components (`HomePage`, `ProductList`, `Checkout`, etc.) for high-contrast light mode.
-  - Fixed dark mode artifacts in `CartDrawer` and input fields.
-  - **Admin**: Updated all Admin pages (`Dashboard`, `Products`, `Orders`) to light theme.
-- **Fixes**:
-  - Resolved crash on `/admin/customers` by implementing missing `Customers` page and `getUsers` API endpoint.
-- **Multi-Image Support & Admin Refinement**:
-  - **Feature**: Added support for multiple images per product.
-    - Updated `Product` schema to include `images String[]`.
-    - Updated Admin `ProductForm` to allow adding/removing multiple image URLs dynamically.
-    - Updated Customer `ProductDetails` to include a Gallery View with thumbnails.
-  - **Admin UI**:
-    - Finalized **Light Theme** migration for `ProductForm` (Edit/Create).
-    - Fixed currency input display ($) to align with PHP context.
-  - **Technical Implementation Guide**:
-    > **How Multi-Image Support Works**:
-    > 1.  **Database**: The `Product` model in Prisma now has an `images` field of type `String[]` (PostgreSQL array). This stores additional image URLs alongside the main `imageUrl`.
-    > 2.  **API**: The tRPC router procedures `createProduct` and `updateProduct` accept an `images` array in their Zod validation schema.
-    > 3.  **Frontend (Admin)**: The `ProductForm` component maintains a state of image strings. When saving, it filters out empty strings and sends the array to the backend.
-    > 4.  **Frontend (Customer)**: The `ProductDetails` component combines `imageUrl` (main) and the `images` array into a single list. It renders a main view and a scrollable thumbnail strip. Clicking a thumbnail updates the `selectedImage` state to change the main view.
-  - **Dynamic Featured Series & Admin Improvements**:
-    - **Feature**: Replaced static/product-based "Showcase" with a dynamic **Featured Series** system.
-    - **Admin: Series Management**:
-      - Created `/admin/series` page for full CRUD operations on Anime Series.
-      - Added "Featured" toggle to dynamically control the Home Page Hero Section.
-      - Implemented **Create**, **Edit**, and **Delete** actions for Series, complete with a modal interface.
-    - **Admin: Product Form Cleanup**:
-      - Removed the deprecated "Featured Product" checkbox to decouple individual products from the main showcase.
-    - **Backend**:
-  - Added `deleteAnimeSeries` mutation to tRPC router.
+- [2026-01-31] **Auth Loop**: Fixed `/auth-callback` infinite redirection.
+- [2026-01-31] **Crash**: Resolved crash on `/admin/customers`.
+- [2026-01-31] **Cascade Delete**: Fixed Foreign Key constraints when deleting Series.
 
-- **Product Slugs & UI Redesign**:
-  - **SEO**:
-    - Added `slug` field to `Product` schema (unique index).
-    - Updated URL routing to use SEO-friendly slugs (e.g., `/product/name-of-product`) instead of IDs.
-    - Added `getProductBySlug` query to tRPC router.
-  - **Premium UI**:
-    - Completely redesigned `ProductDetails.tsx` with a cleaner, high-end ecommerce aesthetic.
-    - Improved typography, spacing, and mobile responsiveness.
-    - Added interactive image gallery with thumbnails.
-  - **Related Products**:
-    - Added "More from [Series Name]" section to product details.
-    - Implemented `getRelatedProducts` query (fetching all products from same anime).
-    - Integrated `ProductCarousel` for scrolling through related items.
-
-
-- **Global Content Expansion**:
-  - **Scraper**: Developed `seed-all.ts` universal scraper for Aniplex USA.
-    - Successfully scraped **69+ Anime Series** and **300+ Products**.
-    - Implemented dynamic category inference.
-    - Added image scraping to automatically populate Series Cover Images.
-- **Series Components & Refactoring**:
-  - **Refactor**: Modularized `HomePage.tsx` by extracting `SeriesGrid` and `PopularSeries` components.
-  - **UI**: Updated "Popular Series" and "All Series" sections to display dynamic cover images instead of placeholders.
-- **Admin UI Modernization**:
-  - **UX**: Replaced native `window.confirm` with custom `ConfirmDialog` component.
-  - **Integration**: Applied new dialog to Product and Series deletion flows.
-- **Bug Fixes**:
-  - **Cascade Delete**: Fixed foreign key constraint violation when deleting Anime Series.
-    - Updated Prisma schema with `onDelete: Cascade` for `Product.anime` relation.
-    - Series deletion now automatically cleans up associated products.
-- **Showcase Redesign v4 (Cinematic Poster)**:
-    - **Visual Overhaul**: Implemented a "Cinematic Poster" layout for the HomePage hero section.
-    - **Atmospheric Background**: Used a blurred, full-width version of the series cover to create an immersive backdrop without pixelation issues on large screens.
-    - **Floating Elements**:
-      - **Poster**: Displayed the original sharp cover image as a 3D-tilted poster card.
-      - **Spotlight Badge**: Added a "Premium Edition" spotlight capability to the layout.
-    - **Product Integration**: Extracted top 3 products from the series and displayed them as interactive "Glassmorphism" cards floating in the foreground.
-    - **Responsive Design**: Ensured the layout adapts from a stacked mobile view to a complex robust desktop composition.
-- **Showcase v4.5: High-Res Headers & Cinematic Skeleton**:
-    - **Feature**: Added `headerImage` support to `AnimeSeries` schema for true full-width banner images.
-    - **Data**: Updated `seed-all.ts` scraper to fetch high-resolution background art from Aniplex.
-    - **UX**: Implemented **Cinematic Skeleton** loader to eliminate "Flash of Incorrect Content" (FOIC).
-    - **UI**: Added cross-fade transitions (`animate-in fade-in duration-700`) for a premium reveal effect.
-
-## [0.0.1] - 2026-01-24
-### Changed
-- Switched database provider to Neon.tech (PostgreSQL) for native IPv4 support and ease of use.
-- Downgraded Prisma to stable v6.x to resolve configuration breaking changes in v7.
-- Updated Tailwind CSS configuration to support v4.0 (installed `@tailwindcss/postcss`).
-
+## [0.0.3] - Series Collection & Fixes - 2026-02-03
 ### Added
-- Initial project structure with Bun Workspaces (`apps/api`, `apps/web`, `packages/db`, `packages/trpc`).
-- Prisma schema for e-commerce MVP (Product, Category, AnimeSeries, Order).
-- **Database Seeding**: Created `seed.ts` with mock data (Naruto, One Piece, etc.).
-- **Documentation**: Added `docs/PROJECT_STRUCTURE.md` and `docs/MVP_CHECKLIST.md`.
-- Architecture documentation and implementation plan.
-- **Phase 2 Features**:
-    - implemented `react-router-dom` for client-side routing.
-    - Added Product Details page (`/product/:id`).
-    - Added Category and Anime Series filtering to Product List.
-    - Enhanced tRPC router with filtering and single-product queries.
-- **Phase 3 Features**:
-    - Added Shopping Cart functionality with `zustand` for state management.
-    - Implemented `CartDrawer` component for managing items.
-    - Integrated "Add to Cart" flow in Product List and Details pages.
-    - Added persistence (cart items survive page refreshes).
-- **Phase 4 Features**:
-    - Implemented secure Checkout Flow with shipping form.
-    - Added `Order` and `OrderItem` models with shipping details suitable for MVP.
-    - Created `OrderConfirmation` page with order summary.
-    - Connected Frontend to Backend via `createOrder` tRPC mutation.
-- **Phase 5 Features**:
-    - **Analytics**: Integrated PostHog for event tracking (Add to Cart, Checkout, **Order Completion**).
-    - **Error Tracking**: Integrated Sentry for frontend error monitoring.
-    - **UI Polish**: Added Skeleton loaders for smoother initial load.
-    - **UX**: Added Toast notifications (`sonner`) for immediate feedback on user actions.
-    - **Fixes**: Resolved TSConfig collisions in `apps/web` build.
+- [2026-02-03] **Collections**: Implemented `/collection/:slug` page with hero header and product grid.
+- [2026-02-03] **Top Picks**: Created dedicated `TopPicks` component for homepage.
+- [2026-02-03] **SEO**: Added `slug` to `AnimeSeries` schema and updated all links.
+
+### Changed
+- [2026-02-03] **Showcase**: Restored "Cinematic" design logic (v4.5) to prioritize `headerImage`.
+- [2026-02-03] **API**: Updated `getAnimeSeries` to support slugs and include product relations (`category`, `anime`).
+
+### Fixed
+- [2026-02-03] **Regressions**: Fixed missing header image in Showcase.
+- [2026-02-03] **Crashes**: Resolved `ProductCard` crash on Collection Page.
+- [2026-02-03] **Admin Access**: Fixed permissions for admin user.

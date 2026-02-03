@@ -1,5 +1,6 @@
 import { trpc } from '../utils/trpc';
 import { Showcase } from './home/Showcase';
+import { TopPicks } from './home/TopPicks';
 import { ProductCarousel } from './home/ProductCarousel';
 import { SeriesCarousel } from './home/SeriesCarousel';
 import { SectionHeader } from './home/SectionHeader';
@@ -13,7 +14,10 @@ export function HomePage() {
   const { data: saleProducts, isLoading: salesLoading } = trpc.getProducts.useQuery({ isSale: true, limit: 10 });
   const { data: preorderProducts, isLoading: preorderLoading } = trpc.getProducts.useQuery({ isPreorder: true, limit: 10 });
   const { data: latestProducts, isLoading: latestLoading } = trpc.getProducts.useQuery({ orderBy: 'newest', limit: 10 });
-  const { data: featuredAnime, isLoading: animeLoading } = trpc.getAnimeSeries.useQuery({ featured: true });
+  
+  // Showcase Featured Anime (Single)
+  const { data: featuredAnimeList, isLoading: animeLoading } = trpc.getAnimeSeries.useQuery({ featured: true });
+
   const { data: seriesList } = trpc.getAnimeSeries.useQuery();
 
   return (
@@ -95,38 +99,8 @@ export function HomePage() {
       </section>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-20">
-        {/* 6. Top Anime Shop Section */}
-        <section>
-          <SectionHeader title="Top Series" subtitle="Shop by your favorite anime" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             {featuredAnime?.slice(0, 3).map((anime, index) => (
-               <Link 
-                 key={anime.id} 
-                 to={`/?animeId=${anime.id}`}
-                 className="relative h-[500px] group overflow-hidden rounded-3xl bg-gray-900"
-               >
-                  <img 
-                    src={anime.coverImage ?? 'https://via.placeholder.com/600x800'} 
-                    alt={anime.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                  
-                  <div className="absolute bottom-0 left-0 p-8 w-full z-10">
-                    <span className="text-yellow-500 font-bold tracking-widest uppercase text-sm mb-2 block">
-                      Top Pick #{index + 1}
-                    </span>
-                    <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-4 leading-none">
-                      {anime.name}
-                    </h3>
-                     <div className="flex items-center gap-2 text-gray-300 font-bold uppercase tracking-wider text-sm group-hover:text-yellow-500 transition-colors">
-                       Shop Collection <ArrowRight className="w-4 h-4" />
-                     </div>
-                  </div>
-               </Link>
-             ))}
-          </div>
-        </section>
+        {/* 6. Top Anime Shop Section (Top Picks) */}
+        <TopPicks />
 
         {/* 7. Latest Drops Section */}
         <section>

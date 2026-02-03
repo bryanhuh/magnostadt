@@ -68,7 +68,7 @@ export function SeriesCarousel({ series, isLoading }: SeriesCarouselProps) {
       >
         {series.map((anime) => (
           <Link
-            to={`/?animeId=${anime.id}`}
+            to={`/collection/${(anime as any).slug ?? anime.id}`}
             key={anime.id}
             className="snap-start min-w-[300px] md:min-w-[400px] aspect-video group relative bg-gray-900 rounded-2xl overflow-hidden hover:ring-2 hover:ring-yellow-500 transition-all duration-300"
           >

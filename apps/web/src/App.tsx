@@ -30,6 +30,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutPage } from './components/CheckoutPage';
 import { OrderConfirmationPage } from './components/OrderConfirmationPage';
 import { HomePage } from './components/HomePage';
+import { CollectionPage } from './pages/CollectionPage';
 import { AuthCallback } from './pages/AuthCallback';
 import { useCartStore } from './store/useCartStore';
 
@@ -135,6 +136,15 @@ export default function App() {
                    <main><HomePage /></main>
                  </>
               } />
+              <Route 
+                path="/collection/:slug" 
+                element={
+                  <>
+                    <Header />
+                    <CollectionPage />
+                  </>
+                } 
+              />
               <Route 
                 path="/shop" 
                 element={

@@ -18,7 +18,7 @@ export function SeriesGrid({ series }: SeriesGridProps) {
           {series.map((anime) => (
             <Link 
               key={anime.id} 
-              to={`/?animeId=${anime.id}`}
+              to={`/collection/${(anime as any).slug ?? anime.id}`}
               className="group flex flex-col items-center text-center gap-3 p-4 rounded-xl hover:bg-white transition-colors"
             >
               <div className="w-full aspect-square rounded-full overflow-hidden border-2 border-gray-200 group-hover:border-yellow-500 transition-colors relative bg-gray-100">

@@ -14,6 +14,7 @@ export function Showcase() {
   // Fallback defaults (Only used if NOT loading and NO data found)
   const showcaseItem = featuredAnime?.[0] || {
     id: 'placeholder',
+    slug: 'demon-slayer-kimetsu-no-yaiba',
     name: 'Demon Slayer: Kimetsu no Yaiba',
     description: 'Tanjiro Kamado lives a modest but blissful life in the mountains with his family.',
     coverImage: 'https://store.aniplexusa.com/demonslayer/images/header.jpg', // Fallback interesting image
@@ -83,7 +84,7 @@ export function Showcase() {
 
                 <div className="flex flex-wrap gap-4 pt-4">
                     <Link 
-                        to={`/?animeId=${showcaseItem.id}`}
+                        to={`/collection/${(showcaseItem as any).slug ?? showcaseItem.id}`}
                         className="bg-white text-black px-10 py-5 rounded-sm font-black text-lg uppercase tracking-wider hover:bg-yellow-400 hover:scale-105 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                     >
                         Shop Collection <ArrowRight className="w-5 h-5" />

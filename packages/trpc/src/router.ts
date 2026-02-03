@@ -140,15 +140,27 @@ export const appRouter = router({
   }),
 
   getAnimeSeries: publicProcedure
-    .input(z.object({ featured: z.boolean().optional() }).optional())
+    .input(z.object({ 
+      featured: z.boolean().optional(),
+      slug: z.string().optional(),
+      names: z.array(z.string()).optional(),
+    }).optional())
     .query(async ({ input }) => {
+      const { featured, slug, names } = input || {};
+      
       return await prisma.animeSeries.findMany({
         where: {
-          featured: input?.featured,
+          featured,
+          slug,
+          ...(names ? { name: { in: names } } : {}),
         },
         include: {
           products: {
-            take: 3, // Preview products
+            take: slug ? undefined : 3, // Fetch all products if querying by slug (Collection Page), else 3 (Preview)
+            include: {
+              category: true,
+              anime: true,
+            }
           }
         }
       });
@@ -162,8 +174,12 @@ export const appRouter = router({
       featured: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
+      const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       return await prisma.animeSeries.create({
-        data: input,
+        data: {
+          ...input,
+          slug, 
+        },
       });
     }),
 

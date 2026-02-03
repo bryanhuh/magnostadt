@@ -48,15 +48,19 @@ async function scrapeShow(showName: string, showUrl: string, coverImageUrl?: str
        headerImage = `${showUrl}${headerImage}`; 
     }
 
+    const slug = showName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
     const series = await prisma.animeSeries.upsert({
-        where: { name: showName },
+        where: { name: showName }, // We can still match by name to update, but we need to ensure slug is set
         update: {
+            slug, // Ensure slug is set if missing
             // Update cover image if provided
             ...(coverImageUrl ? { coverImage: coverImageUrl } : {}),
             ...(headerImage ? { headerImage } : {})
         },
         create: {
             name: showName,
+            slug,
             description: `Official merchandise for ${showName}`,
             featured: false,
             coverImage: coverImageUrl,
