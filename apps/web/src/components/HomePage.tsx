@@ -2,7 +2,6 @@ import { trpc } from '../utils/trpc';
 import { Showcase } from './home/Showcase';
 import { TopPicks } from './home/TopPicks';
 import { ProductCarousel } from './home/ProductCarousel';
-import { SeriesCarousel } from './home/SeriesCarousel';
 import { SectionHeader } from './home/SectionHeader';
 import { SeriesGrid } from './home/SeriesGrid';
 import { PopularSeries } from './home/PopularSeries';
@@ -14,11 +13,8 @@ export function HomePage() {
   const { data: saleProducts, isLoading: salesLoading } = trpc.getProducts.useQuery({ isSale: true, limit: 10 });
   const { data: preorderProducts, isLoading: preorderLoading } = trpc.getProducts.useQuery({ isPreorder: true, limit: 10 });
   const { data: latestProducts, isLoading: latestLoading } = trpc.getProducts.useQuery({ orderBy: 'newest', limit: 10 });
-  
-  // Showcase Featured Anime (Single)
-  const { data: featuredAnimeList, isLoading: animeLoading } = trpc.getAnimeSeries.useQuery({ featured: true });
 
-  const { data: seriesList } = trpc.getAnimeSeries.useQuery();
+  const { data: seriesList, isLoading: animeLoading } = trpc.getAnimeSeries.useQuery();
 
   return (
     <div className="space-y-20 pb-20">

@@ -64,6 +64,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - [2026-02-03] **Showcase**: Restored "Cinematic" design logic (v4.5) to prioritize `headerImage`.
 - [2026-02-03] **API**: Updated `getAnimeSeries` to support slugs and include product relations (`category`, `anime`).
+- [2026-02-03] **Navigation**: Refactored Header to 3-column layout and simplified links (Collection, Products).
 
 ### Fixed
 - [2026-02-03] **Regressions**: Fixed missing header image in Showcase.

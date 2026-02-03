@@ -3,7 +3,16 @@ import { trpc } from '../utils/trpc';
 import { Filter, X } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 
-export function ProductList() {
+interface ProductListProps {
+  initialFilter?: {
+    isSale?: boolean;
+    isPreorder?: boolean;
+    categoryName?: string;
+    sortBy?: 'newest' | 'price_asc' | 'price_desc';
+  };
+}
+
+export function ProductList({ initialFilter }: ProductListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -12,6 +21,7 @@ export function ProductList() {
   const { data: products, isLoading: isProductsLoading, error } = trpc.getProducts.useQuery({
     categoryId: selectedCategory,
     animeId: selectedAnime,
+    ...initialFilter,
   });
 
   const { data: categories } = trpc.getCategories.useQuery();

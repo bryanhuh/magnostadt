@@ -43,7 +43,6 @@ export function AdminProductForm() {
     isSale: false,
     salePrice: '',
     isPreorder: false,
-    isPreorder: false,
   });
 
   useEffect(() => {
@@ -59,7 +58,6 @@ export function AdminProductForm() {
         images: product.images || [],
         isSale: product.isSale,
         salePrice: product.salePrice?.toString() || '',
-        isPreorder: product.isPreorder,
         isPreorder: product.isPreorder,
       });
     }

@@ -52,6 +52,7 @@ export const appRouter = router({
     .input(
       z.object({
         categoryId: z.string().optional(),
+        categoryName: z.string().optional(),
         animeId: z.string().optional(),
         isSale: z.boolean().optional(),
         isPreorder: z.boolean().optional(),
@@ -61,7 +62,7 @@ export const appRouter = router({
       }).optional()
     )
     .query(async ({ input }) => {
-      const { categoryId, animeId, isSale, isPreorder, featured, limit, orderBy } = input || {};
+      const { categoryId, categoryName, animeId, isSale, isPreorder, featured, limit, orderBy } = input || {};
       
       let orderByClause = {};
       if (orderBy === 'newest') {
@@ -77,6 +78,7 @@ export const appRouter = router({
       return await prisma.product.findMany({
         where: {
           categoryId,
+          ...(categoryName ? { category: { name: categoryName } } : {}),
           animeId,
           isSale,
           isPreorder,

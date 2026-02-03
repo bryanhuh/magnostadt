@@ -73,7 +73,7 @@ export function SeriesCarousel({ series, isLoading }: SeriesCarouselProps) {
             className="snap-start min-w-[300px] md:min-w-[400px] aspect-video group relative bg-gray-900 rounded-2xl overflow-hidden hover:ring-2 hover:ring-yellow-500 transition-all duration-300"
           >
              <img 
-               src={anime.coverImage ?? 'https://via.placeholder.com/800x450?text=Anime+Banner'} 
+               src={anime.headerImage ?? 'https://via.placeholder.com/800x450?text=Anime+Banner'} 
                alt={anime.name}
                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 group-hover:opacity-100"
              />

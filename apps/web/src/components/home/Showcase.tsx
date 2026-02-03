@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { trpc } from '../../utils/trpc';
-import { ArrowRight, ShoppingBag, Plus, Star } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { ShowcaseSkeleton } from './ShowcaseSkeleton';
 
 export function Showcase() {
