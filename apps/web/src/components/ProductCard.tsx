@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Heart } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
 import { formatPrice } from '../utils/format';
 import type { inferRouterOutputs } from '@trpc/server';
 import type { AppRouter } from '@shonen-mart/trpc';
+import { trpc } from '../utils/trpc';
+import { useUser } from '@clerk/clerk-react';
 
 type Product = inferRouterOutputs<AppRouter>['getProducts'][number];
 
@@ -15,6 +17,44 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCartStore();
+  const { user } = useUser();
+  const utils = trpc.useUtils();
+
+  const { data: isInWishlist } = trpc.wishlist.checkStatus.useQuery(
+    { productId: product.id },
+    { enabled: !!user }
+  );
+
+  const addToWishlist = trpc.wishlist.add.useMutation({
+    onSuccess: () => {
+      toast.success('Added to wishlist');
+      utils.wishlist.checkStatus.invalidate({ productId: product.id });
+      utils.wishlist.getMine.invalidate();
+    },
+    onError: (err) => toast.error(err.message)
+  });
+
+  const removeFromWishlist = trpc.wishlist.remove.useMutation({
+    onSuccess: () => {
+      toast.success('Removed from wishlist');
+      utils.wishlist.checkStatus.invalidate({ productId: product.id });
+      utils.wishlist.getMine.invalidate();
+    },
+    onError: (err) => toast.error(err.message)
+  });
+
+  const toggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) {
+      toast.error('Please sign in to add to wishlist');
+      return;
+    }
+    if (isInWishlist) {
+      removeFromWishlist.mutate({ productId: product.id });
+    } else {
+      addToWishlist.mutate({ productId: product.id });
+    }
+  };
 
   return (
     <Link
@@ -22,6 +62,17 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
     >
       <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
+         <button
+           onClick={toggleWishlist}
+           className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${
+             isInWishlist 
+               ? 'bg-red-50 text-red-500 shadow-sm opacity-100' 
+               : 'bg-white/80 text-gray-400 hover:text-red-500 hover:bg-white opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0'
+           }`}
+         >
+           <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
+         </button>
+
          <img 
            src={product.imageUrl ?? undefined} 
            alt={product.name}

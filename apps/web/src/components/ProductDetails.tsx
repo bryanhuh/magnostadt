@@ -7,21 +7,51 @@ import { Loader2, ArrowLeft, ShoppingCart, Heart } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
 import { ProductCarousel } from './home/ProductCarousel';
+import { useUser } from '@clerk/clerk-react';
 
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
   const { addItem } = useCartStore();
+  const { user } = useUser();
+  const utils = trpc.useUtils();
   
   const { data: product, isLoading, error } = trpc.getProductBySlug.useQuery(
     { slug: slug! },
     { enabled: !!slug }
   );
 
+  const { data: isInWishlist } = trpc.wishlist.checkStatus.useQuery(
+    { productId: product?.id! },
+    { enabled: !!product?.id && !!user }
+  );
+
+  const addToWishlist = trpc.wishlist.add.useMutation({
+    onSuccess: () => {
+      toast.success('Added to wishlist');
+      utils.wishlist.checkStatus.invalidate({ productId: product?.id });
+      utils.wishlist.getMine.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
+  });
+
+  const removeFromWishlist = trpc.wishlist.remove.useMutation({
+    onSuccess: () => {
+      toast.success('Removed from wishlist');
+      utils.wishlist.checkStatus.invalidate({ productId: product?.id });
+      utils.wishlist.getMine.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
+  });
+
   const { data: relatedProducts } = trpc.getRelatedProducts.useQuery(
     { productId: product?.id! },
     { enabled: !!product?.id }
   );
-  
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Update selected image when product loads or changes
@@ -183,8 +213,26 @@ export function ProductDetails() {
                   {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
                 </button>
                 
-                <button className="w-16 h-auto rounded-xl border-2 border-gray-100 flex items-center justify-center hover:border-red-200 hover:bg-red-50 hover:text-red-500 transition-colors">
-                  <Heart className="w-6 h-6" />
+                <button 
+                  onClick={() => {
+                    if (!user) {
+                      toast.error('Please sign in to add to wishlist');
+                      return;
+                    }
+                    if (isInWishlist) {
+                      removeFromWishlist.mutate({ productId: product.id });
+                    } else {
+                      addToWishlist.mutate({ productId: product.id });
+                    }
+                  }}
+                  disabled={addToWishlist.isPending || removeFromWishlist.isPending}
+                  className={`w-16 h-auto rounded-xl border-2 flex items-center justify-center transition-colors
+                    ${isInWishlist 
+                      ? 'border-red-200 bg-red-50 text-red-500' 
+                      : 'border-gray-100 hover:border-red-200 hover:bg-red-50 hover:text-red-500'
+                    }`}
+                >
+                  <Heart className={`w-6 h-6 ${isInWishlist ? 'fill-current' : ''}`} />
                 </button>
               </div>
               

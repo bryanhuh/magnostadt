@@ -1,9 +1,13 @@
 import { z } from 'zod';
 import { prisma } from '@shonen-mart/db';
 import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
+import { wishlistRouter } from './routers/wishlist';
+import { addressRouter } from './routers/address';
 
 // Force rebuild for headerImage schema update
 export const appRouter = router({
+  wishlist: wishlistRouter,
+  address: addressRouter,
   auth: router({
     me: protectedProcedure.query(async ({ ctx }) => {
       return await ctx.prisma.user.findUnique({
@@ -46,6 +50,20 @@ export const appRouter = router({
         orderBy: { createdAt: 'desc' },
       });
     }),
+  }),
+
+  myOrders: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.order.findMany({
+      where: { userId: ctx.userId },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
   }),
 
   getProducts: publicProcedure
@@ -322,7 +340,7 @@ export const appRouter = router({
         ),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { items, ...shippingDetails } = input;
 
       return await prisma.$transaction(async (tx) => {
@@ -354,12 +372,7 @@ export const appRouter = router({
             items: {
               create: orderItemsData,
             },
-            // If user is logged in (ctx.userId), we should link it!
-            // But createOrder is publicProcedure here. 
-            // We can check ctx inside content if we access it? publicProcedure has ctx too.
-            // But we need to pass ctx to handler.
-            // Let's create `createOrder` as public but check context optional.
-            // publicProcedure middleware allows null userId.
+            userId: ctx.userId || null,
           },
         });
 

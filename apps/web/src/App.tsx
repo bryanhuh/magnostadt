@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ShoppingBag, Heart } from 'lucide-react';
 import { trpc } from './utils/trpc';
 import * as Sentry from '@sentry/react';
 import { Toaster } from 'sonner';
@@ -79,12 +79,17 @@ function Header() {
             <SignedIn>
               <UserButton 
                 afterSignOutUrl="/"
+                userProfileUrl="/profile"
                 appearance={{
                   elements: {
                     avatarBox: "w-9 h-9 border-2 border-yellow-600"
                   }
                 }}
-              />
+              >
+                <UserButton.MenuItems>
+                  <UserButton.Action label="Wishlist" labelIcon={<Heart className="w-4 h-4" />} onClick={() => window.location.href = '/profile/wishlist'} />
+                </UserButton.MenuItems>
+              </UserButton>
             </SignedIn>
           </div>
 
@@ -118,6 +123,10 @@ import { AdminProductForm } from './pages/admin/ProductForm';
 import { AdminOrders } from './pages/admin/Orders';
 import { AdminCustomers } from './pages/admin/Customers';
 import { AdminSeries } from './pages/admin/Series';
+import { ProfileLayout } from './pages/profile/ProfileLayout';
+import { Wishlist } from './pages/profile/Wishlist';
+import { Addresses } from './pages/profile/Addresses';
+import { Orders } from './pages/profile/Orders';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -251,6 +260,19 @@ export default function App() {
                 } 
               />
               <Route path="/auth-callback" element={<AuthCallback />} />
+
+              {/* Profile Routes */}
+              <Route path="/profile" element={
+                <>
+                  <Header />
+                  <ProfileLayout />
+                </>
+              }>
+                <Route index element={<Navigate to="orders" replace />} />
+                <Route path="orders" element={<Orders />} />
+                <Route path="wishlist" element={<Wishlist />} />
+                <Route path="addresses" element={<Addresses />} />
+              </Route>
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminLayout />}>

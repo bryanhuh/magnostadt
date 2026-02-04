@@ -70,3 +70,24 @@ All notable changes to this project will be documented in this file.
 - [2026-02-03] **Regressions**: Fixed missing header image in Showcase.
 - [2026-02-03] **Crashes**: Resolved `ProductCard` crash on Collection Page.
 - [2026-02-03] **Admin Access**: Fixed permissions for admin user.
+
+## [0.0.4] - User Profile & Wishlist - 2026-02-04
+### Added
+- [2026-02-04] **User Dashboard**: Dedicated `/profile` area with Orders, Wishlist, and Addresses.
+- [2026-02-04] **Wishlist System**:
+    - Database schema for `WishlistItem`.
+    - Heart button on Product Cards and Details page.
+    - Dedicated `/profile/wishlist` view.
+- [2026-02-04] **Address Book**:
+    - Full CRUD for managing shipping addresses.
+    - Default address selection logic.
+- [2026-02-04] **Order History**: Visual history of past orders with status tracking.
+- [2026-02-04] **Clerk Integration**: Custom "Wishlist" action in User Button menu.
+
+### Changed
+- [2026-02-04] **Schema**: Linked `Order` to `User` model properly.
+- [2026-02-04] **Navigation**: User Avatar now redirects to `/profile`.
+
+### Fixed
+- [2026-02-04] **Prisma Client**: Resolved missing table error by syncing schema.
+- [2026-02-04] **Links**: Fixed "Browse Shop" link in Orders page.
