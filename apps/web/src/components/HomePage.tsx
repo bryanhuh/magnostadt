@@ -57,19 +57,17 @@ export function HomePage() {
                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
                />
                <div className="absolute bottom-0 left-0 p-12 z-20">
-                 <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-6">
+                 <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-6 font-orbitron">
                    Figures & Statues
                  </h3>
                  <Link 
                    to="/?category=figures"
-                   className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-colors"
+                   className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-colors font-orbitron"
                  >
                    Shop Now <ArrowRight className="w-5 h-5" />
                  </Link>
                </div>
             </div>
-
-
 
             <div className="relative h-[500px] group overflow-hidden rounded-3xl bg-white border border-gray-200">
               <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent z-10" />
@@ -79,12 +77,12 @@ export function HomePage() {
                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
                />
                <div className="absolute bottom-0 left-0 p-12 z-20">
-                 <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-6">
+                 <h3 className="text-5xl font-black text-white uppercase italic tracking-tighter mb-6 font-orbitron">
                    Manga & Books
                  </h3>
                  <Link 
                     to="/?category=manga"
-                    className="inline-flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-colors"
+                    className="inline-flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-colors font-orbitron"
                  >
                    Start Reading <ArrowRight className="w-5 h-5" />
                  </Link>

@@ -77,22 +77,22 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
           <Link
             to={`/product/${product.slug}`}
             key={product.id}
-            className="snap-start min-w-[280px] w-[280px] group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
+            className="snap-start min-w-[280px] w-[280px] group relative border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
           >
             {/* Image */}
-            <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden">
+            <div className="relative overflow-hidden">
                <img 
                  src={product.imageUrl ?? undefined} 
                  alt={product.name}
-                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                 className="w-full h-full object-cover transition-transform scale-115 duration-500 group-hover:scale-110"
                  onError={(e) => {
                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x400?text=No+Image';
                  }}
                />
-               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300" />
+               <div className="absolute inset-0 group-hover:bg-transparent transition-colors duration-300" />
                
                {/* Badges */}
-               <div className="absolute top-3 left-3 flex flex-col gap-2">
+               <div className="absolute top-3 left-0 flex flex-col gap-2">
                  {product.isSale && (
                    <span className="bg-red-500 text-white text-xs font-black uppercase tracking-wider px-2 py-1 rounded">
                      Sale

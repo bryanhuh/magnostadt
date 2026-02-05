@@ -109,7 +109,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'shonen-mart-cart', // key in localStorage
+      name: 'akashic-district-cart', // key in localStorage
     }
   )
 );

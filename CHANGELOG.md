@@ -91,3 +91,16 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - [2026-02-04] **Prisma Client**: Resolved missing table error by syncing schema.
 - [2026-02-04] **Links**: Fixed "Browse Shop" link in Orders page.
+
+## [0.0.5] - Map Integration & UI Polish - 2026-02-05
+### Added
+- [2026-02-05] **Interactive Map**: Added `Leaflet` map to Address form with "Use My Location" feature.
+- [2026-02-05] **Reverse Geocoding**: Integrated Nominatim API to auto-fill address from map coordinates.
+
+### Changed
+- [2026-02-05] **Product UI**: Removed hover scale effects and transition colors from `ProductCard` and `ProductDetails` for a cleaner look.
+- [2026-02-05] **Address Form**: Redesigned UI with tiered layout (Map -> Details) and improved card styling.
+
+### Fixed
+- [2026-02-05] **Authentication Crash**: Added safety checks for `CLERK_SECRET_KEY` in tRPC context creation.
+- [2026-02-05] **Leaflet Compatibility**: Resolved React 18 vs React 19 conflict by downgrading `react-leaflet` to v4.2.1.

@@ -49,9 +49,11 @@ function Header() {
         {/* Left: Logo */}
         <div className="flex-shrink-0">
           <Link to="/" className="block">
-            <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-yellow-600 uppercase italic">
-              Shonen-Mart
-            </h1>
+            <img 
+              src="/logo.png" 
+              alt="Akashic District" 
+              className="h-16 md:h-20 w-auto object-contain"
+            />
           </Link>
         </div>
         
@@ -66,12 +68,12 @@ function Header() {
           <div className="flex items-center gap-4">
             <SignedOut>
               <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
-                <button className="text-gray-700 hover:text-yellow-600 font-bold transition-colors text-sm">
+                <button className="text-gray-700 hover:text-yellow-600 font-bold transition-colors text-sm font-orbitron tracking-wider">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton mode="modal" forceRedirectUrl="/auth-callback">
-                <button className="bg-gray-900 text-white hover:bg-black px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                <button className="bg-gray-900 text-white hover:bg-black px-4 py-2 rounded-lg font-bold transition-colors text-sm font-orbitron tracking-wider">
                   Sign Up
                 </button>
               </SignUpButton>
@@ -151,7 +153,7 @@ export default function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <div className="min-h-screen bg-gray-50 text-gray-900">
+          <div className="min-h-screen bg-gray-50 text-gray-900 font-exo-2">
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={

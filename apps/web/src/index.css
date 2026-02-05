@@ -1,1 +1,45 @@
 @import "tailwindcss";
+
+@theme {
+    --font-orbitron: "Barlow Condensed", sans-serif;
+    /* Keeping variable name 'orbitron' to avoid refactoring all components */
+    --font-exo-2: "Lato", sans-serif;
+    /* Keeping variable name 'exo-2' to avoid refactoring all components */
+
+    --color-akashic-900: #0a0f1c;
+    /* Keep palette in case we use them as accents */
+    --color-akashic-800: #1a2333;
+    --color-akashic-700: #2a3b55;
+    --color-akashic-600: #00f0ff;
+    --color-akashic-500: #ffd700;
+    --color-akashic-400: #33f2ff;
+    --color-akashic-100: #e0faff;
+}
+
+@layer base {
+    body {
+        @apply bg-gray-50 text-gray-900 font-exo-2;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-orbitron text-gray-900;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded-full hover:bg-gray-400;
+    }
+}

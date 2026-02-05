@@ -1,12 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '../../utils/trpc';
-import { Loader2, Plus, MapPin, Trash2, Edit2 } from 'lucide-react';
+import { Loader2, Plus, MapPin, Trash2, Edit2, Navigation, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default Leaflet marker icons in React
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+const DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 interface AddressFormProps {
   initialData?: any;
   onCancel: () => void;
   onSuccess: () => void;
+}
+
+// Map Component to handle clicks and updates
+function LocationMarker({ position, setPosition, onLocationFound }: { position: [number, number] | null, setPosition: (pos: [number, number]) => void, onLocationFound?: (lat: number, lng: number) => void }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, map.getZoom());
+    }
+  }, [position, map]);
+
+  useMapEvents({
+    click(e) {
+      setPosition([e.latlng.lat, e.latlng.lng]);
+      if (onLocationFound) onLocationFound(e.latlng.lat, e.latlng.lng);
+    },
+  });
+
+  return position === null ? null : (
+    <Marker position={position} />
+  );
 }
 
 function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
@@ -19,6 +57,9 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
     country: initialData?.country || 'US',
     isDefault: initialData?.isDefault || false,
   });
+
+  const [mapPosition, setMapPosition] = useState<[number, number] | null>(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
   const utils = trpc.useUtils();
   
@@ -40,6 +81,53 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
     onError: (err) => toast.error(err.message),
   });
 
+  // Reverse Geocoding Function
+  const fetchAddressFromCoords = async (lat: number, lng: number) => {
+    try {
+      setIsLoadingLocation(true);
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await response.json();
+      
+      if (data.address) {
+        setFormData(prev => ({
+          ...prev,
+          street: data.address.road || data.address.house_number || '',
+          city: data.address.city || data.address.town || data.address.village || '',
+          state: data.address.state || '',
+          zipCode: data.address.postcode || '',
+          country: data.address.country_code?.toUpperCase() || 'US'
+        }));
+        toast.success("Location found!", { description: "Address fields updated." });
+      }
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      toast.error("Could not fetch address details from map.");
+    } finally {
+      setIsLoadingLocation(false);
+    }
+  };
+
+  const getUserLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setIsLoadingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setMapPosition([latitude, longitude]);
+        fetchAddressFromCoords(latitude, longitude);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        toast.error("Unable to retrieve your location");
+        setIsLoadingLocation(false);
+      }
+    );
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (initialData?.id) {
@@ -52,108 +140,159 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl p-6 space-y-4 animate-in fade-in slide-in-from-top-4">
-      <h3 className="font-bold uppercase tracking-wide mb-4">
-        {initialData ? 'Edit Address' : 'New Address'}
-      </h3>
+    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+        <h3 className="font-black uppercase tracking-wide text-lg flex items-center gap-2">
+          {initialData ? <Edit2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+          {initialData ? 'Edit Address' : 'New Address'}
+        </h3>
+        <button 
+            type="button" 
+            onClick={getUserLocation}
+            className="text-xs bg-black text-white px-3 py-1.5 rounded-lg font-bold uppercase hover:bg-yellow-500 hover:text-black transition-colors flex items-center gap-2"
+        >
+            {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin"/> : <Navigation className="w-3 h-3" />}
+            Use My Location
+        </button>
+      </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Address Label</label>
-          <input
-            type="text"
-            placeholder="e.g. Home, Office"
-            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
+      <div className="p-6 space-y-8">
+        {/* Map Section */}
+        <div className="rounded-xl overflow-hidden border border-gray-200 h-64 relative bg-gray-100 group">
+             {/* Fallback/Initial View centering on US or User Location */}
+             <MapContainer 
+                center={mapPosition || [37.7749, -122.4194]} 
+                zoom={13} 
+                style={{ height: '100%', width: '100%' }}
+                className="z-0"
+             >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <LocationMarker 
+                    position={mapPosition} 
+                    setPosition={setMapPosition}
+                    onLocationFound={fetchAddressFromCoords}
+                />
+             </MapContainer>
+             {!mapPosition && (
+                 <div className="absolute inset-0 z-[400] bg-black/5 flex items-center justify-center pointer-events-none">
+                     <p className="bg-white/90 backdrop-blur px-4 py-2 rounded-lg text-xs font-bold uppercase shadow-sm text-gray-500">
+                        Click on map or use location button
+                     </p>
+                 </div>
+             )}
+             {isLoadingLocation && (
+                 <div className="absolute inset-0 z-[500] bg-white/50 backdrop-blur-sm flex items-center justify-center">
+                     <Loader2 className="w-8 h-8 animate-spin text-black" />
+                 </div>
+             )}
         </div>
-        <div>
-           <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Country</label>
-            <select
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              value={formData.country}
-              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-            >
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="UK">United Kingdom</option>
-              <option value="JP">Japan</option>
-              {/* Add more as needed */}
-            </select>
-        </div>
-        <div className="md:col-span-2">
-          <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Street Address</label>
-          <input
-            type="text"
-            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            value={formData.street}
-            onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-bold text-gray-400 uppercase mb-1">City</label>
-          <input
-            type="text"
-            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-            required
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase mb-1">State</label>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2">
+            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Address Label</label>
+            <div className="relative">
+                <MapPin className="absolute left-4 top-3 w-4 h-4 text-gray-300" />
+                <input
+                    type="text"
+                    placeholder="e.g. Home, Office, Secret Base"
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium placeholder:text-gray-300"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                />
+            </div>
+          </div>
+
+           <div className="md:col-span-2">
+            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Street Address</label>
             <input
               type="text"
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              placeholder="123 Anime Street"
+              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              value={formData.street}
+              onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+              required
+            />
+          </div>
+
+          <div>
+             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Country</label>
+              <select
+                className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium appearance-none"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              >
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="JP">Japan</option>
+                <option value="PH">Philippines</option>
+              </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">City</label>
+            <input
+              type="text"
+              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              required
+            />
+          </div>
+
+          <div>
+             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">State / Province</label>
+            <input
+              type="text"
+              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
               required
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Zip Code</label>
+            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Zip Code</label>
             <input
               type="text"
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
               value={formData.zipCode}
               onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
               required
             />
           </div>
         </div>
+
+        <div className="flex items-center gap-3 pt-2 group cursor-pointer" onClick={() => setFormData({ ...formData, isDefault: !formData.isDefault })}>
+            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${formData.isDefault ? 'bg-black border-black text-white' : 'border-gray-300 bg-white'}`}>
+                {formData.isDefault && <Check className="w-3 h-3" />}
+            </div>
+            <label className="text-sm font-bold text-gray-700 select-none cursor-pointer">Set as default address</label>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 pt-2">
-        <input
-          type="checkbox"
-          id="isDefault"
-          checked={formData.isDefault}
-          onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-          className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
-        />
-        <label htmlFor="isDefault" className="text-sm font-medium text-gray-700">Set as default address</label>
-      </div>
-
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
+      <div className="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-500 hover:text-black font-bold uppercase text-sm transition-colors"
+          className="px-6 py-2.5 text-gray-500 hover:text-black font-bold uppercase text-xs tracking-wider transition-colors"
           disabled={isPending}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-black text-white rounded-lg hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all flex items-center gap-2"
+          className="px-8 py-2.5 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase text-xs tracking-wider transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
           disabled={isPending}
         >
-          {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-          Save Address
+          {isPending ? (
+             <span className='flex items-center gap-2'><Loader2 className="w-3 h-3 animate-spin" /> Saving...</span>
+          ) : (
+             'Save Address'
+          )}
         </button>
       </div>
     </form>
@@ -176,23 +315,27 @@ export function Addresses() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-yellow-500 mb-4" />
+        <span className="text-xs font-bold uppercase text-gray-400 tracking-widest animate-pulse">Loading Addresses...</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-         <h2 className="text-xl font-black uppercase tracking-tight">Saved Addresses</h2>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+         <div>
+            <h2 className="text-2xl font-black uppercase tracking-tighter">My Addresses</h2>
+            <p className="text-gray-400 text-sm font-medium mt-1">Manage your shipping destinations</p>
+         </div>
          {!isAdding && !editingId && (
            <button
              onClick={() => setIsAdding(true)}
-             className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all text-sm"
+             className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all text-xs tracking-wider shadow-lg hover:shadow-xl hover:-translate-y-0.5"
            >
              <Plus className="w-4 h-4" />
-             Add New
+             Add New Address
            </button>
          )}
       </div>
@@ -205,21 +348,23 @@ export function Addresses() {
       )}
 
       {addresses?.length === 0 && !isAdding && (
-         <div className="flex flex-col items-center justify-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-          <MapPin className="w-12 h-12 text-gray-200 mb-4" />
-          <h3 className="text-lg font-black uppercase text-gray-400">No Addresses Found</h3>
-          <p className="text-gray-400 text-sm mt-1 mb-6">Add an address for faster checkout</p>
+         <div className="flex flex-col items-center justify-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 group hover:border-black/10 transition-colors">
+          <div className="bg-white p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
+             <MapPin className="w-8 h-8 text-gray-300 group-hover:text-yellow-500 transition-colors" />
+          </div>
+          <h3 className="text-lg font-black uppercase text-gray-900 mb-2">No Addresses Found</h3>
+          <p className="text-gray-400 text-sm mb-8 font-medium">Add an address to speed up your checkout process functionality.</p>
           <button
              onClick={() => setIsAdding(true)}
-             className="flex items-center gap-2 px-6 py-2 bg-white border border-gray-200 text-black rounded-lg hover:border-black font-bold uppercase transition-all text-sm shadow-sm"
+             className="flex items-center gap-2 px-8 py-3 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all text-xs tracking-wider shadow-lg"
            >
              <Plus className="w-4 h-4" />
-             Add Address
+             Add First Address
            </button>
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-6">
         {addresses?.map((address) => (
           editingId === address.id ? (
             <AddressForm
@@ -229,43 +374,50 @@ export function Addresses() {
               onSuccess={() => setEditingId(null)}
             />
           ) : (
-            <div key={address.id} className={`group bg-white border rounded-xl p-6 relative flex items-start justify-between transition-all hover:shadow-md
-              ${address.isDefault ? 'border-yellow-500 ring-1 ring-yellow-500/20' : 'border-gray-200'}`}>
+            <div key={address.id} className={`group bg-white border rounded-2xl p-6 relative flex flex-col md:flex-row md:items-center justify-between transition-all duration-300 hover:shadow-xl
+              ${address.isDefault ? 'border-black ring-1 ring-black/5' : 'border-gray-100 hover:border-gray-200'}`}>
               
-              <div className="space-y-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="font-bold text-lg">{address.name}</span>
-                  {address.isDefault && (
-                    <span className="bg-yellow-100 text-yellow-700 text-[10px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider">
-                      Default
-                    </span>
-                  )}
+              <div className="flex items-start gap-5">
+                <div className={`mt-1 p-3 rounded-xl flex-shrink-0 ${address.isDefault ? 'bg-black text-yellow-500' : 'bg-gray-50 text-gray-300 group-hover:text-black group-hover:bg-gray-100 transition-colors'}`}>
+                    <MapPin className="w-6 h-6" />
                 </div>
-                <p className="text-gray-600">{address.street}</p>
-                <p className="text-gray-600">
-                  {address.city}, {address.state} {address.zipCode}
-                </p>
-                <p className="text-gray-400 text-sm uppercase font-bold tracking-wider mt-2">{address.country}</p>
+                
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <span className="font-black text-lg uppercase tracking-tight">{address.name}</span>
+                    {address.isDefault && (
+                      <span className="bg-yellow-400 text-black text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">
+                        Default
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600 font-medium leading-relaxed">{address.street}</p>
+                  <p className="text-gray-500 font-medium">
+                    {address.city}, {address.state} <span className="text-gray-300">|</span> {address.zipCode}
+                  </p>
+                  <p className="text-gray-400 text-xs uppercase font-bold tracking-widest mt-2">{address.country}</p>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-2 mt-4 md:mt-0 pl-16 md:pl-0 opacity-100 md:opacity-0 md:translate-x-4 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300">
                 <button
                   onClick={() => setEditingId(address.id)}
-                  className="p-2 text-gray-400 hover:text-black hover:bg-gray-50 rounded-lg transition-colors"
-                  title="Edit"
+                  className="px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
                 >
-                  <Edit2 className="w-4 h-4" />
+                  <Edit2 className="w-3 h-3" />
+                  Edit
                 </button>
+                <div className="w-px h-4 bg-gray-200 hidden md:block"></div>
                 <button
                   onClick={() => {
                     if (confirm('Are you sure you want to delete this address?')) {
                       deleteMutation.mutate({ id: address.id });
                     }
                   }}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                  title="Delete"
+                  className="px-4 py-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3 h-3" />
+                  Delete
                 </button>
               </div>
             </div>

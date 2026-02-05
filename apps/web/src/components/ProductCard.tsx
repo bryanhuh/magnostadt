@@ -59,7 +59,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       to={`/product/${product.slug}`}
-      className="group relative bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
+      className="group relative bg-transparent hover:bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
     >
       <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
          <button
@@ -76,18 +76,17 @@ export function ProductCard({ product }: ProductCardProps) {
          <img 
            src={product.imageUrl ?? undefined} 
            alt={product.name}
-           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+           className="w-full h-full object-cover scale-110"
            onError={(e) => {
              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x500?text=No+Image';
            }}
          />
-         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300" />
       </div>
       
       <div className="p-5 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex justify-between items-start mb-2 gap-2">
-            <h3 className="text-lg font-bold group-hover:text-yellow-600 transition-colors uppercase italic tracking-wider leading-tight text-gray-900">
+            <h3 className="text-lg font-bold uppercase italic tracking-wider leading-tight text-gray-900 font-orbitron">
               {product.name}
             </h3>
           </div>
@@ -99,7 +98,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         
         <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-          <span className="text-yellow-600 font-black text-xl">{formatPrice(Number(product.price))}</span>
+          <span className="text-yellow-600 font-black text-xl font-orbitron">{formatPrice(Number(product.price))}</span>
           <button 
             onClick={(e) => {
               e.preventDefault(); // Prevent navigation to details

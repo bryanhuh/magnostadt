@@ -102,7 +102,7 @@ export function ProductDetails() {
           
           {/* Gallery Section */}
           <div className="space-y-6">
-            <div className="relative group bg-gray-50 rounded-2xl p-8 border border-gray-100">
+            <div className="relative group bg-transparent hover:bg-gray-50 rounded-2xl p-8 border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300">
                {/* Badges */}
                <div className="absolute top-6 left-6 z-10 flex gap-2">
                   {product.stock <= 5 && product.stock > 0 && (
@@ -121,7 +121,7 @@ export function ProductDetails() {
                 <img
                   src={selectedImage || product.imageUrl || ''}
                   alt={product.name}
-                  className="w-full h-full object-contain filter drop-shadow-xl transition-all duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain filter drop-shadow-xl scale-100"
                 />
               </div>
             </div>

@@ -14,6 +14,10 @@ export async function createContext({ req }: FetchCreateContextFnOptions) {
         : authHeader;
 
       if (token) {
+        if (!process.env.CLERK_SECRET_KEY) {
+          console.error("❌ CLERK_SECRET_KEY is missing in API environment!");
+        }
+
         // verifyToken matches the token against the secret key
         const verified = await verifyToken(token, {
           secretKey: process.env.CLERK_SECRET_KEY,
@@ -32,7 +36,8 @@ export async function createContext({ req }: FetchCreateContextFnOptions) {
         }
       }
     } catch (err) {
-      console.error("Auth error", err);
+      // Log the full error to help debugging
+      console.error("Auth error in createContext:", err);
     }
   }
 
