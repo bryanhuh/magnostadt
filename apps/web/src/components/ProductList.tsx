@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '../utils/trpc';
 import { Filter, X, Check } from 'lucide-react';
 import { ProductCard } from './ProductCard';
+import { useSearchParams } from 'react-router-dom';
 
 interface ProductListProps {
   initialFilter?: {
@@ -13,6 +14,9 @@ interface ProductListProps {
 }
 
 export function ProductList({ initialFilter }: ProductListProps) {
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get('category');
+
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
   const [isSaleOnly, setIsSaleOnly] = useState(initialFilter?.isSale || false);
@@ -21,6 +25,9 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
   const { data: products, isLoading: isProductsLoading, error } = trpc.getProducts.useQuery({
     categoryId: selectedCategory,
+    // Use categoryName from URL if available, otherwise from initialFilter
+    // If selectedCategory (ID) is set, it takes precedence (via categoryId)
+    categoryName: selectedCategory ? undefined : (categoryFromUrl ?? initialFilter?.categoryName),
     animeId: selectedAnime,
     isSale: isSaleOnly ? true : undefined,
     ...initialFilter,
@@ -28,6 +35,19 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
   const { data: categories } = trpc.getCategories.useQuery();
   const { data: animeSeries } = trpc.getAnimeSeries.useQuery();
+
+  // Sync URL category with selectedCategory state for sidebar highlighting
+  useEffect(() => {
+    if (categoryFromUrl && categories) {
+      const category = categories.find(c => c.name.toLowerCase() === categoryFromUrl.toLowerCase());
+      if (category) {
+        setSelectedCategory(category.id);
+      }
+    } else if (!categoryFromUrl && !initialFilter?.categoryName) {
+      // Clear selection if no URL param and no initial filter (e.g. user navigated to /shop)
+      setSelectedCategory(undefined);
+    }
+  }, [categoryFromUrl, categories, initialFilter]);
 
   const isLoading = isProductsLoading;
 
@@ -80,7 +100,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
+    <div className="flex flex-col lg:flex-row gap-8 mt-10">
       {/* Mobile Filter Toggle */}
       <button
         className="lg:hidden flex items-center gap-2 bg-gray-800 p-3 rounded-lg text-yellow-500 mb-4"

@@ -123,3 +123,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - [2026-02-06] **Filtering Logic**: Fixed bug where "All Categories" excluded sale items by default.
+- [2026-02-06] **Image Rendering**: Added fallback logic (`imageUrl` -> `images[0]`) to ensure products always display a cover.
+
+### Refactored
+- [2026-02-06] **Home Components**: Extracted "Shop Category" section into dedicated `CategoryGrid` component.
+- [2026-02-06] **Manga Display**:
+    -   Implemented diagonal "fanning" animation for manga covers.
+    -   Added "Speed Lines" background pattern (conic gradient).
+- [2026-02-06] **Navigation Flow**:
+    -   Updated Homepage category links to use URL query params (`/shop?category=...`).
+    -   Updated `ProductList` to sync sidebar selection with URL.
