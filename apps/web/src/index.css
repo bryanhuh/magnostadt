@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-    --font-orbitron: "Barlow Condensed", sans-serif;
+    --font-orbitron: "Assistant", sans-serif;
     /* Keeping variable name 'orbitron' to avoid refactoring all components */
-    --font-exo-2: "Lato", sans-serif;
+    --font-exo-2: "Assistant", sans-serif;
     /* Keeping variable name 'exo-2' to avoid refactoring all components */
+    --font-libre-bodoni: "Libre Bodoni", serif;
+    --font-open-sans: "Open Sans", sans-serif;
 
     --color-akashic-900: #0a0f1c;
     /* Keep palette in case we use them as accents */

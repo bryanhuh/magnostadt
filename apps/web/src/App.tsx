@@ -37,14 +37,14 @@ import { AuthCallback } from './pages/AuthCallback';
 import { useCartStore } from './store/useCartStore';
 import { Navigation } from './components/Navigation'; // [NEW]
 
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, UserButton } from '@clerk/clerk-react';
 
 function Header() {
   const { toggleCart, getTotalItems } = useCartStore();
   const totalItems = getTotalItems();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <header className="sticky top-0 z-[100] bg-white/80 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
@@ -54,6 +54,11 @@ function Header() {
               alt="Akashic District" 
               className="h-16 md:h-20 w-auto object-contain"
             />
+            {/* <Link to="/" className="block group">
+              <h1 className="font-libre-bodoni text-3xl md:text-4xl tracking-[0.05em] text-gray-900 group-hover:text-yellow-600 transition-colors">
+                Akashic District
+              </h1>
+            </Link> */}
           </Link>
         </div>
         
@@ -66,18 +71,7 @@ function Header() {
         <div className="flex items-center gap-4 flex-shrink-0">
           {/* Auth Buttons */}
           <div className="flex items-center gap-4">
-            <SignedOut>
-              <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
-                <button className="text-gray-700 hover:text-yellow-600 font-bold transition-colors text-sm font-orbitron tracking-wider">
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal" forceRedirectUrl="/auth-callback">
-                <button className="bg-gray-900 text-white hover:bg-black px-4 py-2 rounded-lg font-bold transition-colors text-sm font-orbitron tracking-wider">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
+
             <SignedIn>
               <UserButton 
                 afterSignOutUrl="/"

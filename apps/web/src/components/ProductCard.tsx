@@ -73,6 +73,22 @@ export function ProductCard({ product }: ProductCardProps) {
            <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
          </button>
 
+         <div className="absolute inset-0 group-hover:bg-transparent transition-colors duration-300" />
+         
+         {/* Badges */}
+         <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+           {product.isSale && (
+             <span className="bg-red-500 text-white text-xs font-black uppercase tracking-wider px-2 py-1 rounded shadow-md">
+               Sale
+             </span>
+           )}
+           {product.isPreorder && (
+             <span className="bg-blue-500 text-white text-xs font-black uppercase tracking-wider px-2 py-1 rounded shadow-md">
+               Pre-Order
+             </span>
+           )}
+         </div>
+
          <img 
            src={product.imageUrl ?? undefined} 
            alt={product.name}
@@ -86,7 +102,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="p-5 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex justify-between items-start mb-2 gap-2">
-            <h3 className="text-lg font-bold uppercase italic tracking-wider leading-tight text-gray-900 font-orbitron">
+            <h3 className="text-lg font-bold uppercase tracking-wider leading-tight text-gray-900 font-orbitron">
               {product.name}
             </h3>
           </div>
@@ -97,8 +113,17 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
         
-        <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-          <span className="text-yellow-600 font-black text-xl font-orbitron">{formatPrice(Number(product.price))}</span>
+        <div className="mt-4 pt-4 border-t border-gray-200 flex items-end justify-between">
+          <div>
+            {product.isSale && product.salePrice ? (
+              <div className="flex flex-col">
+                <span className="text-gray-400 line-through text-xs font-bold">{formatPrice(Number(product.price))}</span>
+                <span className="text-red-500 font-black text-xl font-orbitron">{formatPrice(Number(product.salePrice))}</span>
+              </div>
+            ) : (
+              <span className="text-yellow-600 font-black text-xl font-orbitron">{formatPrice(Number(product.price))}</span>
+            )}
+          </div>
           <button 
             onClick={(e) => {
               e.preventDefault(); // Prevent navigation to details

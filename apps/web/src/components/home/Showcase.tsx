@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { trpc } from '../../utils/trpc';
 import { ArrowRight, Star } from 'lucide-react';
 import { ShowcaseSkeleton } from './ShowcaseSkeleton';
+import { SignInButton, SignedOut } from '@clerk/clerk-react'; // Import
 
 export function Showcase() {
   const { data: featuredAnime, isLoading } = trpc.getAnimeSeries.useQuery({ featured: true });
@@ -57,10 +58,10 @@ export function Showcase() {
       {/* --- CONTENT LAYER --- */}
       <div className="relative z-10 w-full h-full max-w-[1600px] mx-auto px-4 md:px-8 flex flex-col justify-center h-full">
         
-        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20 h-full pt-20">
+        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20 h-full">
             
             {/* 1. TEXT INFO (Left - 45%) */}
-            <div className="w-full md:w-[45%] space-y-8 flex flex-col justify-center">
+            <div className="w-full md:w-[45%] space-y-8 flex flex-col justify-center pt-32 md:pt-40"> {/* Increased padding-top */}
                 
                 {/* Badge */}
                 <div className="flex items-center gap-3">
@@ -89,9 +90,14 @@ export function Showcase() {
                     >
                         Shop Collection <ArrowRight className="w-5 h-5" />
                     </Link>
-                    <button className="px-10 py-5 rounded-sm font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md uppercase tracking-wider transition-all">
-                        Watch Trailer
-                    </button>
+                    
+                    <SignedOut>
+                        <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
+                            <button className="px-10 py-5 rounded-sm font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md uppercase tracking-wider transition-all">
+                                Sign In
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
                 </div>
             </div>
 

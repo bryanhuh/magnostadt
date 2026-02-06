@@ -33,7 +33,7 @@ export function TopPicks() {
                 <span className="text-yellow-500 font-bold tracking-widest uppercase text-sm mb-2 block">
                   Top Pick #{index + 1}
                 </span>
-                <h3 className="text-4xl font-black text-white italic uppercase tracking-tighter mb-4 leading-none">
+                <h3 className="text-4xl font-black text-white uppercase tracking-tighter mb-4 leading-none">
                   {anime.name}
                 </h3>
                  <div className="flex items-center gap-2 text-gray-300 font-bold uppercase tracking-wider text-sm group-hover:text-yellow-500 transition-colors">

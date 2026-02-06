@@ -12,7 +12,7 @@ export function SectionHeader({ title, subtitle, linkText, onLinkClick, classNam
   return (
     <div className={`flex items-end justify-between mb-8 ${className}`}>
       <div>
-        <h2 className="text-3xl md:text-4xl font-black text-gray-900 italic uppercase tracking-tighter font-orbitron">
+        <h2 className="text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-wide font-orbitron">
           {title}
         </h2>
         {subtitle && (

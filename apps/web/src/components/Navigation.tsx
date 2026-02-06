@@ -15,7 +15,7 @@ export function Navigation() {
           <li key={link.path}>
             <Link
               to={link.path}
-              className={`text-sm md:text-base font-bold uppercase tracking-widest transition-colors font-orbitron ${
+              className={`text-sm md:text-base uppercase tracking-widest transition-colors font-orbitron ${
                 location.pathname === link.path 
                   ? 'text-yellow-600' 
                   : 'text-gray-500 hover:text-gray-900'

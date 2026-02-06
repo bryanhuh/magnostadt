@@ -103,4 +103,23 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - [2026-02-05] **Authentication Crash**: Added safety checks for `CLERK_SECRET_KEY` in tRPC context creation.
-- [2026-02-05] **Leaflet Compatibility**: Resolved React 18 vs React 19 conflict by downgrading `react-leaflet` to v4.2.1.
+
+## [0.0.6] - Visual Identity & UX Polish - 2026-02-06
+### Added
+- [2026-02-06] **Text-Based Logo**: Replaced image logo with "Akashic District" text using `Libre Bodoni` font for a cleaner, high-end look.
+- [2026-02-06] **Redesigned Shop Categories**:
+    -   New "Shonen" aesthetic with Black/Yellow high-contrast cards.
+    -   Dot pattern backgrounds.
+    -   Double-character layout for Figures (Naruto & Sasuke).
+- [2026-02-06] **Sales Features**:
+    -   Added `isSale` filtering to Product List.
+    -   Implemented "View All Sales" button and filtering logic.
+    -   Added "Sale" and "Pre-order" badges to Product Cards.
+
+### Changed
+- [2026-02-06] **Product Cards**: Stripped `italic` styles for cleaner typography. Added price comparison (original vs sale price).
+- [2026-02-06] **Typography**: Removed italic styles from sidebar filters.
+- [2026-02-06] **Layout**: Increased Header z-index (`z-[100]`) to fix overlap with filters.
+
+### Fixed
+- [2026-02-06] **Filtering Logic**: Fixed bug where "All Categories" excluded sale items by default.

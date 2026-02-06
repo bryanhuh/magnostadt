@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
-import { Filter, X } from 'lucide-react';
+import { Filter, X, Check } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 
 interface ProductListProps {
@@ -15,12 +15,14 @@ interface ProductListProps {
 export function ProductList({ initialFilter }: ProductListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
+  const [isSaleOnly, setIsSaleOnly] = useState(initialFilter?.isSale || false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   // const { addItem } = useCartStore(); // Unused here now
 
   const { data: products, isLoading: isProductsLoading, error } = trpc.getProducts.useQuery({
     categoryId: selectedCategory,
     animeId: selectedAnime,
+    isSale: isSaleOnly ? true : undefined,
     ...initialFilter,
   });
 
@@ -102,9 +104,32 @@ export function ProductList({ initialFilter }: ProductListProps) {
         </div>
 
         <div className="space-y-8">
+          {/* Status Filters */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
+              Status
+            </h3>
+            <div className="space-y-2">
+               <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-yellow-500 border-yellow-500 text-black' : 'border-gray-300 bg-white group-hover:border-yellow-500'}`}>
+                      {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  </div>
+                  <input 
+                      type="checkbox" 
+                      className="hidden" 
+                      checked={isSaleOnly} 
+                      onChange={(e) => setIsSaleOnly(e.target.checked)} 
+                  />
+                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors ${isSaleOnly ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>
+                      On Sale
+                  </span>
+               </label>
+            </div>
+          </div>
+
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase italic tracking-wider border-b border-gray-200 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
               Categories
             </h3>
             <div className="space-y-2">
@@ -134,7 +159,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
           {/* Anime Series */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase italic tracking-wider border-b border-gray-200 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
               Series
             </h3>
             <div className="space-y-2">

@@ -42,7 +42,7 @@ export function CollectionPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-black/50" />
         
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 mt-20">
-          <h1 className="text-6xl md:text-8xl font-black text-white uppercase italic tracking-tighter drop-shadow-2xl mb-6">
+          <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl mb-6">
             {series.name}
           </h1>
           {series.description && (
