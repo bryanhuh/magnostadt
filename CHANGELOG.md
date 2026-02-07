@@ -132,4 +132,21 @@ All notable changes to this project will be documented in this file.
     -   Added "Speed Lines" background pattern (conic gradient).
 - [2026-02-06] **Navigation Flow**:
     -   Updated Homepage category links to use URL query params (`/shop?category=...`).
-    -   Updated `ProductList` to sync sidebar selection with URL.
+
+## [0.0.7] - Top Picks & Visual Quality - 2026-02-08
+### Added
+- [2026-02-08] **Top Picks Redesign**:
+    -   Implemented **Marquee Header** with infinite scrolling text ("CURRENT TOP HITS").
+    -   Updated layout to full-width 5-column grid.
+    -   Added "Ranking Badge" system (Top 1-5).
+    -   Added Entrance Animations (Framer Motion) and Confetti effects.
+- [2026-02-08] **Image Quality System**:
+    -   Created `download_anime_images.ts` script to bypass hotlink protection.
+    -   Downloaded high-resolution key visuals for top series (FMAB, Demon Slayer, etc.) to local storage.
+    -   Updated database to serve images locally (`/images/anime/...`).
+
+### Changed
+- [2026-02-08] **Layout Alignment**:
+    -   Aligned `TopPicks` section width with `FlashSale` container (`max-w-[1400px]`).
+    -   Refined card visuals (removed rounded corners, added gold borders).
+

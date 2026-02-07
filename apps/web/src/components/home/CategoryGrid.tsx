@@ -10,7 +10,7 @@ export function CategoryGrid() {
   return (
     <section className="w-full bg-[#F0E6CA] py-20">
       <div className="max-w-[1700px] mx-auto">
-        <SectionHeader title="Shop by Category" className="mb-12" />
+        {/* <SectionHeader title="Shop by Category" className="mb-12" /> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Figures & Statues Card */}
           <div className="relative h-[600px] group overflow-hidden rounded-3xl bg-gray-950 transition-all duration-500 hover:p-0">

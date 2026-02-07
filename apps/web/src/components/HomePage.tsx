@@ -48,10 +48,10 @@ export function HomePage() {
       {/* 5. Shop Figures and Manga (Grid) - Full Width */}
       <CategoryGrid />
 
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-20">
-        {/* 6. Top Anime Shop Section (Top Picks) */}
-        <TopPicks />
+      {/* 6. Top Anime Shop Section (Top Picks) */}
+      <TopPicks />
 
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-20">
         {/* 7. Latest Drops Section */}
         <section>
           <SectionHeader title="Latest Drops" subtitle="Fresh arrivals just for you" />
