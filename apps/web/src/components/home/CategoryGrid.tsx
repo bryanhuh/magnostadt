@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { trpc } from '../../utils/trpc';
-import { SectionHeader } from './SectionHeader';
 
 export function CategoryGrid() {
   // Fetch manga products for dynamic display

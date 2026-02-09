@@ -70,15 +70,17 @@ async function scrapeShow(showName: string, showUrl: string, coverImageUrl?: str
 
     const productCards = $('.iportfolio');
 
-    console.log(`   Found ${productCards.length} products.`);
+    console.log(`   Found ${productCards.length} products to process.`);
+    console.log('   (This helps populate images and pre-order status by visiting each page...)');
     
     let addedCount = 0;
 
+    // Use a regular for loop to await efficiently
     for (const card of productCards) {
         const $card = $(card);
         const title = $card.find('.portfolio-desc h3').text().trim();
         const href = $card.find('.portfolio-image a').attr('href');
-        let imgSrc = $card.find('.portfolio-image img').attr('src');
+        let listImgSrc = $card.find('.portfolio-image img').attr('src');
         
         // Price extraction
         const priceText = $card.find('.item-price').text().trim();
@@ -102,24 +104,125 @@ async function scrapeShow(showName: string, showUrl: string, coverImageUrl?: str
             }
         }
 
-        // Image URL normalization
-        if (imgSrc && !imgSrc.startsWith('http')) {
-             if (imgSrc.startsWith('/')) {
-                 imgSrc = `${BASE_URL}${imgSrc}`;
+        if (!title || price === 0) continue;
+
+        // Construct Full Product URL
+        let productUrl = href || '';
+        if (productUrl && !productUrl.startsWith('http')) {
+            productUrl = `${BASE_URL}${productUrl}`; // Usually absolute relative to root or base
+            // NOTE: href often comes as "/show/product/" so base url append is correct
+            // But we'll double check if it doesn't start with /
+            if (!href?.startsWith('/')) {
+                 productUrl = `${showUrl}${href}`;
+            }
+        }
+
+        // --- FETCH DETAIL PAGE ---
+        let description = href ? `External Link: ${href}` : 'Imported from Aniplex Store';
+        let images: string[] = [];
+        let isPreorder = false;
+        let releaseDate: Date | null = null;
+        let detailImgSrc: string | null = null;
+
+        if (productUrl) {
+            try {
+                // console.log(`      ...fetching detail: ${title}`);
+                const detailRes = await fetch(productUrl);
+                if (detailRes.ok) {
+                    const detailHtml = await detailRes.text();
+                    const $detail = cheerio.load(detailHtml);
+
+                    // 1. Scrape Description
+                    // Try .product-info or .description or just body text if needed
+                    // Based on inspection, Aniplex might not have a clean description block easily.
+                    // We'll leave the default description for now or try to grab a paragraph.
+                    
+                    // 2. Scrape Images
+                    // Selector based on test: .slide img
+                    // Some might be thumbnails in a different container, but .slide img usually covers the main slider
+                    const scrapedImages = new Set<string>();
+                    
+                    // Get main images
+                    $detail('img').each((_, el) => {
+                         const src = $detail(el).attr('src');
+                         // Heuristic to find gallery images: usually inside a slider or gallery container
+                         // or just large images. 
+                         // Refined strategy: check for 'slide' class in parents
+                         const parentClass = $detail(el).parent().attr('class') || '';
+                         const grandParentClass = $detail(el).parent().parent().attr('class') || '';
+                         
+                         if (parentClass.includes('slide') || grandParentClass.includes('slide')) {
+                             if (src) scrapedImages.add(src);
+                         }
+                    });
+
+                    // Convert to array and resolve URLs
+                    images = Array.from(scrapedImages).map(img => {
+                        if (!img.startsWith('http')) {
+                            // Resolve relative
+                            // If starts with /, relative to domain
+                            if (img.startsWith('/')) return `${BASE_URL}${img}`;
+                            // Else relative to page? Aniplex is tricky.
+                            // Usually assets are absolute or root relative.
+                            // Let's assume relative to current URL directory if not root
+                            const urlObj = new URL(productUrl);
+                            const path = urlObj.pathname.substring(0, urlObj.pathname.lastIndexOf('/') + 1);
+                             return `${urlObj.origin}${path}${img}`; 
+                        }
+                        return img;
+                    }).filter(url => !url.includes('pixel') && !url.includes('logo'));
+
+                    if (images.length > 0) {
+                        detailImgSrc = images[0]; // Use first gallery image as main if available
+                    }
+
+                    // 3. Scrape Pre-Order / Release Date
+                    const bodyText = $detail('body').text();
+                    
+                    // Check for "Pre-Order" text
+                    // Sometimes status is explicitly "Pre-order found"
+                    if (bodyText.toLowerCase().includes('pre-order')) {
+                        isPreorder = true;
+                    }
+
+                    // Check Release Date
+                    const releaseDateMatch = bodyText.match(/Release Date:\s*([0-9\/]+)/i);
+                    if (releaseDateMatch) {
+                        const dateStr = releaseDateMatch[1];
+                        const date = new Date(dateStr);
+                        if (!isNaN(date.getTime())) {
+                            releaseDate = date;
+                            // If release date is in the future, it is a preorder
+                            if (date > new Date()) {
+                                isPreorder = true;
+                            }
+                        }
+                    }
+
+                }
+            } catch (err) {
+                console.warn(`      Failed to scrape detail page for ${title}:`, err);
+            }
+        }
+
+        // Fallback for image
+        let finalImgSrc = detailImgSrc || listImgSrc;
+        if (finalImgSrc && !finalImgSrc.startsWith('http')) {
+             if (finalImgSrc.startsWith('/')) {
+                 finalImgSrc = `${BASE_URL}${finalImgSrc}`;
              } else {
-                 // Often relative to current path, but showUrl ends in /, so simple append usually works
-                 // But safer to check. Generally images are /assets/... or similar?
-                 // Let's assume Aniplex uses relative or root-relative.
-                 // Inspecting site: <img src="images/..." > relative to /shows/name/
-                 imgSrc = `${showUrl}${imgSrc}`;
+                 finalImgSrc = `${showUrl}${finalImgSrc}`;
              }
         }
 
-        if (!title || price === 0) continue;
+        // Normalize images array to absolute URLs if not already (logic above handled most, but duplicate check)
+        // Also ensure main image is in images list?
+        if (finalImgSrc && !images.includes(finalImgSrc)) {
+            images.unshift(finalImgSrc);
+        }
 
         // Ensure category
         const category = await getCategory(title);
-
         const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
         // Upsert Product
@@ -128,24 +231,33 @@ async function scrapeShow(showName: string, showUrl: string, coverImageUrl?: str
             update: {
                 price,
                 stock: 20, // Restock if re-scraping
-                imageUrl: imgSrc,
+                imageUrl: finalImgSrc,
                 isSale,
                 salePrice: salePrice ?? undefined,
+                images: images,      // Update images
+                isPreorder: isPreorder, // Update pre-order status
+                releaseDate: releaseDate, // Update release date
             },
             create: {
                 name: title,
                 slug,
-                description: href ? `External Link: ${href}` : 'Imported from Aniplex Store',
+                description: description,
                 price,
-                imageUrl: imgSrc,
+                imageUrl: finalImgSrc,
                 stock: 20,
                 animeId: series.id,
                 categoryId: category.id,
                 isSale,
                 salePrice: salePrice ?? undefined,
+                images: images,
+                isPreorder: isPreorder,
+                releaseDate: releaseDate,
             }
         });
         addedCount++;
+        
+        // Small delay to be polite to the server since we are making many requests
+        await new Promise(r => setTimeout(r, 200));
     }
     console.log(`   ✅ Added/Updated ${addedCount} items.`);
 

@@ -119,7 +119,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - [2026-02-06] **Product Cards**: Stripped `italic` styles for cleaner typography. Added price comparison (original vs sale price).
 - [2026-02-06] **Typography**: Removed italic styles from sidebar filters.
-- [2026-02-06] **Layout**: Increased Header z-index (`z-[100]`) to fix overlap with filters.
+- [2026-02-06] **Layout**: Increased Header z-index (`z-[100]`) to fix overlap with filters∏.
 
 ### Fixed
 - [2026-02-06] **Filtering Logic**: Fixed bug where "All Categories" excluded sale items by default.
@@ -149,4 +149,18 @@ All notable changes to this project will be documented in this file.
 - [2026-02-08] **Layout Alignment**:
     -   Aligned `TopPicks` section width with `FlashSale` container (`max-w-[1400px]`).
     -   Refined card visuals (removed rounded corners, added gold borders).
+
+## [0.0.8] - Scraper & Product Enhancements - 2026-02-09
+### Added
+- [2026-02-09] **Advanced Scraper**:
+    -   Updated `seed-all.ts` to scrape individual product detail pages.
+    -   Added support for detecting **Pre-Order** status based on "Release Date" or explicit flags.
+    -   Implemented **Multiple Image** scraping to populate product galleries.
+- [2026-02-09] **Data Integrity**:
+    -   Populated `isPreorder` and `images` fields for over 70 products.
+    -   Verified correct mapping of release dates.
+
+### Fixed
+- [2026-02-09] **Pre-Order Section**: Fixed "No products found" in Home Page Pre-Order section by correctly populating `isPreorder` field.
+- [2026-02-09] **Product Gallery**: Resolved missing multiple images in `ProductDetails` by scraping full gallery from source.
 

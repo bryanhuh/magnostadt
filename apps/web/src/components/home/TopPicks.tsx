@@ -44,11 +44,15 @@ export function TopPicks() {
 
   const { data: topPicks } = trpc.getAnimeSeries.useQuery({ 
     names: [
-      'FULLMETAL ALCHEMIST: BROTHERHOOD', 
-      'Demon Slayer: Kimetsu no Yaiba', 
-      'BOCCHI THE ROCK!',
-      'Fate/Grand Order',
-      'Sword Art Online'
+      'Fate/Zero',
+      'Fate/stay night [Unlimited Blade Works]',
+      'Fate/stay night [Heaven’s Feel]',
+      'Fate/Grand Order - Absolute Demonic Front: Babylonia',
+      'Fate/Apocrypha',
+      // 'Fate/Grand Order',
+      // 'Demon Slayer: Kimetsu no Yaiba',
+      // 'BOCCHI THE ROCK!',
+      // 'Sword Art Online'
     ] 
   });
 
@@ -106,7 +110,7 @@ export function TopPicks() {
                    <img 
                     src={anime.coverImage ?? anime.headerImage ?? 'https://via.placeholder.com/600x800'} 
                     alt={anime.name}
-                    className="h-full w-full object-cover opacity-90 grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover opacity-100 grayscale-[30%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                   />
                 </div>
 
@@ -114,7 +118,7 @@ export function TopPicks() {
                 <div className="absolute inset-0 z-20 bg-gradient-to-t from-gray-950 via-gray-900/20 to-transparent" />
                 
                 {/* Badge - Absolute Top Left */}
-                <div className="absolute top-6 left-6 z-30 flex flex-col items-center">
+                {/* <div className="absolute top-6 left-6 z-30 flex flex-col items-center">
                    <img 
                      src="/ranking-badge.png" 
                      alt="Ranking Badge" 
@@ -123,12 +127,12 @@ export function TopPicks() {
                    <span className="text-[#F0E6CA] font-black tracking-widest uppercase text-[10px] bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm border border-[#F0E6CA]/30">
                      #{index + 1}
                    </span>
-                </div>
+                </div> */}
 
                 {/* 5. Content */}
                 <div className="absolute bottom-0 left-0 p-8 w-full z-30 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
                   
-                  <h3 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-[0.9] drop-shadow-lg line-clamp-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-[0.9] drop-shadow-lg line-clamp-2">
                     {anime.name}
                   </h3>
                   
