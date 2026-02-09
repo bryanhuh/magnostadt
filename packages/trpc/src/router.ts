@@ -168,7 +168,7 @@ export const appRouter = router({
     .query(async ({ input }) => {
       const { featured, slug, names } = input || {};
       
-      return await prisma.animeSeries.findMany({
+      const results = await prisma.animeSeries.findMany({
         where: {
           featured,
           slug,
@@ -184,6 +184,17 @@ export const appRouter = router({
           }
         }
       });
+
+      // If specific names were requested, sort the results to match the order of the input array
+      if (names && names.length > 0) {
+        return results.sort((a, b) => {
+          const indexA = names.indexOf(a.name);
+          const indexB = names.indexOf(b.name);
+          return indexA - indexB;
+        });
+      }
+
+      return results;
     }),
 
   createAnimeSeries: adminProcedure

@@ -17,8 +17,8 @@ export function Navigation() {
               to={link.path}
               className={`text-sm md:text-base uppercase tracking-widest transition-colors font-orbitron ${
                 location.pathname === link.path 
-                  ? 'text-yellow-600' 
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-gray-900 dark:text-[#F0E6CA] font-bold' 
+                  : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
               }`}
             >
               {link.name}

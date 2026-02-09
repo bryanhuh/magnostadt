@@ -8,7 +8,7 @@ export function CollectionsPage() {
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F0E6CA]"></div>
       </div>
     );
   }
@@ -38,12 +38,12 @@ export function CollectionsPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
             
             <div className="absolute bottom-0 left-0 p-8 transform transition-transform duration-500 group-hover:translate-y-0 translate-y-2">
-              <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-2 drop-shadow-lg">
+              <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-2 drop-shadow-lg font-libre-bodoni">
                 {series.name}
               </h3>
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                <span className="text-yellow-400 font-bold tracking-wide text-sm">Explore Collection</span>
-                <span className="bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded">
+                <span className="text-[#F0E6CA] font-bold tracking-wide text-sm font-exo-2">Explore Collection</span>
+                <span className="bg-[#F0E6CA] text-[#0a0f1c] text-[10px] font-black px-2 py-0.5 rounded font-exo-2 border border-[#F0E6CA]">
                   {(series as any).products?.length || 0} ITEMS
                 </span>
               </div>

@@ -1,67 +1,31 @@
+
 import { PrismaClient } from '@prisma/client';
-import fs from 'fs';
-import path from 'path';
-import { Readable } from 'stream';
-import { finished } from 'stream/promises';
 
 const prisma = new PrismaClient();
 
-const OUTPUT_DIR = path.join(process.cwd(), 'apps/web/public/images/anime');
-
-// Ensure directory exists
-if (!fs.existsSync(OUTPUT_DIR)) {
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-}
-
-// Helper to download image
-async function downloadImage(url: string, filepath: string) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Referer': 'https://www.anime-planet.com/',
-    }
-  });
-
-  if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-
-  const fileStream = fs.createWriteStream(filepath);
-  // @ts-ignore - native fetch response body is a readable stream in node/bun
-  await finished(Readable.fromWeb(res.body!).pipe(fileStream));
-}
-
 async function main() {
-  console.log('⬇️  Starting anime image download...');
+  console.log('🔄 Updating anime cover images (using provided local files)...');
 
   const updates = [
     {
-      name: 'FULLMETAL ALCHEMIST: BROTHERHOOD',
-      // FMAB High Res
-      url: 'https://cdn.anime-planet.com/anime/primary/fullmetal-alchemist-brotherhood-1.jpg?t=1625770353', 
-      filename: 'fmab.jpg'
+      name: 'Fate/Zero',
+      path: '/images/anime/fate-zero.jpg'
     },
     {
-      name: 'Demon Slayer: Kimetsu no Yaiba',
-      // Demon Slayer High Res
-      url: 'https://cdn.anime-planet.com/anime/primary/demon-slayer-kimetsu-no-yaiba-movie-infinity-castle-part-1-1.webp?t=1753752988', 
-      filename: 'demon-slayer.webp'
+      name: 'Fate/stay night [Unlimited Blade Works]',
+      path: '/images/anime/fate-ubw.jpg'
     },
     {
-      name: 'BOCCHI THE ROCK!',
-      // Bocchi High Res
-      url: 'https://cdn.anime-planet.com/anime/primary/bocchi-the-rock-1.webp?t=1671405672', 
-      filename: 'bocchi.webp'
+      name: 'Fate/stay night [Heaven’s Feel]',
+      path: '/images/anime/fate-feel.jpg'
     },
     {
-      name: 'Fate/Grand Order',
-      // FGO Babylonia
-      url: 'https://cdn.anime-planet.com/anime/primary/fate-grand-order-absolute-demonic-front-babylonia-1.jpg?t=1625784961b', 
-      filename: 'fgo.jpg'
+      name: 'Fate/Grand Order - Absolute Demonic Front: Babylonia',
+      path: '/images/anime/fate-order.jpg'
     },
     {
-      name: 'Sword Art Online',
-      // SAO High Res
-      url: 'https://cdn.anime-planet.com/anime/primary/sword-art-online-1.jpg?t=1625775113f', 
-      filename: 'sao.jpg'
+      name: 'Fate/Apocrypha',
+      path: '/images/anime/fate-apocrypha.jpg'
     }
   ];
 
@@ -70,34 +34,27 @@ async function main() {
       const anime = await prisma.animeSeries.findFirst({
         where: {
           name: {
-            equals: update.name,
-            mode: 'insensitive',
+             equals: update.name,
+             mode: 'insensitive',
           }
         }
       });
 
       if (anime) {
-        const localPath = `/images/anime/${update.filename}`;
-        const absPath = path.join(OUTPUT_DIR, update.filename);
-
-        console.log(`Downloading ${update.name}...`);
-        await downloadImage(update.url, absPath);
-        
         await prisma.animeSeries.update({
           where: { id: anime.id },
-          data: { coverImage: localPath },
+          data: { coverImage: update.path },
         });
-        console.log(`✅ Updated ${update.name} -> ${localPath}`);
+        console.log(`✅ Updated ${anime.name} -> ${update.path}`);
       } else {
-        console.warn(`⚠️  Could not find anime: ${update.name}`);
+        console.warn(`⚠️  Could not find anime matching: ${update.name}`);
       }
-
     } catch (error) {
-      console.error(`❌ Failed to process ${update.name}:`, error);
+      console.error(`❌ Failed to update ${update.name}:`, error);
     }
   }
 
-  console.log('🏁 Anime image download and update completed.');
+  console.log('🏁 Anime image update completed.');
 }
 
 main()

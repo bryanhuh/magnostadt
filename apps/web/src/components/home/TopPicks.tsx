@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { trpc } from '../../utils/trpc';
 import { ArrowRight } from 'lucide-react';
-import { SectionHeader } from './SectionHeader';
+
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { useEffect, useRef } from 'react';
@@ -59,25 +59,58 @@ export function TopPicks() {
   return (
     <section ref={containerRef} className="relative w-full">
       {/* Marquee Header */}
-      <div className="w-full overflow-hidden bg-yellow-400 py-3 mb-0 border-y-4 border-black relative z-20">
-        <motion.div 
-          className="flex whitespace-nowrap"
-          animate={{ x: [0, -1000] }}
-          transition={{ 
-            repeat: Infinity, 
-            ease: "linear", 
-            duration: 20 
-          }}
-        >
-           {[...Array(10)].map((_, i) => (
-             <span key={i} className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-black px-8">
-               CURRENT TOP HITS <span className="text-white px-2">•</span> FAN FAVORITES <span className="text-white px-2">•</span> BEST SELLERS <span className="text-white px-2">•</span>
-             </span>
-           ))}
-        </motion.div>
+      {/* The Exhibit Header */}
+      <div className="w-full bg-gray-50 dark:bg-gray-950 pt-24 pb-12 px-6 md:px-12 flex flex-col items-center relative z-20 transition-colors duration-300">
+        <div className="w-full max-w-[1400px]">
+          <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-8">
+            <div className="relative">
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: "100%" }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, ease: "easeInOut" }}
+                className="absolute -top-6 left-0 h-[1px] bg-gradient-to-r from-gray-900 to-transparent dark:from-[#F0E6CA] dark:to-transparent"
+              />
+              <motion.h2 
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="text-5xl md:text-7xl font-libre-bodoni text-gray-900 dark:text-[#F0E6CA] leading-none transition-colors"
+              >
+                Staff Top Picks
+              </motion.h2>
+              <motion.p 
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="text-gray-600 dark:text-gray-400 mt-4 text-sm md:text-base max-w-md font-exo-2 tracking-wide transition-colors"
+              >
+                Curated collections from the most acclaimed series in modern anime history.
+              </motion.p>
+            </div>
+
+            <Link
+              to="/collections"
+              className="group flex items-center gap-3 text-gray-900 dark:text-[#F0E6CA] hover:text-gray-600 dark:hover:text-white transition-colors pb-2 border-b border-transparent hover:border-gray-900 dark:hover:border-[#F0E6CA] font-exo-2 uppercase tracking-widest text-xs"
+            >
+              View Full Collection
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+          
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="w-full h-[1px] bg-gray-200 dark:bg-[#F0E6CA]/20 origin-left transition-colors"
+          />
+        </div>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-gray-950">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
          {topPicks?.map((anime, index) => (
            <motion.div
              key={anime.id}
@@ -115,7 +148,7 @@ export function TopPicks() {
                 </div>
 
                 {/* 4. Deep Gradient */}
-                <div className="absolute inset-0 z-20 bg-gradient-to-t from-gray-950 via-gray-900/20 to-transparent" />
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-gray-50 via-gray-50/20 to-transparent dark:from-gray-950 dark:via-gray-900/20 dark:to-transparent transition-colors" />
                 
                 {/* Badge - Absolute Top Left */}
                 {/* <div className="absolute top-6 left-6 z-30 flex flex-col items-center">
@@ -132,14 +165,14 @@ export function TopPicks() {
                 {/* 5. Content */}
                 <div className="absolute bottom-0 left-0 p-8 w-full z-30 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
                   
-                  <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-[0.9] drop-shadow-lg line-clamp-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter mb-4 leading-[0.9] drop-shadow-lg line-clamp-2 transition-colors">
                     {anime.name}
                   </h3>
                   
-                   <div className="flex items-center gap-3 text-white font-bold uppercase tracking-wider text-sm opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-                     <div className="h-[2px] w-8 bg-[#F0E6CA]" />
-                     Shop Now <ArrowRight className="w-4 h-4 text-[#F0E6CA]" />
-                   </div>
+                     <div className="flex items-center gap-3 text-gray-900 dark:text-white font-bold uppercase tracking-wider text-sm opacity-0 transform translate-y-4 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+                       <div className="h-[2px] w-8 bg-gray-900 dark:bg-[#F0E6CA] transition-colors" />
+                       Shop Now <ArrowRight className="w-4 h-4 text-gray-900 dark:text-[#F0E6CA] transition-colors" />
+                     </div>
                 </div>
              </Link>
            </motion.div>

@@ -164,3 +164,30 @@ All notable changes to this project will be documented in this file.
 - [2026-02-09] **Pre-Order Section**: Fixed "No products found" in Home Page Pre-Order section by correctly populating `isPreorder` field.
 - [2026-02-09] **Product Gallery**: Resolved missing multiple images in `ProductDetails` by scraping full gallery from source.
 
+
+## [0.0.9] - Theme Overhaul & Global Dark Mode - 2026-02-09
+### Added
+- [2026-02-09] **Global Light/Dark Theme**:
+    - Implemented `ThemeContext` and floating `ThemeToggle`.
+    - Integrated `tailwindcss` dark mode strategy.
+    - Added "Akashic District" logo to Admin Sidebar.
+- [2026-02-09] **Admin Theme Support**:
+    - Refactored all Admin pages (`Dashboard`, `Products`, `Orders`, `Series`) to support both Light and Dark modes.
+    - Updated Admin Layout with improved contrast and branding.
+
+### Changed
+- [2026-02-09] **Default Theme**:
+    - Set application default to **Light Mode** for better initial accessibility.
+- [2026-02-09] **Public Pages Refactor**:
+    - Updated `HomePage` components (`Showcase`, `TopPicks`, `CategoryGrid`, `SeriesGrid`) to be theme-aware.
+    - Refactored `ProductList`, `ProductDetails`, and `CartDrawer` for consistent theming.
+    - **Category Grid**: Adjusted text colors and backgrounds for legibility in both modes.
+    - **Series Grid**: Fixed background color issues in Dark Mode.
+    - **Collections Page**: Added full Dark Mode support.
+
+### Fixed
+- [2026-02-09] **Theme Toggle**: Resolved issue where toggle button was not persisting state or updating DOM correctly.
+- [2026-02-09] **Visual Bugs**:
+    - Fixed "FIGURES STATUES" text visibility in Light Mode.
+    - Fixed "Manga & Books" card background contrast.
+    - Fixed `ProductDetails` Sale badge styling.

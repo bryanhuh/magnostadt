@@ -16,8 +16,8 @@ export function AdminLayout() {
 
   if (!isLoaded || (isSignedIn && isDbLoading)) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-12 h-12 text-yellow-600 animate-spin" />
+      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-[#0a0f1c]">
+        <Loader2 className="w-12 h-12 text-gray-900 dark:text-[#F0E6CA] animate-spin" />
       </div>
     );
   }
@@ -35,13 +35,15 @@ export function AdminLayout() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0a0f1c] text-gray-900 dark:text-white font-exo-2 transition-colors duration-300">
       {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
+      <div className="w-64 bg-white dark:bg-[#0a0f1c] border-r border-gray-200 dark:border-[#F0E6CA]/10 flex flex-col shadow-xl shadow-black/5 dark:shadow-black/20 transition-colors duration-300">
         <div className="p-6">
-          <h1 className="text-xl font-black text-yellow-600 uppercase italic tracking-tighter">
-            Shonen Admin
-          </h1>
+          <img 
+            src="/logo.png" 
+            alt="Akashic District" 
+            className="h-10 w-auto object-contain brightness-0 dark:invert transition-all"
+          />
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
@@ -51,23 +53,23 @@ export function AdminLayout() {
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive 
-                    ? 'bg-yellow-50 text-yellow-700 font-bold' 
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    ? 'bg-gray-100 dark:bg-[#F0E6CA] text-gray-900 dark:text-[#0a0f1c] font-black shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20' 
+                    : 'text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#1a2333] hover:text-gray-900 dark:hover:text-[#F0E6CA]'
                 }`}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-yellow-600' : 'text-gray-400'}`} />
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-gray-900 dark:text-[#0a0f1c]' : 'text-gray-400 group-hover:text-gray-900 dark:group-hover:text-[#F0E6CA]'}`} />
                 {item.name}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 dark:border-[#F0E6CA]/10">
           <button 
             onClick={() => signOut()}
-            className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            className="flex items-center gap-3 px-4 py-3 w-full text-red-500 hover:bg-red-500/10 rounded-xl transition-colors font-bold"
           >
             <LogOut className="w-5 h-5" />
             Sign Out
@@ -76,7 +78,7 @@ export function AdminLayout() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto bg-gray-50">
+      <div className="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0f1c] transition-colors duration-300">
         <div className="p-8 max-w-7xl mx-auto">
           <Outlet />
         </div>

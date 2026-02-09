@@ -38,13 +38,15 @@ import { useCartStore } from './store/useCartStore';
 import { Navigation } from './components/Navigation'; // [NEW]
 
 import { SignedIn, UserButton } from '@clerk/clerk-react';
+import { ThemeProvider } from './context/ThemeContext';
+import { ThemeToggle } from './components/ThemeToggle';
 
 function Header() {
   const { toggleCart, getTotalItems } = useCartStore();
   const totalItems = getTotalItems();
 
   return (
-    <header className="sticky top-0 z-[100] bg-white/80 backdrop-blur-md border-b border-gray-100">
+    <header className="sticky top-0 z-[100] bg-white/80 dark:bg-[#0a0f1c]/80 backdrop-blur-md border-b border-gray-200 dark:border-[#F0E6CA]/10 transition-colors duration-300">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between gap-4">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
@@ -52,13 +54,8 @@ function Header() {
             <img 
               src="/logo.png" 
               alt="Akashic District" 
-              className="h-16 md:h-20 w-auto object-contain"
+              className="h-16 md:h-20 w-auto object-contain brightness-0 dark:invert transition-all"
             />
-            {/* <Link to="/" className="block group">
-              <h1 className="font-libre-bodoni text-3xl md:text-4xl tracking-[0.05em] text-gray-900 group-hover:text-yellow-600 transition-colors">
-                Akashic District
-              </h1>
-            </Link> */}
           </Link>
         </div>
         
@@ -78,7 +75,7 @@ function Header() {
                 userProfileUrl="/profile"
                 appearance={{
                   elements: {
-                    avatarBox: "w-9 h-9 border-2 border-yellow-600"
+                    avatarBox: "w-9 h-9 border-2 border-[#F0E6CA]"
                   }
                 }}
               >
@@ -91,11 +88,11 @@ function Header() {
 
           <button 
             onClick={toggleCart}
-            className="relative bg-gray-100 hover:bg-yellow-50 text-gray-900 p-2.5 rounded-xl transition-all group"
+            className="relative bg-gray-100 dark:bg-[#1a2333] hover:bg-gray-200 dark:hover:bg-[#F0E6CA]/10 text-gray-900 dark:text-[#F0E6CA] p-2.5 rounded-xl transition-all group border border-gray-200 dark:border-[#F0E6CA]/20"
           >
-            <ShoppingBag className="w-5 h-5 group-hover:text-yellow-600 transition-colors" />
+            <ShoppingBag className="w-5 h-5 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-yellow-600 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+              <span className="absolute -top-1.5 -right-1.5 bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white dark:border-[#0a0f1c]">
                 {totalItems}
               </span>
             )}
@@ -146,9 +143,11 @@ export default function App() {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <div className="min-h-screen bg-gray-50 text-gray-900 font-exo-2">
-            <Routes>
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          <BrowserRouter>
+            <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1c] text-gray-900 dark:text-gray-100 font-exo-2 transition-colors duration-300">
+              <ThemeToggle />
+              <Routes>
               {/* Public Routes */}
               <Route path="/" element={
                  <>
@@ -284,7 +283,8 @@ export default function App() {
           </div>
           <CartDrawer />
           <Toaster position="bottom-right" theme="light" />
-        </BrowserRouter>
+          </BrowserRouter>
+        </ThemeProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );

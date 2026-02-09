@@ -112,13 +112,13 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
       {/* Sidebar Filters */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white p-6 transform transition-transform duration-300 ease-in-out border-r border-gray-200
+        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#0a0f1c] p-6 transform transition-transform duration-300 ease-in-out border-r border-gray-200 dark:border-[#F0E6CA]/10
         lg:static lg:translate-x-0 lg:bg-transparent lg:p-0 lg:border-none lg:w-64 lg:block
         ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex justify-between items-center lg:hidden mb-6">
-          <h2 className="text-xl font-bold text-yellow-500">Filters</h2>
-          <button onClick={() => setIsFilterOpen(false)}>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-[#F0E6CA]">Filters</h2>
+          <button onClick={() => setIsFilterOpen(false)} className="text-gray-400">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -126,12 +126,12 @@ export function ProductList({ initialFilter }: ProductListProps) {
         <div className="space-y-8">
           {/* Status Filters */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-[#F0E6CA]/10 pb-2 font-libre-bodoni transition-colors">
               Status
             </h3>
             <div className="space-y-2">
                <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-yellow-500 border-yellow-500 text-black' : 'border-gray-300 bg-white group-hover:border-yellow-500'}`}>
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-gray-900 dark:bg-[#F0E6CA] border-gray-900 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-gray-900 dark:group-hover:border-[#F0E6CA]'}`}>
                       {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                   </div>
                   <input 
@@ -140,7 +140,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
                       checked={isSaleOnly} 
                       onChange={(e) => setIsSaleOnly(e.target.checked)} 
                   />
-                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors ${isSaleOnly ? 'text-black' : 'text-gray-500 group-hover:text-black'}`}>
+                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100'}`}>
                       On Sale
                   </span>
                </label>
@@ -149,14 +149,14 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-[#F0E6CA]/10 pb-2 font-libre-bodoni transition-colors">
               Categories
             </h3>
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedCategory(undefined)}
-                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                  !selectedCategory ? 'bg-yellow-500 text-black font-bold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
+                  !selectedCategory ? 'bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1a2333]'
                 }`}
               >
                 All Categories
@@ -165,10 +165,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
                     selectedCategory === category.id
-                      ? 'bg-yellow-500 text-black font-bold'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-[#F0E6CA] text-[#0a0f1c] font-bold'
+                      : 'text-gray-400 hover:text-white hover:bg-[#1a2333]'
                   }`}
                 >
                   {category.name}
@@ -179,14 +179,14 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
           {/* Anime Series */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider border-b border-gray-200 pb-2">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-[#F0E6CA]/10 pb-2 font-libre-bodoni transition-colors">
               Series
             </h3>
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedAnime(undefined)}
-                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                  !selectedAnime ? 'bg-yellow-500 text-black font-bold' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
+                  !selectedAnime ? 'bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1a2333]'
                 }`}
               >
                 All Series
@@ -195,10 +195,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
                 <button
                   key={anime.id}
                   onClick={() => setSelectedAnime(anime.id)}
-                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
                     selectedAnime === anime.id
-                      ? 'bg-yellow-500 text-black font-bold'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-[#F0E6CA] text-[#0a0f1c] font-bold'
+                      : 'text-gray-400 hover:text-white hover:bg-[#1a2333]'
                   }`}
                 >
                   {anime.name}
@@ -225,14 +225,14 @@ export function ProductList({ initialFilter }: ProductListProps) {
           ))}
           
           {products?.length === 0 && (
-            <div className="col-span-full text-center py-20 border-2 border-dashed border-gray-200 rounded-3xl">
-              <p className="text-gray-500 text-lg">No products found matching your filters.</p>
-              <button 
+            <div className="col-span-full text-center py-20 border-2 border-dashed border-[#F0E6CA]/20 rounded-3xl">
+              <p className="text-gray-400 text-lg font-exo-2">No products found matching your filters.</p>
+                 <button 
                 onClick={() => {
                   setSelectedCategory(undefined);
                   setSelectedAnime(undefined);
                 }}
-                className="mt-4 text-yellow-500 hover:underline"
+                className="mt-4 text-gray-900 dark:text-[#F0E6CA] hover:underline font-bold transition-colors"
               >
                 Clear all filters
               </button>

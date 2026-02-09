@@ -26,7 +26,7 @@ export function Showcase() {
   const products = showcaseItem.products || [];
 
   return (
-    <section className="relative w-full h-[90vh] min-h-[700px] bg-black overflow-hidden group animate-in fade-in duration-700">
+    <section className="relative w-full h-[90vh] min-h-[700px] bg-gray-900 dark:bg-black overflow-hidden group animate-in fade-in duration-700 transition-colors">
       
       {/* --- BACKGROUND LAYER --- */}
       <div className="absolute inset-0 z-0">
@@ -48,8 +48,8 @@ export function Showcase() {
          />
          
          {/* Overlays for Text Readability */}
-         <div className={`absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 ${showcaseItem.headerImage ? 'via-black/10' : 'via-black/50'}`} />
-         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+         <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-gray-900/30 dark:from-black dark:via-transparent dark:to-black/30 ${showcaseItem.headerImage ? 'via-gray-900/10 dark:via-black/10' : 'via-gray-900/50 dark:via-black/50'}`} />
+         <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/40 to-transparent dark:from-black/80 dark:via-black/40 dark:to-transparent" />
          
          {/* Noise Texture (Keep consistent) */}
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
@@ -65,12 +65,12 @@ export function Showcase() {
                 
                 {/* Badge */}
                 <div className="flex items-center gap-3">
-                     <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-400 text-black font-black uppercase tracking-widest text-xs rounded-sm shadow-lg shadow-yellow-500/20">
+                     <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F0E6CA] text-black font-black uppercase tracking-widest text-xs rounded-sm shadow-lg shadow-[#F0E6CA]/20 font-exo-2">
                         <Star className="w-3 h-3 fill-black" />
                         Spotlight
                      </div>
                      <div className="h-[1px] w-12 bg-white/50" />
-                     <span className="text-white/80 uppercase tracking-widest text-xs font-bold shadow-black drop-shadow-md">
+                     <span className="text-white/80 uppercase tracking-widest text-xs font-bold shadow-black drop-shadow-md font-exo-2">
                          Premium Edition
                      </span>
                 </div>
@@ -79,21 +79,21 @@ export function Showcase() {
                     {showcaseItem.name}
                 </h1>
                 
-                <p className="text-gray-200 text-lg md:text-xl font-medium max-w-xl leading-relaxed line-clamp-3 drop-shadow-md border-l-4 border-yellow-500 pl-6">
+                <p className="text-gray-200 text-lg md:text-xl font-medium max-w-xl leading-relaxed line-clamp-3 drop-shadow-md border-l-4 border-[#F0E6CA] pl-6 font-exo-2">
                    {showcaseItem.description ?? "Experience the thrill of the hunt. Official merchandise, figures, and apparel available now."}
                 </p>
 
                 <div className="flex flex-wrap gap-4 pt-4">
                     <Link 
                         to={`/collection/${(showcaseItem as any).slug ?? showcaseItem.id}`}
-                        className="bg-white text-black px-10 py-5 rounded-sm font-black text-lg uppercase tracking-wider hover:bg-yellow-400 hover:scale-105 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+                        className="bg-white text-black px-10 py-5 rounded-sm font-black text-lg uppercase tracking-wider hover:bg-[#F0E6CA] hover:scale-105 transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.3)] font-exo-2"
                     >
                         Shop Collection <ArrowRight className="w-5 h-5" />
                     </Link>
                     
                     <SignedOut>
                         <SignInButton mode="modal" forceRedirectUrl="/auth-callback">
-                            <button className="px-10 py-5 rounded-sm font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md uppercase tracking-wider transition-all">
+                            <button className="px-10 py-5 rounded-sm font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md uppercase tracking-wider transition-all font-exo-2">
                                 Sign In
                             </button>
                         </SignInButton>
@@ -131,7 +131,7 @@ export function Showcase() {
                                 className={`
                                     relative w-40 md:w-48 aspect-[3/4] 
                                     bg-black/60 backdrop-blur-xl border border-white/20 rounded-xl overflow-hidden shadow-2xl
-                                    transition-all duration-300 hover:scale-110 hover:z-50 hover:bg-black/80 hover:border-yellow-500/50
+                                    transition-all duration-300 hover:scale-110 hover:z-50 hover:bg-black/80 hover:border-[#F0E6CA]/50
                                     ${idx % 2 === 0 ? '-translate-y-10' : 'translate-y-0'}
                                 `}
                             >
@@ -141,8 +141,8 @@ export function Showcase() {
                                     className="w-full h-full object-cover opacity-90 group-hover:opacity-100"
                                 />
                                 <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black via-black/80 to-transparent">
-                                    <p className="text-white text-xs font-bold line-clamp-1">{product.name}</p>
-                                    <p className="text-yellow-400 text-xs font-mono font-bold">${product.price}</p>
+                                    <p className="text-white text-xs font-bold line-clamp-1 font-exo-2">{product.name}</p>
+                                    <p className="text-[#F0E6CA] text-xs font-bold font-exo-2">${product.price}</p>
                                 </div>
                             </Link>
                         ))}
