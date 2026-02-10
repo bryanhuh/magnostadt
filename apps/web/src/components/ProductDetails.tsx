@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { formatPrice } from '../utils/format';
 import { trpc } from '../utils/trpc';
-import { Loader2, ArrowLeft, ShoppingCart, Heart } from 'lucide-react';
+import { Loader2, ArrowLeft, ShoppingCart, Heart, Check } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
 import { ProductCarousel } from './home/ProductCarousel';
@@ -12,6 +12,7 @@ import { useUser } from '@clerk/clerk-react';
 export function ProductDetails() {
   const { slug } = useParams<{ slug: string }>();
   const { addItem } = useCartStore();
+  const [isAdded, setIsAdded] = useState(false);
   const { user } = useUser();
   const utils = trpc.useUtils();
   
@@ -202,15 +203,19 @@ export function ProductDetails() {
                       price: Number(product.price),
                       location: 'product_details'
                     });
+                    setIsAdded(true);
+                    setTimeout(() => setIsAdded(false), 2000);
                   }}
-                  disabled={product.stock === 0}
+                  disabled={product.stock === 0 || isAdded}
                   className={`flex-1 py-5 rounded-xl font-black uppercase tracking-widest text-base transition-all flex items-center justify-center gap-3 font-exo-2 
                     ${product.stock > 0 
-                      ? 'bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white dark:hover:text-black hover:shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20 shadow-md' 
+                      ? isAdded
+                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/20 scale-105'
+                        : 'bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white dark:hover:text-black hover:shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20 shadow-md' 
                       : 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'}`}
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                  {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+                  {product.stock > 0 ? (isAdded ? 'Added to Cart' : 'Add to Cart') : 'Out of Stock'}
                 </button>
                 
                 <button 

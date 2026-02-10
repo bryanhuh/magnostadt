@@ -16,6 +16,7 @@ interface ProductListProps {
 export function ProductList({ initialFilter }: ProductListProps) {
   const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
 
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
@@ -30,6 +31,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
     categoryName: selectedCategory ? undefined : (categoryFromUrl ?? initialFilter?.categoryName),
     animeId: selectedAnime,
     isSale: isSaleOnly ? true : undefined,
+    search: searchQuery || undefined,
     ...initialFilter,
   });
 
@@ -131,7 +133,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
             </h3>
             <div className="space-y-2">
                <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-gray-900 dark:bg-[#F0E6CA] border-gray-900 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-gray-900 dark:group-hover:border-[#F0E6CA]'}`}>
+                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-blue-600 dark:bg-[#F0E6CA] border-blue-600 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-blue-600 dark:group-hover:border-[#F0E6CA]'}`}>
                       {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                   </div>
                   <input 
@@ -140,7 +142,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
                       checked={isSaleOnly} 
                       onChange={(e) => setIsSaleOnly(e.target.checked)} 
                   />
-                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100'}`}>
+                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-[#F0E6CA]'}`}>
                       On Sale
                   </span>
                </label>
@@ -156,7 +158,9 @@ export function ProductList({ initialFilter }: ProductListProps) {
               <button
                 onClick={() => setSelectedCategory(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedCategory ? 'bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1a2333]'
+                  !selectedCategory 
+                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' 
+                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                 }`}
               >
                 All Categories
@@ -167,8 +171,8 @@ export function ProductList({ initialFilter }: ProductListProps) {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
                     selectedCategory === category.id
-                      ? 'bg-[#F0E6CA] text-[#0a0f1c] font-bold'
-                      : 'text-gray-400 hover:text-white hover:bg-[#1a2333]'
+                      ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
+                      : 'text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                   }`}
                 >
                   {category.name}
@@ -186,7 +190,9 @@ export function ProductList({ initialFilter }: ProductListProps) {
               <button
                 onClick={() => setSelectedAnime(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedAnime ? 'bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1a2333]'
+                  !selectedAnime 
+                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' 
+                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                 }`}
               >
                 All Series
@@ -197,8 +203,8 @@ export function ProductList({ initialFilter }: ProductListProps) {
                   onClick={() => setSelectedAnime(anime.id)}
                   className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
                     selectedAnime === anime.id
-                      ? 'bg-[#F0E6CA] text-[#0a0f1c] font-bold'
-                      : 'text-gray-400 hover:text-white hover:bg-[#1a2333]'
+                      ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
+                      : 'text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                   }`}
                 >
                   {anime.name}
@@ -219,6 +225,16 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
       {/* Product Grid */}
       <div className="flex-1">
+        {searchQuery && (
+          <div className="mb-6 flex items-center gap-2">
+            <span className="text-gray-500 dark:text-gray-400">Search results for:</span>
+            <span className="font-bold text-gray-900 dark:text-white text-lg">"{searchQuery}"</span>
+            {products && (
+              <span className="text-gray-400 text-sm ml-2">({products.length} found)</span>
+            )}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products?.map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -231,6 +247,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
                 onClick={() => {
                   setSelectedCategory(undefined);
                   setSelectedAnime(undefined);
+                  // Optionally clear URL search params if needed, but simple state reset is often enough for "Clear all"
                 }}
                 className="mt-4 text-gray-900 dark:text-[#F0E6CA] hover:underline font-bold transition-colors"
               >

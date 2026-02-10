@@ -5,7 +5,7 @@ import { useClerk, useUser } from '@clerk/clerk-react';
 export function ProfileLayout() {
   const location = useLocation();
   const { signOut } = useClerk();
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
 
   const links = [
     { href: '/profile/orders', label: 'Order History', icon: Package },
@@ -23,18 +23,18 @@ export function ProfileLayout() {
         {/* Sidebar */}
         <div className="md:col-span-1 space-y-2">
           {/* User Profile Card */}
-          <div className="bg-gray-50 p-6 rounded-2xl mb-6 border border-gray-100 flex flex-col items-center text-center">
-            <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden mb-4">
+          <div className="bg-gray-50 dark:bg-[#1a2333] p-6 rounded-2xl mb-6 border border-gray-100 dark:border-[#F0E6CA]/10 flex flex-col items-center text-center transition-colors">
+            <div className="w-24 h-24 rounded-full border-4 border-white dark:border-[#0a0f1c] shadow-lg overflow-hidden mb-4">
               <img 
                 src={user?.imageUrl} 
                 alt={user?.fullName || 'User'} 
                 className="w-full h-full object-cover"
               />
             </div>
-            <h3 className="font-black text-lg uppercase tracking-tight mb-1">
+            <h3 className="font-black text-lg uppercase tracking-tight mb-1 text-gray-900 dark:text-white font-exo-2">
               {user?.fullName || 'Guest User'}
             </h3>
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest truncate max-w-full px-2">
+            <p className="text-gray-400 dark:text-gray-500 text-xs font-bold uppercase tracking-widest truncate max-w-full px-2 font-exo-2">
               {user?.primaryEmailAddress?.emailAddress}
             </p>
           </div>
@@ -44,23 +44,25 @@ export function ProfileLayout() {
               <Link
               key={link.href}
               to={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold uppercase tracking-wide transition-all
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold uppercase tracking-wide transition-all font-exo-2
                 ${isActive(link.href) 
-                  ? 'bg-black text-white' 
-                  : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-black'}`}
+                  ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c]' 
+                  : 'bg-gray-50 dark:bg-[#1a2333] text-gray-400 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1a2333]/80 hover:text-gray-900 dark:hover:text-[#F0E6CA]'}`}
             >
               <link.icon className="w-5 h-5" />
               {link.label}
             </Link>
           ))}
           
-          <button
-            onClick={() => signOut()}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold uppercase tracking-wide bg-red-50 text-red-500 hover:bg-red-100 transition-all mt-8"
-          >
-            <LogOut className="w-5 h-5" />
-            Sign Out
-          </button>
+          {isSignedIn && (
+            <button
+              onClick={() => signOut()}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold uppercase tracking-wide bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all mt-8 font-exo-2"
+            >
+              <LogOut className="w-5 h-5" />
+              Sign Out
+            </button>
+          )}
           </div>
         </div>
 

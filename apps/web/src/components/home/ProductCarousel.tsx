@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { formatPrice } from '../../utils/format';
-import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../../store/useCartStore';
@@ -18,6 +18,7 @@ interface ProductCarouselProps {
 export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { addItem } = useCartStore();
+  const [addedId, setAddedId] = useState<string | null>(null);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -143,10 +144,17 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
                       product_name: product.name,
                       price: product.isSale && product.salePrice ? Number(product.salePrice) : Number(product.price),
                     });
+                    setAddedId(product.id);
+                    setTimeout(() => setAddedId(null), 2000);
                   }}
-                  className="bg-gray-900 dark:bg-[#F0E6CA] hover:bg-gray-700 dark:hover:bg-white text-white dark:text-[#0a0f1c] p-2 rounded-lg transition-transform active:scale-95 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20"
+                  disabled={addedId === product.id}
+                  className={`p-2 rounded-lg transition-all active:scale-95 shadow-lg ${
+                    addedId === product.id
+                      ? 'bg-green-500 text-white shadow-green-500/20 scale-110 opacity-100 translate-y-0'
+                      : 'bg-gray-900 dark:bg-[#F0E6CA] hover:bg-gray-700 dark:hover:bg-white text-white dark:text-[#0a0f1c] opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 shadow-gray-200 dark:shadow-[#F0E6CA]/20'
+                  }`}
                 >
-                  <ShoppingCart className="w-4 h-4" />
+                  {addedId === product.id ? <Check className="w-4 h-4" /> : <ShoppingCart className="w-4 h-4" />}
                 </button>
               </div>
             </div>

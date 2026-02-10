@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { toast } from 'sonner';
-import { ShoppingCart, Heart } from 'lucide-react';
+import { Heart, ShoppingCart, Check } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
+
 import { formatPrice } from '../utils/format';
 import type { inferRouterOutputs } from '@trpc/server';
 import type { AppRouter } from '@shonen-mart/trpc';
@@ -16,9 +18,34 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const [isAdded, setIsAdded] = useState(false);
   const { addItem } = useCartStore();
   const { user } = useUser();
   const utils = trpc.useUtils();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.isSale && product.salePrice ? Number(product.salePrice) : Number(product.price),
+      imageUrl: product.imageUrl,
+      anime: { name: product.anime.name }
+    });
+
+    setIsAdded(true);
+    toast.success(`Added ${product.name} to cart`);
+    
+    captureEvent('add_to_cart', {
+      product_id: product.id,
+      product_name: product.name,
+      price: Number(product.price),
+    });
+
+    setTimeout(() => setIsAdded(false), 2000);
+  };
 
   const { data: isInWishlist } = trpc.wishlist.checkStatus.useQuery(
     { productId: product.id },
@@ -123,27 +150,20 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-gray-900 dark:text-[#F0E6CA] font-bold text-lg font-exo-2 transition-colors">{formatPrice(Number(product.price))}</span>
             )}
           </div>
-          {/* <button 
+          <button 
             onClick={(e) => {
-              e.preventDefault(); // Prevent navigation to details
-              addItem({
-                id: product.id,
-                name: product.name,
-                price: Number(product.price),
-                imageUrl: product.imageUrl,
-                anime: { name: product.anime.name }
-              });
-              toast.success(`Added ${product.name} to cart`);
-              captureEvent('add_to_cart', {
-                product_id: product.id,
-                product_name: product.name,
-                price: Number(product.price),
-              });
+              // e.preventDefault(); // Already handled in handleAddToCart
+              handleAddToCart(e);
             }}
-            className="bg-[#F0E6CA] hover:bg-white text-[#0a0f1c] p-2 rounded-lg transition-transform active:scale-95 shadow-lg shadow-[#F0E6CA]/10"
+            disabled={isAdded}
+            className={`p-2 rounded-lg transition-all active:scale-95 shadow-lg ${
+              isAdded 
+                ? 'bg-green-500 text-white shadow-green-500/20 scale-110' 
+                : 'bg-[#F0E6CA] hover:bg-white text-[#0a0f1c] dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white shadow-[#F0E6CA]/10'
+            }`}
           >
-            <ShoppingCart className="w-5 h-5" />
-          </button> */}
+            {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+          </button>
         </div>
       </div>
     </Link>

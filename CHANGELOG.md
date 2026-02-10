@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.10] - Header, Search, & UX Polish - 2026-02-10
+### Added
+- **Search Functionality**: Implemented search query handling in `ProductList` and `Shop` page.
+- **Cart UX**: Added "Sent to Cart" visual feedback (green checkmark animation) to `ProductCard`, `ProductDetails`, and `ProductCarousel`.
+- **Conditional Rendering**: Added logic to only show the "Sign Out" button in `ProfileLayout` when the user is signed in.
+
+### Changed
+- **Header**:
+    - Replaced image logo with text-based "Akashic District" logo using `font-libre-bodoni`.
+    - Refined Cart icon styling (removed background/border) for a cleaner look.
+- **Search Modal**:
+    - Redesigned sidebar with larger typography and better categorization.
+    - Removed placeholder text from search input.
+    - Modal now closes automatically when submitting a search or opening the cart.
+- **Typography**:
+    - Updated various headings and text in `ProfileLayout`, `Addresses`, `Wishlist`, and `Orders` pages to use `font-exo-2`.
+    - Replaced `font-libre-bodoni` with `font-exo-2` in Admin Orders page title.
+- **Cart Behavior**: Disabled automatic cart opening when adding items.
+- **Theme**: Improved dark mode consistency across Profile and Admin pages (colors, borders, backgrounds).
+
+### Fixed
+- **Sidebar**: Fixed hover/active states for sidebar buttons in both light and dark modes.
+
 ## [0.0.1] - MVP Launch - 2026-01-24
 ### Added
 - [2026-01-24] **Project Structure**: Initialized Bun Workspaces (`apps/api`, `apps/web`, `packages/db`, `packages/trpc`).

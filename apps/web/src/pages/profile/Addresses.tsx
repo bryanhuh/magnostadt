@@ -140,16 +140,16 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg animate-in fade-in zoom-in-95 duration-300">
-      <div className="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-        <h3 className="font-black uppercase tracking-wide text-lg flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-[#0a0f1c] border border-gray-200 dark:border-[#F0E6CA]/10 rounded-2xl overflow-hidden shadow-lg animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-gray-50 dark:bg-[#1a2333] px-6 py-4 border-b border-gray-100 dark:border-[#F0E6CA]/10 flex justify-between items-center transition-colors">
+        <h3 className="font-black uppercase tracking-wide text-lg flex items-center gap-2 text-gray-900 dark:text-white font-exo-2">
           {initialData ? <Edit2 className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
           {initialData ? 'Edit Address' : 'New Address'}
         </h3>
         <button 
             type="button" 
             onClick={getUserLocation}
-            className="text-xs bg-black text-white px-3 py-1.5 rounded-lg font-bold uppercase hover:bg-yellow-500 hover:text-black transition-colors flex items-center gap-2"
+            className="text-xs bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] px-3 py-1.5 rounded-lg font-bold uppercase hover:bg-gray-800 dark:hover:bg-white transition-colors flex items-center gap-2"
         >
             {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin"/> : <Navigation className="w-3 h-3" />}
             Use My Location
@@ -158,7 +158,7 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
       
       <div className="p-6 space-y-8">
         {/* Map Section */}
-        <div className="rounded-xl overflow-hidden border border-gray-200 h-64 relative bg-gray-100 group">
+        <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-[#F0E6CA]/10 h-64 relative bg-gray-100 dark:bg-[#1a2333] group">
              {/* Fallback/Initial View centering on US or User Location */}
              <MapContainer 
                 center={mapPosition || [37.7749, -122.4194]} 
@@ -192,13 +192,13 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Address Label</label>
+            <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Address Label</label>
             <div className="relative">
                 <MapPin className="absolute left-4 top-3 w-4 h-4 text-gray-300" />
                 <input
                     type="text"
                     placeholder="e.g. Home, Office, Secret Base"
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium placeholder:text-gray-300"
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium placeholder:text-gray-300 dark:placeholder:text-gray-600 text-gray-900 dark:text-white"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
@@ -207,11 +207,11 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
           </div>
 
            <div className="md:col-span-2">
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Street Address</label>
+            <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Street Address</label>
             <input
               type="text"
               placeholder="123 Anime Street"
-              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium text-gray-900 dark:text-white"
               value={formData.street}
               onChange={(e) => setFormData({ ...formData, street: e.target.value })}
               required
@@ -219,9 +219,9 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
           </div>
 
           <div>
-             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Country</label>
+             <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Country</label>
               <select
-                className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium appearance-none"
+                className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium appearance-none text-gray-900 dark:text-white"
                 value={formData.country}
                 onChange={(e) => setFormData({ ...formData, country: e.target.value })}
               >
@@ -234,10 +234,10 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
           </div>
 
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">City</label>
+            <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">City</label>
             <input
               type="text"
-              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium text-gray-900 dark:text-white"
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               required
@@ -245,20 +245,20 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
           </div>
 
           <div>
-             <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">State / Province</label>
+             <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">State / Province</label>
             <input
               type="text"
-              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium text-gray-900 dark:text-white"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
               required
             />
           </div>
           <div>
-            <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Zip Code</label>
+            <label className="block text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Zip Code</label>
             <input
               type="text"
-              className="w-full px-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition-all font-medium"
+              className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#1a2333] border-none rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-[#F0E6CA] transition-all font-medium text-gray-900 dark:text-white"
               value={formData.zipCode}
               onChange={(e) => setFormData({ ...formData, zipCode: e.target.value })}
               required
@@ -267,25 +267,28 @@ function AddressForm({ initialData, onCancel, onSuccess }: AddressFormProps) {
         </div>
 
         <div className="flex items-center gap-3 pt-2 group cursor-pointer" onClick={() => setFormData({ ...formData, isDefault: !formData.isDefault })}>
-            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${formData.isDefault ? 'bg-black border-black text-white' : 'border-gray-300 bg-white'}`}>
+            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors 
+                ${formData.isDefault 
+                    ? 'bg-gray-900 dark:bg-[#F0E6CA] border-gray-900 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' 
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333]'}`}>
                 {formData.isDefault && <Check className="w-3 h-3" />}
             </div>
-            <label className="text-sm font-bold text-gray-700 select-none cursor-pointer">Set as default address</label>
+            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 select-none cursor-pointer">Set as default address</label>
         </div>
       </div>
 
-      <div className="bg-gray-50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100">
+      <div className="bg-gray-50 dark:bg-[#1a2333] px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-[#F0E6CA]/10">
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2.5 text-gray-500 hover:text-black font-bold uppercase text-xs tracking-wider transition-colors"
+          className="px-6 py-2.5 text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white font-bold uppercase text-xs tracking-wider transition-colors"
           disabled={isPending}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-8 py-2.5 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase text-xs tracking-wider transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+          className="px-8 py-2.5 bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] rounded-xl hover:bg-gray-800 dark:hover:bg-white font-bold uppercase text-xs tracking-wider transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
           disabled={isPending}
         >
           {isPending ? (
@@ -316,7 +319,7 @@ export function Addresses() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-yellow-500 mb-4" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 dark:text-[#F0E6CA] mb-4" />
         <span className="text-xs font-bold uppercase text-gray-400 tracking-widest animate-pulse">Loading Addresses...</span>
       </div>
     );
@@ -324,15 +327,15 @@ export function Addresses() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+      <div className="flex items-center justify-between border-b border-gray-100 dark:border-[#F0E6CA]/10 pb-6 transition-colors">
          <div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter">My Addresses</h2>
-            <p className="text-gray-400 text-sm font-medium mt-1">Manage your shipping destinations</p>
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-gray-900 dark:text-white font-exo-2">My Addresses</h2>
+            <p className="text-gray-400 dark:text-gray-500 text-sm font-medium mt-1 font-exo-2">Manage your shipping destinations</p>
          </div>
          {!isAdding && !editingId && (
            <button
              onClick={() => setIsAdding(true)}
-             className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all text-xs tracking-wider shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+             className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] rounded-xl hover:bg-gray-800 dark:hover:bg-white font-bold uppercase transition-all text-xs tracking-wider shadow-lg hover:shadow-xl hover:-translate-y-0.5"
            >
              <Plus className="w-4 h-4" />
              Add New Address
@@ -348,15 +351,15 @@ export function Addresses() {
       )}
 
       {addresses?.length === 0 && !isAdding && (
-         <div className="flex flex-col items-center justify-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 group hover:border-black/10 transition-colors">
-          <div className="bg-white p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
-             <MapPin className="w-8 h-8 text-gray-300 group-hover:text-yellow-500 transition-colors" />
+         <div className="flex flex-col items-center justify-center py-24 bg-gray-50 dark:bg-[#1a2333] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#F0E6CA]/10 group hover:border-gray-300 dark:hover:border-[#F0E6CA]/30 transition-colors">
+          <div className="bg-white dark:bg-[#0a0f1c] p-4 rounded-full shadow-sm mb-6 group-hover:scale-110 transition-transform duration-300">
+             <MapPin className="w-8 h-8 text-gray-300 dark:text-gray-600 group-hover:text-blue-600 dark:group-hover:text-[#F0E6CA] transition-colors" />
           </div>
-          <h3 className="text-lg font-black uppercase text-gray-900 mb-2">No Addresses Found</h3>
-          <p className="text-gray-400 text-sm mb-8 font-medium">Add an address to speed up your checkout process functionality.</p>
+          <h3 className="text-lg font-black uppercase text-gray-900 dark:text-white mb-2 font-exo-2">No Addresses Found</h3>
+          <p className="text-gray-400 dark:text-gray-500 text-sm mb-8 font-medium">Add an address to speed up your checkout process functionality.</p>
           <button
              onClick={() => setIsAdding(true)}
-             className="flex items-center gap-2 px-8 py-3 bg-black text-white rounded-xl hover:bg-yellow-500 hover:text-black font-bold uppercase transition-all text-xs tracking-wider shadow-lg"
+             className="flex items-center gap-2 px-8 py-3 bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] rounded-xl hover:bg-gray-800 dark:hover:bg-white font-bold uppercase transition-all text-xs tracking-wider shadow-lg"
            >
              <Plus className="w-4 h-4" />
              Add First Address
@@ -374,47 +377,52 @@ export function Addresses() {
               onSuccess={() => setEditingId(null)}
             />
           ) : (
-            <div key={address.id} className={`group bg-white border rounded-2xl p-6 relative flex flex-col md:flex-row md:items-center justify-between transition-all duration-300 hover:shadow-xl
-              ${address.isDefault ? 'border-black ring-1 ring-black/5' : 'border-gray-100 hover:border-gray-200'}`}>
+            <div key={address.id} className={`group bg-white dark:bg-[#0a0f1c] border rounded-2xl p-6 relative flex flex-col md:flex-row md:items-center justify-between transition-all duration-300 hover:shadow-xl shadow-sm
+              ${address.isDefault 
+                ? 'border-gray-900 dark:border-[#F0E6CA] ring-1 ring-gray-900/5 dark:ring-[#F0E6CA]/20' 
+                : 'border-gray-200 dark:border-[#F0E6CA]/10 hover:border-gray-300 dark:hover:border-[#F0E6CA]/30'}`}>
               
               <div className="flex items-start gap-5">
-                <div className={`mt-1 p-3 rounded-xl flex-shrink-0 ${address.isDefault ? 'bg-black text-yellow-500' : 'bg-gray-50 text-gray-300 group-hover:text-black group-hover:bg-gray-100 transition-colors'}`}>
+                <div className={`mt-1 p-3 rounded-xl flex-shrink-0 transition-colors
+                    ${address.isDefault 
+                        ? 'bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c]' 
+                        : 'bg-gray-50 dark:bg-[#1a2333] text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white group-hover:bg-gray-100 dark:group-hover:bg-[#1a2333]/80'}`}>
                     <MapPin className="w-6 h-6" />
                 </div>
                 
                 <div className="space-y-1">
                   <div className="flex items-center gap-3 mb-1">
-                    <span className="font-black text-lg uppercase tracking-tight">{address.name}</span>
+                    <span className="font-black text-lg uppercase tracking-tight text-gray-900 dark:text-white">{address.name}</span>
                     {address.isDefault && (
-                      <span className="bg-yellow-400 text-black text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">
+                      <span className="bg-[#F0E6CA] dark:bg-[#F0E6CA] text-[#0a0f1c] text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">
                         Default
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 font-medium leading-relaxed">{address.street}</p>
-                  <p className="text-gray-500 font-medium">
-                    {address.city}, {address.state} <span className="text-gray-300">|</span> {address.zipCode}
+                  <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">{address.street}</p>
+                  <p className="text-gray-500 dark:text-gray-500 font-medium">
+                    {address.city}, {address.state} <span className="text-gray-300 dark:text-gray-700">|</span> {address.zipCode}
                   </p>
-                  <p className="text-gray-400 text-xs uppercase font-bold tracking-widest mt-2">{address.country}</p>
+                  <p className="text-gray-400 dark:text-gray-600 text-xs uppercase font-bold tracking-widest mt-2">{address.country}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 mt-4 md:mt-0 pl-16 md:pl-0 opacity-100 md:opacity-0 md:translate-x-4 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300">
                 <button
                   onClick={() => setEditingId(address.id)}
-                  className="px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
+                  className="px-4 py-2 text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-[#1a2333] rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
                 >
                   <Edit2 className="w-3 h-3" />
                   Edit
                 </button>
-                <div className="w-px h-4 bg-gray-200 hidden md:block"></div>
+                <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 hidden md:block"></div>
                 <button
                   onClick={() => {
                     if (confirm('Are you sure you want to delete this address?')) {
                       deleteMutation.mutate({ id: address.id });
                     }
                   }}
-                  className="px-4 py-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
+                  className="px-4 py-2 text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors font-bold uppercase text-xs tracking-wider flex items-center gap-2"
                 >
                   <Trash2 className="w-3 h-3" />
                   Delete

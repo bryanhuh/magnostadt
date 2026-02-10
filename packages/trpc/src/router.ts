@@ -77,10 +77,11 @@ export const appRouter = router({
         featured: z.boolean().optional(),
         limit: z.number().optional(),
         orderBy: z.enum(['newest', 'price_asc', 'price_desc']).optional(),
+        search: z.string().optional(),
       }).optional()
     )
     .query(async ({ input }) => {
-      const { categoryId, categoryName, animeId, isSale, isPreorder, featured, limit, orderBy } = input || {};
+      const { categoryId, categoryName, animeId, isSale, isPreorder, featured, limit, orderBy, search } = input || {};
       
       let orderByClause = {};
       if (orderBy === 'newest') {
@@ -101,6 +102,12 @@ export const appRouter = router({
           isSale,
           isPreorder,
           featured,
+          ...(search ? {
+            OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { description: { contains: search, mode: 'insensitive' } },
+            ]
+          } : {}),
         },
         take: limit,
         orderBy: orderByClause,

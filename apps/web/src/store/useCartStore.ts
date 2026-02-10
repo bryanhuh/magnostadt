@@ -55,7 +55,7 @@ export const useCartStore = create<CartState>()(
                   ? { ...item, quantity: item.quantity + 1 }
                   : item
               ),
-              isOpen: true, // Auto-open cart on add
+              // isOpen: true, // Removed auto-open
             };
           }
 
@@ -71,7 +71,7 @@ export const useCartStore = create<CartState>()(
                 quantity: 1,
               },
             ],
-            isOpen: true,
+            // isOpen: true, // Removed auto-open
           };
         });
       },

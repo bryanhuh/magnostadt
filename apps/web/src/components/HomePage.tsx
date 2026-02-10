@@ -15,7 +15,7 @@ export function HomePage() {
   const { data: preorderProducts, isLoading: preorderLoading } = trpc.getProducts.useQuery({ isPreorder: true, limit: 10 });
   const { data: latestProducts, isLoading: latestLoading } = trpc.getProducts.useQuery({ orderBy: 'newest', limit: 10 });
 
-  const { data: seriesList, isLoading: animeLoading } = trpc.getAnimeSeries.useQuery();
+  const { data: seriesList } = trpc.getAnimeSeries.useQuery();
 
   return (
     <div className="space-y-20 pb-20">
