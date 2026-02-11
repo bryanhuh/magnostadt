@@ -85,7 +85,7 @@ export function ProductDetails() {
     );
   }
 
-  const allImages = [product.imageUrl, ...(product.images || [])].filter(Boolean) as string[];
+  const allImages = Array.from(new Set([product.imageUrl, ...(product.images || [])].filter(Boolean))) as string[];
 
   return (
     <div className="animate-in fade-in duration-500 pb-20">

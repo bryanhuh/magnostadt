@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.11] - Payment Revert & Data Restoration - 2026-02-11
+### Reverted
+- **Payment Integration**: Rolled back Maya Payment implementation (Schema, Services, UI) to restore system stability.
+
+### Fixed
+- **Database Integrity**:
+    - Restored all Anime/Product data using `seed-all.ts` (Global Scraper).
+    - Restored Admin User access via `fix-admin-user.ts`.
+    - Recovered high-res Anime cover images via `download_anime_images.ts`.
+- **Admin Access**: Corrected email typo in admin recovery script.
+
+### Changed
+- **Content**: Updated "BOCCHI THE ROCK!" header image to high-quality local asset.
+
 ## [0.0.10] - Header, Search, & UX Polish - 2026-02-10
 ### Added
 - **Search Functionality**: Implemented search query handling in `ProductList` and `Shop` page.

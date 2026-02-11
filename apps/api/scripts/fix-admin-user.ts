@@ -1,7 +1,7 @@
-import { prisma } from '@shonen-mart/db';
+import { prisma } from '../../../packages/db/index';
 
 async function fixAdmin() {
-  const email = 'breelagrama@gmail.com';
+  const email = 'bryandiolata00@gmail.com';
   console.log(`Fixing admin user: ${email}`);
 
   const user = await prisma.user.upsert({

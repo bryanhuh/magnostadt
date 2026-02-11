@@ -19,11 +19,11 @@ async function main() {
   const accessories = await prisma.category.create({ data: { name: 'Accessories' } });
 
   // 3. Create Anime Series
-  const naruto = await prisma.animeSeries.create({ data: { name: 'Naruto Shippuden' } });
-  const onePiece = await prisma.animeSeries.create({ data: { name: 'One Piece' } });
-  const jjk = await prisma.animeSeries.create({ data: { name: 'Jujutsu Kaisen' } });
-  const demonSlayer = await prisma.animeSeries.create({ data: { name: 'Demon Slayer' } });
-  const spyXFamily = await prisma.animeSeries.create({ data: { name: 'Spy x Family' } });
+  const naruto = await prisma.animeSeries.create({ data: { name: 'Naruto Shippuden', slug: 'naruto-shippuden' } });
+  const onePiece = await prisma.animeSeries.create({ data: { name: 'One Piece', slug: 'one-piece' } });
+  const jjk = await prisma.animeSeries.create({ data: { name: 'Jujutsu Kaisen', slug: 'jujutsu-kaisen' } });
+  const demonSlayer = await prisma.animeSeries.create({ data: { name: 'Demon Slayer', slug: 'demon-slayer' } });
+  const spyXFamily = await prisma.animeSeries.create({ data: { name: 'Spy x Family', slug: 'spy-x-family' } });
 
   // 4. Create Products
   await prisma.product.createMany({

@@ -30,7 +30,7 @@ export function CartDrawer() {
         <div className="p-6 border-b border-gray-200 dark:border-[#F0E6CA]/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ShoppingBag className="w-6 h-6 text-gray-900 dark:text-[#F0E6CA]" />
-            <h2 className="text-2xl font-black uppercase italic tracking-wider text-gray-900 dark:text-gray-100 font-libre-bodoni transition-colors">Your Cart</h2>
+            <h2 className="text-2xl font-black uppercase italic tracking-wider text-gray-900 dark:text-gray-100 font-exo-2 transition-colors">Your Cart</h2>
           </div>
           <button 
             onClick={closeCart}
@@ -68,7 +68,7 @@ export function CartDrawer() {
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-bold text-lg leading-tight mb-1 text-gray-900 dark:text-gray-100 font-libre-bodoni transition-colors">{item.name}</h3>
+                    <h3 className="font-bold text-lg leading-tight mb-1 text-gray-900 dark:text-gray-100 font-exo-2 transition-colors">{item.name}</h3>
                     <p className="text-sm text-gray-500 uppercase font-bold font-exo-2">{item.animeName}</p>
                   </div>
                   
@@ -99,7 +99,7 @@ export function CartDrawer() {
                            removeItem(item.id);
                            captureEvent('remove_from_cart', { product_id: item.id });
                          }}
-                         className="text-xs text-red-500 hover:text-red-400 flex items-center gap-1 mt-1 font-exo-2"
+                         className="text-xs text-red-500 hover:text-red-400 cursor-pointer flex items-center gap-1 mt-1 font-exo-2"
                        >
                          <Trash2 className="w-3 h-3" /> Remove
                        </button>

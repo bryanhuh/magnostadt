@@ -61,14 +61,14 @@ export function CategoryGrid() {
             
             {/* Inner Container */}
             <div 
-              className="relative h-full w-full rounded-2xl overflow-hidden transition-all duration-500 group-hover:rounded-none bg-gray-100 dark:bg-[#151b2b]"
+              className="relative h-full w-full rounded-2xl overflow-hidden transition-all duration-500 group-hover:rounded-none bg-gray-100 dark:bg-[#151b2b] [--pattern-color:rgba(17,24,39,0.05)] dark:[--pattern-color:rgba(240,230,202,0.05)]"
               style={{ 
                 backgroundImage: `repeating-conic-gradient(
                   from 0deg at 50% 50%,
                   transparent 0deg,
                   transparent 10deg,
-                  rgba(240, 230, 202, 0.05) 10deg,
-                  rgba(240, 230, 202, 0.05) 20deg
+                  var(--pattern-color) 10deg,
+                  var(--pattern-color) 20deg
                 )`,
               }}
             >

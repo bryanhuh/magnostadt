@@ -1,5 +1,5 @@
 
-import { prisma } from '@shonen-mart/db';
+import { prisma } from '../../../packages/db/index';
 import * as cheerio from 'cheerio';
 
 const BASE_URL = 'https://store.aniplexusa.com';

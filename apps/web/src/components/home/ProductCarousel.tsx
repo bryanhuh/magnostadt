@@ -124,7 +124,7 @@ export function ProductCarousel({ products, isLoading }: ProductCarouselProps) {
                        <span className="text-red-400 font-bold text-lg font-exo-2">{formatPrice(Number(product.salePrice))}</span>
                      </div>
                    ) : (
-                     <span className="text-[#F0E6CA] font-bold text-lg font-exo-2">{formatPrice(Number(product.price))}</span>
+                     <span className="text-gray-900 dark:text-[#F0E6CA] font-bold text-lg font-exo-2">{formatPrice(Number(product.price))}</span>
                    )}
                 </div>
                 
