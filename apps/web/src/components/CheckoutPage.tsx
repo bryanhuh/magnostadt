@@ -33,7 +33,11 @@ export function CheckoutPage() {
       });
 
       clearCart();
-      navigate(`/order/${data.id}`);
+      if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+      } else {
+          navigate(`/order/${data.orderId}`);
+      }
     },
   });
 

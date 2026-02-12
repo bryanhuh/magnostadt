@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { prisma } from '@shonen-mart/db';
 import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
+import { TRPCError } from '@trpc/server';
 import { wishlistRouter } from './routers/wishlist';
 import { addressRouter } from './routers/address';
 
@@ -361,14 +362,22 @@ export const appRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { items, ...shippingDetails } = input;
 
-      return await prisma.$transaction(async (tx) => {
+      const order = await prisma.$transaction(async (tx) => {
         let total = 0;
         const orderItemsData = [];
+        const stripeLineItems = [];
 
         for (const item of items) {
-          const product = await tx.product.findUniqueOrThrow({
+          const product = await tx.product.findUnique({
             where: { id: item.productId },
           });
+
+          if (!product) {
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: `Product with ID ${item.productId} not found. Please clear your cart and try again.`,
+            });
+          }
 
           // if (product.stock < item.quantity) { }
 
@@ -380,9 +389,29 @@ export const appRouter = router({
             quantity: item.quantity,
             price: product.price, 
           });
-        }
 
-        const order = await tx.order.create({
+          stripeLineItems.push({
+             name: product.name,
+             description: product.description || undefined,
+             images: product.imageUrl ? [product.imageUrl] : undefined,
+             amount: Number(product.price) * 100, // Stripe expects cents
+             quantity: item.quantity,
+             currency: 'usd',
+          });
+        }
+        
+        // Add shipping (Flat rate $10 for now, matching frontend)
+        // Ideally this should be passed in or calculated centrally
+        const shippingCost = 10;
+        total += shippingCost;
+        stripeLineItems.push({
+            name: 'Shipping',
+            amount: shippingCost * 100,
+            quantity: 1,
+            currency: 'usd',
+        });
+
+        const newOrder = await tx.order.create({
           data: {
             ...shippingDetails,
             total,
@@ -394,8 +423,28 @@ export const appRouter = router({
           },
         });
 
-        return order;
+        return { newOrder, stripeLineItems };
       });
+      
+      // Import dynamically to avoid circular deps if any, or just standard import at top
+      const { createCheckoutSession } = await import('./services/stripe');
+
+      // Create Stripe Session
+      const session = await createCheckoutSession({
+          items: order.stripeLineItems,
+          orderId: order.newOrder.id,
+          customerEmail: input.email,
+          successUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/order/${order.newOrder.id}?success=true`,
+          cancelUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/checkout?canceled=true`,
+      });
+      
+      // Update Order with Session ID
+      await prisma.order.update({
+          where: { id: order.newOrder.id },
+          data: { stripeSessionId: session.id },
+      });
+
+      return { orderId: order.newOrder.id, checkoutUrl: session.url };
     }),
 
   getOrderById: publicProcedure

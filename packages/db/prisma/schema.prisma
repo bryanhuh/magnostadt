@@ -62,6 +62,8 @@ model Order {
   userId       String?
   user         User?       @relation(fields: [userId], references: [id])
   items        OrderItem[]
+  stripeSessionId String?   @unique
+  paymentStatus   String    @default("UNPAID") // UNPAID, PAID, FAILED
 }
 
 model User {

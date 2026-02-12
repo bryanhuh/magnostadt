@@ -46,7 +46,7 @@ export function OrderConfirmationPage() {
         <CheckCircle className="w-24 h-24 text-green-500" />
       </div>
       
-      <h1 className="text-4xl font-black text-gray-900 uppercase italic mb-2">Order Confirmed!</h1>
+      <h1 className="text-4xl font-black text-gray-900 uppercase mb-2">Order Confirmed!</h1>
       <p className="text-gray-500 text-lg mb-8">Thank you, {order.customerName}. Your gear is on the way.</p>
 
       <div className="bg-white rounded-2xl p-8 border border-gray-200 text-left mb-8 shadow-sm">
@@ -57,7 +57,7 @@ export function OrderConfirmationPage() {
            </div>
            <div className="text-right">
              <p className="text-sm text-gray-500 font-bold uppercase">Status</p>
-             <p className="font-bold text-green-700 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm inline-block">
+             <p className="font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm inline-block">
                {order.status}
              </p>
            </div>
@@ -94,7 +94,7 @@ export function OrderConfirmationPage() {
         </p>
         <Link 
           to="/"
-          className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-black py-3 px-8 rounded-xl uppercase tracking-wider transition-transform active:scale-95"
+          className="inline-flex items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:hover:bg-white dark:text-[#0a0f1c] font-black py-4 px-8 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(240,230,202,0.4)] active:scale-95 font-exo-2"
         >
           <Home className="w-5 h-5" /> Continue Shopping
         </Link>

@@ -8,6 +8,7 @@
     "@clerk/backend": "^2.29.5",
     "@shonen-mart/db": "workspace:*",
     "@trpc/server": "latest",
+    "stripe": "^20.3.1",
     "zod": "latest"
   }
 }

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.12] - Payment Integration (Stripe) - 2026-02-12
+### Added
+- **Stripe Integration**: Implemented Checkout Session Support.
+    - Database Order schema update (`stripeSessionId`, `paymentStatus`).
+    - Backend Service for Stripe Checkout (`stripe.ts`).
+    - Public procedure `createCheckoutSession` (via `createOrder` mutation).
+- **Payment Flow**:
+    - Users are redirected to Stripe Hosted Checkout.
+    - On success, redirected back to Order Confirmation.
+- **Documentation**: Added `docs/stripe_integration_guide.md`.
+
+### Changed
+- **Checkout Page**: Updated logic to handle redirect URL from backend.
+- **Order Confirmation**: Refined UI (removed italics, styling updates).
+
 ## [0.0.11] - Payment Revert & Data Restoration - 2026-02-11
 ### Reverted
 - **Payment Integration**: Rolled back Maya Payment implementation (Schema, Services, UI) to restore system stability.
@@ -178,7 +193,7 @@ All notable changes to this project will be documented in this file.
     -   Added "Ranking Badge" system (Top 1-5).
     -   Added Entrance Animations (Framer Motion) and Confetti effects.
 - [2026-02-08] **Image Quality System**:
-    -   Created `download_anime_images.ts` script to bypass hotlink protection.
+    -   Created `download_anime_images.ts` script to bypass hotlink protection.d
     -   Downloaded high-resolution key visuals for top series (FMAB, Demon Slayer, etc.) to local storage.
     -   Updated database to serve images locally (`/images/anime/...`).
 
