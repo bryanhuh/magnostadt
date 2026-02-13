@@ -1,4 +1,4 @@
-# Akashic District
+# Magnostadt
 
 A professional anime e-commerce store built with the B3 Stack (Bun, Hono, tRPC).
 

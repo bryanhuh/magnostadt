@@ -8,11 +8,16 @@
   },
   "dependencies": {
     "@hono/trpc-server": "latest",
+    "@react-email/components": "^1.0.7",
+    "@react-email/render": "^2.0.4",
     "@shonen-mart/db": "workspace:*",
     "@shonen-mart/trpc": "workspace:*",
     "@trpc/server": "latest",
     "cheerio": "^1.2.0",
-    "hono": "latest"
+    "hono": "latest",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "resend": "^6.9.2"
   },
   "devDependencies": {
     "@types/cheerio": "^1.0.0"

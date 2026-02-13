@@ -337,10 +337,25 @@ export const appRouter = router({
       status: z.enum(['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
     }))
     .mutation(async ({ input }) => {
-      return await prisma.order.update({
+      const order = await prisma.order.update({
         where: { id: input.id },
         data: { status: input.status },
+        include: { items: { include: { product: true } }, user: true },
       });
+
+      if (order.email) {
+          const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email');
+          
+          if (input.status === 'SHIPPED') {
+              await sendShippingUpdate(order, order.email);
+          } else if (input.status === 'DELIVERED') {
+              await sendDeliveredUpdate(order, order.email);
+          } else if (input.status === 'CANCELLED') {
+              await sendCancelledUpdate(order, order.email);
+          }
+      }
+
+      return order;
     }),
 
   createOrder: publicProcedure
@@ -443,6 +458,23 @@ export const appRouter = router({
           where: { id: order.newOrder.id },
           data: { stripeSessionId: session.id },
       });
+
+      // Send Order Confirmation Email (Async/Best Effort)
+      // Note: In production, this should ideally happen in a webhook after payment is confirmed.
+      // But for this MVP, we send it upon order creation (pending payment) or could wait.
+      // Actually, plan says "sent immediately after payment" usually, but without webhooks we can send "Order Placed"
+      // Let's send it now as "Order Received" to verify functionality.
+      // We need to fetch the full order with product details to match the template props
+      const fullOrder = await prisma.order.findUnique({
+          where: { id: order.newOrder.id },
+          include: { items: { include: { product: true } } }
+      });
+      
+      if (fullOrder) {
+          // Import from local service
+          const { sendOrderConfirmation } = await import('./services/email'); 
+          await sendOrderConfirmation(fullOrder, input.email);
+      }
 
       return { orderId: order.newOrder.id, checkoutUrl: session.url };
     }),

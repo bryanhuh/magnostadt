@@ -27,7 +27,7 @@ export function Header() {
             <Link to="/" className="block">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl md:text-3xl font-black font-libre-bodoni uppercase tracking-[0.15em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
-                  Akashic
+                  Magnostadt
                 </span>
                 <span className="text-lg md:text-xl font-bold font-libre-bodoni uppercase tracking-[0.1em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
                   District

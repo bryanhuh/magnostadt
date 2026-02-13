@@ -6,8 +6,15 @@
   "types": "./src/index.ts",
   "dependencies": {
     "@clerk/backend": "^2.29.5",
+    "@react-email/components": "^1.0.7",
+    "@react-email/render": "^2.0.4",
     "@shonen-mart/db": "workspace:*",
     "@trpc/server": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "resend": "^6.9.2",
     "stripe": "^20.3.1",
     "zod": "latest"
   }

@@ -41,7 +41,7 @@ export function AdminLayout() {
         <div className="p-6">
           <img 
             src="/logo.png" 
-            alt="Akashic District" 
+            alt="Magnostadt" 
             className="h-10 w-auto object-contain brightness-0 dark:invert transition-all"
           />
         </div>

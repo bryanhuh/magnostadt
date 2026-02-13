@@ -46,17 +46,17 @@ export function OrderConfirmationPage() {
         <CheckCircle className="w-24 h-24 text-green-500" />
       </div>
       
-      <h1 className="text-4xl font-black text-gray-900 uppercase mb-2">Order Confirmed!</h1>
-      <p className="text-gray-500 text-lg mb-8">Thank you, {order.customerName}. Your gear is on the way.</p>
+      <h1 className="text-4xl font-black font-exo-2 text-gray-900 uppercase mb-2 text-black dark:text-white">Order Confirmed</h1>
+      <p className="text-black dark:text-white text-lg mb-8">Thank you, {order.customerName}. Your gear is on the way.</p>
 
       <div className="bg-white rounded-2xl p-8 border border-gray-200 text-left mb-8 shadow-sm">
         <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
            <div>
              <p className="text-sm text-gray-500 font-bold uppercase">Order ID</p>
-             <p className="font-mono text-yellow-600">{order.id}</p>
+             <p className="font-mono text-blue-600">{order.id}</p>
            </div>
            <div className="text-right">
-             <p className="text-sm text-gray-500 font-bold uppercase">Status</p>
+             {/* <p className="text-sm text-gray-500 font-bold uppercase">Status</p> */}
              <p className="font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm inline-block">
                {order.status}
              </p>
@@ -84,17 +84,17 @@ export function OrderConfirmationPage() {
 
         <div className="flex justify-between items-center pt-4 border-t border-gray-200">
           <span className="font-bold text-lg text-gray-900">Total Paid</span>
-          <span className="font-black text-2xl text-yellow-600">{formatPrice(Number(order.total))}</span>
+          <span className="font-black text-2xl text-blue-600">{formatPrice(Number(order.total))}</span>
         </div>
       </div>
 
       <div className="space-y-4">
-        <p className="text-gray-500 text-sm">
-          A confirmation email has been sent to <span className="text-gray-900 font-bold">{order.email}</span>
+        <p className="text-gray-500 dark:text-white text-sm">
+          A confirmation email has been sent to <span className="text-gray-900 dark:text-white font-bold">{order.email}</span>
         </p>
         <Link 
           to="/"
-          className="inline-flex items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:hover:bg-white dark:text-[#0a0f1c] font-black py-4 px-8 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(240,230,202,0.4)] active:scale-95 font-exo-2"
+          className="inline-flex mt-8 items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:hover:bg-white dark:text-[#0a0f1c] font-black py-4 px-8 rounded-xl text-lg uppercase tracking-wider transition-all hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(240,230,202,0.4)] active:scale-95 font-exo-2"
         >
           <Home className="w-5 h-5" /> Continue Shopping
         </Link>

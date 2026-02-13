@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.13] - Email Notifications & Rebranding - 2026-02-13
+### Added
+- **Email Notifications**: Implemented comprehensive email system using **Resend** and **React Email**.
+    - **Triggers**:
+        - `OrderConfirmation`: Sent immediately upon order creation.
+        - `ShippingUpdate`: Sent when order status changes to `SHIPPED`.
+        - `Delivered`: Sent when order status changes to `DELIVERED`.
+        - `Cancelled`: Sent when order status changes to `CANCELLED`.
+    - **Templates**: Beautiful, responsive HTML email templates with item details and pricing.
+- **Documentation**: Added `docs/EMAIL_INTEGRATION_GUIDE.md` covering implementation, testing, and troubleshooting.
+
+### Changed
+- **Rebranding**: Renamed application to **Magnostadt**.
+    - Updated Global Header and Logo.
+    - Updated Admin Sidebar.
+    - Updated Document Title and Metadata.
+    - Updated Email Sender Name and Footer.
+
 ## [0.0.12] - Payment Integration (Stripe) - 2026-02-12
 ### Added
 - **Stripe Integration**: Implemented Checkout Session Support.

@@ -4,26 +4,25 @@ This document tracks the missing features and planned improvements for the Shone
 
 ## 🔴 Priority: Critical Features (Must Have)
 
-### 1. Payment Processing Integration
-- [ ] **Provider**: Implement **Maya (PayMaya)** as primary.
-- [ ] **Fallback**: Keep architecture flexible for Stripe/PayPal.
-- [ ] **Backend**: Set up Maya Checkout API integration in TRPC router.
-- [ ] **Frontend**: Redirect to Maya Checkout page from `CheckoutPage`.
-- [ ] **Webhooks**: Implement webhook handler to verify payment success.
+### 1. Payment Processing Integration (✅ Done)
+- [x] **Provider**: Implemented **Stripe**.
+- [x] **Backend**: Set up Stripe Checkout API integration in TRPC router.
+- [x] **Frontend**: Redirect to Stripe Checkout page from `CheckoutPage`.
+- [ ] **Webhooks**: Implement webhook handler to verify payment success (Future Polish).
 
-### 2. User Reviews & Ratings
-- [ ] **Database**: Add `Review` model to Prisma schema (relation to Product and User).
-- [ ] **API**: Create TRPC procedures for `createReview` and `getReviewsByProduct`.
-- [ ] **UI**:
-    - [ ] Component to display star rating and comments on `ProductDetails`.
-    - [ ] Form for verified buyers to submit reviews.
-
-### 3. Order Notifications (Email)
+### 2. Order Notifications (Email) [NEXT PRIORITY]
 - [ ] **Service**: Set up email provider (Resend or SendGrid).
 - [ ] **Templates**: Design email templates for:
     - [ ] Order Confirmation (sent immediately after payment).
     - [ ] Shipping Update (sent when admin marks order as SHIPPED).
 - [ ] **Trigger**: Connect email sending to `createOrder` and `updateOrderStatus` procedures.
+
+### 3. User Reviews & Ratings [SKIPPED FOR NOW]
+- [ ] **Database**: Add `Review` model to Prisma schema (relation to Product and User).
+- [ ] **API**: Create TRPC procedures for `createReview` and `getReviewsByProduct`.
+- [ ] **UI**:
+    - [ ] Component to display star rating and comments on `ProductDetails`.
+    - [ ] Form for verified buyers to submit reviews.
 
 ### 4. Advanced Inventory Management
 - [ ] **Stock Control**: Implement optimistic/transactional stock decrements.
