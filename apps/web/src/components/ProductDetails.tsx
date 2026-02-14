@@ -194,7 +194,8 @@ export function ProductDetails() {
                       name: product.name,
                       price: Number(product.isSale && product.salePrice ? product.salePrice : product.price),
                       imageUrl: product.imageUrl,
-                      anime: { name: product.anime.name }
+                      anime: { name: product.anime.name },
+                      stock: product.stock,
                     });
                     toast.success(`Added ${product.name} to cart`);
                     captureEvent('add_to_cart', {

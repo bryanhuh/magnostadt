@@ -32,7 +32,8 @@ export function ProductCard({ product }: ProductCardProps) {
       name: product.name,
       price: product.isSale && product.salePrice ? Number(product.salePrice) : Number(product.price),
       imageUrl: product.imageUrl,
-      anime: { name: product.anime.name }
+      anime: { name: product.anime.name },
+      stock: product.stock,
     });
 
     setIsAdded(true);

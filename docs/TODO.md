@@ -10,12 +10,10 @@ This document tracks the missing features and planned improvements for the Shone
 - [x] **Frontend**: Redirect to Stripe Checkout page from `CheckoutPage`.
 - [ ] **Webhooks**: Implement webhook handler to verify payment success (Future Polish).
 
-### 2. Order Notifications (Email) [NEXT PRIORITY]
-- [ ] **Service**: Set up email provider (Resend or SendGrid).
-- [ ] **Templates**: Design email templates for:
-    - [ ] Order Confirmation (sent immediately after payment).
-    - [ ] Shipping Update (sent when admin marks order as SHIPPED).
-- [ ] **Trigger**: Connect email sending to `createOrder` and `updateOrderStatus` procedures.
+### 2. Order Notifications (Email) (✅ Done)
+- [x] **Service**: Set up email provider (Resend).
+- [x] **Templates**: Designed email templates for Order Confirmation, Shipping, Delivered, and Cancelled.
+- [x] **Trigger**: Connected email sending to `createOrder` and `updateOrderStatus` procedures.
 
 ### 3. User Reviews & Ratings [SKIPPED FOR NOW]
 - [ ] **Database**: Add `Review` model to Prisma schema (relation to Product and User).
@@ -24,10 +22,10 @@ This document tracks the missing features and planned improvements for the Shone
     - [ ] Component to display star rating and comments on `ProductDetails`.
     - [ ] Form for verified buyers to submit reviews.
 
-### 4. Advanced Inventory Management
-- [ ] **Stock Control**: Implement optimistic/transactional stock decrements.
-- [ ] **Admin**: Add "Low Stock" dashboard widget or badging.
-- [ ] **Prevention**: strict backend checks to prevent negative stock.
+### 4. Advanced Inventory Management (✅ Done)
+- [x] **Stock Control**: Implemented transactional stock decrements in `createOrder` and restoration on cancellation.
+- [x] **Admin**: Added "Low Stock" dashboard widget with live inventory stats.
+- [x] **Prevention**: Strict backend checks + frontend cart guards to prevent overselling.
 
 ## 🟡 Priority: Improvements (Should Have)
 

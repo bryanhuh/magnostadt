@@ -146,13 +146,13 @@ export function AdminSeries() {
               placeholder="Search series..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#0a0f1c] border border-gray-200 dark:border-[#F0E6CA]/10 rounded-lg focus:outline-none focus:border-gray-900 dark:focus:border-[#F0E6CA] focus:bg-white dark:focus:bg-[#0a0f1c] text-gray-900 dark:text-white transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-600"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-[#0a0f1c] border border-gray-200 dark:border-[#F0E6CA]/10 rounded-lg focus:outline-none focus:border-gray-900 dark:focus:border-[#F0E6CA] focus:bg-white dark:focus:bg-[#0a0f1c] text-gray-900 dark:text-white transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-600 font-exo-2"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left transition-colors">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 font-exo-2 transition-colors">
             <thead className="bg-gray-100 dark:bg-[#0a0f1c] text-gray-900 dark:text-[#F0E6CA] font-bold uppercase text-xs font-exo-2 transition-colors">
               <tr>
                 <th className="px-6 py-4">Name</th>
@@ -187,17 +187,17 @@ export function AdminSeries() {
                     <div className="flex items-center justify-end gap-2">
                       <button 
                         onClick={() => handleOpenEdit(s)}
-                        className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-[#F0E6CA]/10 rounded-lg text-blue-600 dark:text-blue-400 transition-colors"
                         title="Edit Series"
                       >
-                        <Edit className="w-5 h-5" />
+                        <Edit className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDelete(s.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-[#F0E6CA]/10 rounded-lg text-red-600 dark:text-red-400 transition-colors"
                         title="Delete Series"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>

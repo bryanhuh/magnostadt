@@ -39,7 +39,7 @@ export function AdminOrders() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white font-exo-2 transition-colors">Orders</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white font-libre-bodoni transition-colors">Orders</h1>
         <p className="text-gray-500 dark:text-gray-400 font-exo-2 transition-colors">Manage customer orders</p>
       </div>
 
@@ -84,7 +84,7 @@ export function AdminOrders() {
                              {order.status}
                            </span>
                            <select 
-                             className="bg-gray-50 dark:bg-[#0a0f1c] border border-gray-200 dark:border-[#F0E6CA]/10 text-xs rounded text-gray-900 dark:text-white p-1 focus:outline-none focus:border-gray-900 dark:focus:border-[#F0E6CA] transition-colors"
+                             className="bg-gray-50 dark:bg-[#0a0f1c] border border-gray-200 dark:border-[#F0E6CA]/10 text-xs rounded text-gray-900 dark:text-white p-1 focus:outline-none focus:border-gray-900 dark:focus:border-[#F0E6CA] transition-colors font-exo-2"
                              value={order.status}
                              onChange={(e) => updateStatus.mutate({ 
                                id: order.id, 

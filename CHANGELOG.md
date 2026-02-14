@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.14] - Advanced Inventory & Admin UI Polish - 2026-02-14
+### Added
+- **Advanced Inventory Management**:
+    - **Stock Validation**: Transactional stock checks in `createOrder` — prevents overselling with descriptive error messages.
+    - **Atomic Stock Decrement**: Stock decremented inside Prisma `$transaction` on order creation.
+    - **Stock Restoration**: Automatic stock restore when order status is changed to `CANCELLED`.
+    - **Admin APIs**: New `getLowStockProducts` and `getInventoryStats` tRPC procedures.
+    - **Cart Guards**: Frontend enforcement — quantity capped at available stock in cart store, "max X" label in `CartDrawer`.
+    - **Admin Dashboard**: Rebuilt with live inventory stats (Total Revenue, Products, Low Stock, Out of Stock) and interactive Low Stock Alerts table.
+- **Documentation**: Added `docs/INVENTORY_GUIDE.md` covering implementation, stock flow, and edge cases.
+
+### Changed
+- **Admin Layout**: Replaced `<img>` logo with text-based "Magnostadt" logo using `font-libre-bodoni`.
+- **Admin UI Consistency**:
+    - Standardized all page headings to `font-libre-bodoni` (fixed Orders page).
+    - Unified all body text to `font-exo-2` across tables, inputs, and labels.
+    - Standardized action buttons (Edit/Delete) in Series page to match Products page style.
+    - Added `font-exo-2` to Series search input and table root.
+
+### Removed
+- **Theme Toggle on Admin**: Floating Dark/Light mode button is now hidden on all `/admin` routes.
+
 ## [0.0.13] - Email Notifications & Rebranding - 2026-02-13
 ### Added
 - **Email Notifications**: Implemented comprehensive email system using **Resend** and **React Email**.

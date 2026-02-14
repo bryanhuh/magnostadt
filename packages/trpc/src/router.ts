@@ -343,6 +343,18 @@ export const appRouter = router({
         include: { items: { include: { product: true } }, user: true },
       });
 
+      // Restore stock when an order is cancelled
+      if (input.status === 'CANCELLED') {
+        await prisma.$transaction(async (tx) => {
+          for (const item of order.items) {
+            await tx.product.update({
+              where: { id: item.productId },
+              data: { stock: { increment: item.quantity } },
+            });
+          }
+        });
+      }
+
       if (order.email) {
           const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email');
           
@@ -394,7 +406,18 @@ export const appRouter = router({
             });
           }
 
-          // if (product.stock < item.quantity) { }
+          if (product.stock < item.quantity) {
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: `"${product.name}" only has ${product.stock} left in stock.`,
+            });
+          }
+
+          // Atomic stock decrement
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.quantity } },
+          });
 
           const itemTotal = Number(product.price) * item.quantity;
           total += itemTotal;
@@ -492,6 +515,31 @@ export const appRouter = router({
           },
         },
       });
+    }),
+  // Admin: Get low stock products (stock <= 10)
+  getLowStockProducts: adminProcedure
+    .query(async () => {
+      return await prisma.product.findMany({
+        where: { stock: { lte: 10 } },
+        orderBy: { stock: 'asc' },
+        include: {
+          category: true,
+          anime: true,
+        },
+      });
+    }),
+
+  // Admin: Get inventory stats for dashboard
+  getInventoryStats: adminProcedure
+    .query(async () => {
+      const [totalProducts, outOfStock, lowStock, totalOrders] = await Promise.all([
+        prisma.product.count(),
+        prisma.product.count({ where: { stock: 0 } }),
+        prisma.product.count({ where: { stock: { gt: 0, lte: 10 } } }),
+        prisma.order.count(),
+      ]);
+
+      return { totalProducts, outOfStock, lowStock, totalOrders };
     }),
 });
 

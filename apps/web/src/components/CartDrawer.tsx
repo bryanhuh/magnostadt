@@ -71,9 +71,9 @@ export function CartDrawer() {
                     <h3 className="font-bold text-lg leading-tight mb-1 text-gray-900 dark:text-gray-100 font-exo-2 transition-colors">{item.name}</h3>
                     <p className="text-sm text-gray-500 uppercase font-bold font-exo-2">{item.animeName}</p>
                   </div>
-                  
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-3 bg-gray-100 dark:bg-[#1a2333] rounded-lg p-1 border border-gray-200 dark:border-[#F0E6CA]/10 transition-colors">
+                                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-3 bg-gray-100 dark:bg-[#1a2333] rounded-lg p-1 border border-gray-200 dark:border-[#F0E6CA]/10 transition-colors">
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         className="p-1 hover:text-gray-900 dark:hover:text-[#F0E6CA] transition-colors text-gray-500 dark:text-gray-400"
@@ -84,10 +84,21 @@ export function CartDrawer() {
                       <span className="font-mono font-bold w-4 text-center text-gray-900 dark:text-gray-100">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 hover:text-gray-900 dark:hover:text-[#F0E6CA] transition-colors text-gray-500 dark:text-gray-400"
+                        disabled={item.quantity >= item.stock}
+                        className={`p-1 transition-colors ${
+                          item.quantity >= item.stock 
+                            ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed' 
+                            : 'hover:text-gray-900 dark:hover:text-[#F0E6CA] text-gray-500 dark:text-gray-400'
+                        }`}
                       >
                         <Plus className="w-4 h-4" />
                       </button>
+                    </div>
+                    {item.quantity >= item.stock && (
+                      <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider font-exo-2">
+                        max {item.stock}
+                      </span>
+                    )}
                     </div>
                     
                     <div className="text-right">

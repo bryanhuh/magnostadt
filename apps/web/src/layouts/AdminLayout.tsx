@@ -39,11 +39,16 @@ export function AdminLayout() {
       {/* Sidebar */}
       <div className="w-64 bg-white dark:bg-[#0a0f1c] border-r border-gray-200 dark:border-[#F0E6CA]/10 flex flex-col shadow-xl shadow-black/5 dark:shadow-black/20 transition-colors duration-300">
         <div className="p-6">
-          <img 
-            src="/logo.png" 
-            alt="Magnostadt" 
-            className="h-10 w-auto object-contain brightness-0 dark:invert transition-all"
-          />
+          <Link to="/admin" className="block">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xl font-black font-libre-bodoni uppercase tracking-[0.1em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
+                Magnostadt
+              </span>
+              {/* <span className="text-sm font-bold font-libre-bodoni uppercase tracking-[0.08em] text-gray-500 dark:text-gray-400 transition-colors">
+                District
+              </span> */}
+            </div>
+          </Link>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">

@@ -10,6 +10,7 @@ export interface CartItem {
   imageUrl: string | null;
   animeName: string;
   quantity: number;
+  stock: number;
 }
 
 export interface ProductToAdd {
@@ -18,6 +19,7 @@ export interface ProductToAdd {
   price: number;
   imageUrl: string | null;
   anime: { name: string };
+  stock: number;
 }
 
 interface CartState {
@@ -49,15 +51,18 @@ export const useCartStore = create<CartState>()(
           const existingItem = state.items.find((item) => item.id === product.id);
           
           if (existingItem) {
+            // Don't exceed available stock
+            const newQuantity = Math.min(existingItem.quantity + 1, product.stock);
             return {
               items: state.items.map((item) =>
                 item.id === product.id
-                  ? { ...item, quantity: item.quantity + 1 }
+                  ? { ...item, quantity: newQuantity, stock: product.stock }
                   : item
               ),
-              // isOpen: true, // Removed auto-open
             };
           }
+
+          if (product.stock <= 0) return {}; // Can't add out-of-stock items
 
           return {
             items: [
@@ -69,9 +74,9 @@ export const useCartStore = create<CartState>()(
                 imageUrl: product.imageUrl,
                 animeName: product.anime.name,
                 quantity: 1,
+                stock: product.stock,
               },
             ],
-            // isOpen: true, // Removed auto-open
           };
         });
       },
@@ -90,7 +95,7 @@ export const useCartStore = create<CartState>()(
         
         set((state) => ({
           items: state.items.map((item) =>
-            item.id === productId ? { ...item, quantity } : item
+            item.id === productId ? { ...item, quantity: Math.min(quantity, item.stock) } : item
           ),
         }));
       },
