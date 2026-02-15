@@ -3,6 +3,7 @@ import { trpc } from '../utils/trpc';
 import { Filter, X, Check } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import { useSearchParams } from 'react-router-dom';
+import { SEO } from './SEO';
 
 interface ProductListProps {
   initialFilter?: {
@@ -103,7 +104,11 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-10">
-      {/* Mobile Filter Toggle */}
+      <SEO
+        title={searchQuery ? `Search: "${searchQuery}"` : 'Shop All Products'}
+        description="Browse our full collection of anime figures, manga, and collectibles."
+        url="/shop"
+      />
       <button
         className="lg:hidden flex items-center gap-2 bg-gray-800 p-3 rounded-lg text-yellow-500 mb-4"
         onClick={() => setIsFilterOpen(!isFilterOpen)}

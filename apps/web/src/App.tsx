@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { trpc } from './utils/trpc';
 
 import * as Sentry from '@sentry/react';
@@ -75,6 +76,7 @@ export default function App() {
   );
 
   return (
+    <HelmetProvider>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -227,5 +229,6 @@ export default function App() {
         </ThemeProvider>
       </QueryClientProvider>
     </trpc.Provider>
+    </HelmetProvider>
   );
 }

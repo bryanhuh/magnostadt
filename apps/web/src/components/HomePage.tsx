@@ -6,6 +6,7 @@ import { SectionHeader } from './home/SectionHeader';
 import { SeriesGrid } from './home/SeriesGrid';
 import { CategoryGrid } from './home/CategoryGrid';
 import { useNavigate } from 'react-router-dom';
+import { SEO } from './SEO';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export function HomePage() {
 
   return (
     <div className="space-y-20 pb-20">
-      {/* 1. Showcase Section - Full Width handled by component */}
+      <SEO url="/" />
       <Showcase />
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 space-y-20">

@@ -6,6 +6,7 @@ import { trpc } from '../utils/trpc';
 import { Loader2, ArrowLeft, ShoppingCart, Heart, Check, Bell, BellOff } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
+import { SEO } from './SEO';
 import { ProductCarousel } from './home/ProductCarousel';
 import { useUser } from '@clerk/clerk-react';
 
@@ -111,6 +112,13 @@ export function ProductDetails() {
 
   return (
     <div className="animate-in fade-in duration-500 pb-20">
+      <SEO
+        title={product.name}
+        description={product.description?.slice(0, 160) || `Shop ${product.name} — anime figures and collectibles at Magnostadt.`}
+        image={product.imageUrl || undefined}
+        url={`/product/${product.slug}`}
+        type="product"
+      />
       {/* Breadcrumb / Back Navigation */}
       <div className="container mx-auto px-4 py-6">
         <Link

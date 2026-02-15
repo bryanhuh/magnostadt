@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { ProductCard } from '../components/ProductCard';
 import { Loader2, Heart, ArrowLeft } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 export function SharedWishlist() {
   const { token } = useParams<{ token: string }>();
@@ -41,6 +42,11 @@ export function SharedWishlist() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-10 animate-in fade-in duration-500">
+      <SEO
+        title={`${data.ownerName}'s Wishlist`}
+        description={`Check out ${data.ownerName}'s wishlist — ${data.items.length} items saved on Magnostadt.`}
+        url={`/wishlist/${token}`}
+      />
       {/* Header */}
       <div className="mb-10">
         <Link
