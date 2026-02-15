@@ -14,7 +14,7 @@ import {
   Column,
   Row,
 } from '@react-email/components';
-import * as React from 'react';
+
 
 interface OrderConfirmationProps {
   order: {

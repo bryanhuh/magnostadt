@@ -9,9 +9,7 @@ import {
   Section,
   Text,
   Tailwind,
-  Hr,
 } from '@react-email/components';
-import * as React from 'react';
 
 interface ShippingUpdateProps {
   order: {

@@ -47,7 +47,7 @@ SENDER_EMAIL=onboarding@resend.dev  # Use a verified domain in production (e.g.,
 
 ### Method 1: Manual Script
 We created a test script to verify email delivery without placing an order.
-1.  Run: `bun run scripts/test-email.ts`
+1.  Run: `bun run apps/api/scripts/test-email.ts`
 2.  Check your inbox for a "Test Order Confirmation" email.
 
 ### Method 2: End-to-End Flow

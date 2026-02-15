@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
-import { OrderConfirmation } from '../packages/trpc/src/services/email/templates/OrderConfirmation';
+import { OrderConfirmation } from '../../../packages/trpc/src/services/email/templates/OrderConfirmation';
 
 // Mock Data
 const mockOrder = {
