@@ -4,9 +4,34 @@ import { OrderConfirmation } from './templates/OrderConfirmation';
 import { ShippingUpdate } from './templates/ShippingUpdate';
 import { Delivered } from './templates/Delivered';
 import { Cancelled } from './templates/Cancelled';
+import { BackInStock } from './templates/BackInStock';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
+
+export const sendBackInStockAlert = async (product: { name: string; imageUrl?: string | null; slug: string; price: string | number }, email: string) => {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY is missing. Back in stock email not sent.');
+    return;
+  }
+
+  try {
+    const html = await render(BackInStock({ product }));
+
+    const { error } = await resend.emails.send({
+      from: 'Magnostadt <' + SENDER_EMAIL + '>',
+      to: [email],
+      subject: `${product.name} is back in stock!`,
+      html,
+    });
+
+    if (error) {
+      console.error('Error sending back in stock email:', error);
+    }
+  } catch (e) {
+    console.error('Failed to send back in stock alert:', e);
+  }
+};
 
 export const sendOrderConfirmation = async (order: any, email: string) => {
   if (!process.env.RESEND_API_KEY) {
@@ -42,7 +67,7 @@ export const sendShippingUpdate = async (order: any, email: string) => {
   try {
     const html = await render(ShippingUpdate({ order }));
 
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Magnostadt <' + SENDER_EMAIL + '>',
       to: [email],
       subject: `Your Order #${order.id} has Shipped!`,

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Heart, ShoppingCart, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Check, Bell } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
 
@@ -84,6 +84,30 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   };
 
+  // Stock Alert
+  const { data: hasStockAlert } = trpc.stockAlert.checkStatus.useQuery(
+    { productId: product.id },
+    { enabled: product.stock === 0 && !!user }
+  );
+
+  const subscribeAlert = trpc.stockAlert.subscribe.useMutation({
+    onSuccess: () => {
+      toast.success('You\'ll be notified when back in stock!');
+      utils.stockAlert.checkStatus.invalidate({ productId: product.id });
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const handleNotifyMe = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.error('Please sign in to get stock alerts');
+      return;
+    }
+    subscribeAlert.mutate({ productId: product.id, email: user.primaryEmailAddress?.emailAddress || '' });
+  };
+
   return (
     <Link
       to={`/product/${product.slug}`}
@@ -123,7 +147,31 @@ export function ProductCard({ product }: ProductCardProps) {
                Pre-Order
              </span>
            )}
-         </div>
+          </div>
+
+          {/* Out of Stock Badge + Notify Me */}
+          {product.stock === 0 && (
+            <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between">
+              <span className="bg-gray-900/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded shadow-lg">
+                Out of Stock
+              </span>
+              {!hasStockAlert && (
+                <button
+                  onClick={handleNotifyMe}
+                  disabled={subscribeAlert.isPending}
+                  className="bg-white/90 dark:bg-[#0a0f1c]/90 backdrop-blur-md text-amber-500 p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform"
+                  title="Notify me when back in stock"
+                >
+                  <Bell className="w-4 h-4" />
+                </button>
+              )}
+              {hasStockAlert && (
+                <span className="bg-amber-500/90 backdrop-blur-md text-white p-1.5 rounded-full shadow-lg" title="You'll be notified">
+                  <Bell className="w-4 h-4 fill-current" />
+                </span>
+              )}
+            </div>
+          )}
       </div>
       
       <div className="p-5 flex flex-col flex-1">

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { formatPrice } from '../utils/format';
 import { trpc } from '../utils/trpc';
-import { Loader2, ArrowLeft, ShoppingCart, Heart, Check } from 'lucide-react';
+import { Loader2, ArrowLeft, ShoppingCart, Heart, Check, Bell, BellOff } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { captureEvent } from '../utils/analytics';
 import { ProductCarousel } from './home/ProductCarousel';
@@ -52,6 +52,28 @@ export function ProductDetails() {
     { productId: product?.id! },
     { enabled: !!product?.id }
   );
+
+  // Stock Alert
+  const { data: hasStockAlert } = trpc.stockAlert.checkStatus.useQuery(
+    { productId: product?.id! },
+    { enabled: !!product?.id && product?.stock === 0 && !!user }
+  );
+
+  const subscribeAlert = trpc.stockAlert.subscribe.useMutation({
+    onSuccess: () => {
+      toast.success('You\'ll be notified when this item is back in stock!');
+      utils.stockAlert.checkStatus.invalidate({ productId: product?.id });
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const unsubscribeAlert = trpc.stockAlert.unsubscribe.useMutation({
+    onSuccess: () => {
+      toast.success('Stock alert removed');
+      utils.stockAlert.checkStatus.invalidate({ productId: product?.id });
+    },
+    onError: (err) => toast.error(err.message),
+  });
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -246,6 +268,41 @@ export function ProductDetails() {
                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                  Free Shipping on orders over $50
               </div>
+
+              {/* Back in Stock Alert */}
+              {product.stock === 0 && (
+                <button
+                  onClick={() => {
+                    if (!user) {
+                      toast.error('Please sign in to get stock alerts');
+                      return;
+                    }
+                    if (hasStockAlert) {
+                      unsubscribeAlert.mutate({ productId: product.id });
+                    } else {
+                      subscribeAlert.mutate({ productId: product.id, email: user.primaryEmailAddress?.emailAddress || '' });
+                    }
+                  }}
+                  disabled={subscribeAlert.isPending || unsubscribeAlert.isPending}
+                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-3 font-exo-2 mt-3 ${
+                    hasStockAlert
+                      ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-2 border-amber-500/20 hover:bg-amber-500/20'
+                      : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-2 border-blue-500/20 hover:bg-blue-500/20'
+                  }`}
+                >
+                  {hasStockAlert ? (
+                    <>
+                      <BellOff className="w-5 h-5" />
+                      Remove Stock Alert
+                    </>
+                  ) : (
+                    <>
+                      <Bell className="w-5 h-5" />
+                      Notify Me When Available
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

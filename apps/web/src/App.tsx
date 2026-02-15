@@ -53,6 +53,7 @@ import { ProfileLayout } from './pages/profile/ProfileLayout';
 import { Wishlist } from './pages/profile/Wishlist';
 import { Addresses } from './pages/profile/Addresses';
 import { Orders } from './pages/profile/Orders';
+import { SharedWishlist } from './pages/SharedWishlist';
 
 export default function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -188,6 +189,12 @@ export default function App() {
                 } 
               />
               <Route path="/auth-callback" element={<AuthCallback />} />
+              <Route path="/wishlist/:token" element={
+                <>
+                  <Header />
+                  <SharedWishlist />
+                </>
+              } />
 
               {/* Profile Routes */}
               <Route path="/profile" element={

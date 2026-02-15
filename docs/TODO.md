@@ -29,9 +29,9 @@ This document tracks the missing features and planned improvements for the Shone
 
 ## 🟡 Priority: Improvements (Should Have)
 
-### 1. Wishlist Enhancements
-- [ ] **Back in Stock Alerts**: Allow users to sign up for email alerts on out-of-stock items.
-- [ ] **Sharing**: Add ability to share wishlist via link.
+### 1. Wishlist Enhancements (✅ Done)
+- [x] **Back in Stock Alerts**: Allow users to sign up for email alerts on out-of-stock items.
+- [x] **Sharing**: Add ability to share wishlist via link.
 
 ### 2. SEO & Metadata
 - [ ] **OpenGraph**: Add dynamic `meta` tags for Product Pages (`og:title`, `og:image`, `og:description`).

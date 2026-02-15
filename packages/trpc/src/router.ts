@@ -4,11 +4,13 @@ import { router, publicProcedure, adminProcedure, protectedProcedure } from './t
 import { TRPCError } from '@trpc/server';
 import { wishlistRouter } from './routers/wishlist';
 import { addressRouter } from './routers/address';
+import { stockAlertRouter } from './routers/stockAlert';
 
 // Force rebuild for headerImage schema update
 export const appRouter = router({
   wishlist: wishlistRouter,
   address: addressRouter,
+  stockAlert: stockAlertRouter,
   auth: router({
     me: protectedProcedure.query(async ({ ctx }) => {
       return await ctx.prisma.user.findUnique({
@@ -309,10 +311,50 @@ export const appRouter = router({
     )
     .mutation(async ({ input }) => {
       const { id, data } = input;
-      return await prisma.product.update({
+
+      // Check current stock before update (for back-in-stock alerts)
+      const currentProduct = await prisma.product.findUnique({
+        where: { id },
+        select: { stock: true },
+      });
+
+      const updatedProduct = await prisma.product.update({
         where: { id },
         data,
+        include: { anime: true, category: true },
       });
+
+      // Trigger back-in-stock alerts if stock went from 0 to > 0
+      if (currentProduct && currentProduct.stock === 0 && data.stock && data.stock > 0) {
+        const alerts = await prisma.stockAlert.findMany({
+          where: { productId: id, notified: false },
+        });
+
+        if (alerts.length > 0) {
+          const { sendBackInStockAlert } = await import('./services/email');
+
+          // Send emails & mark as notified (fire and forget)
+          Promise.all(
+            alerts.map(async (alert) => {
+              await sendBackInStockAlert(
+                {
+                  name: updatedProduct.name,
+                  imageUrl: updatedProduct.imageUrl,
+                  slug: updatedProduct.slug,
+                  price: Number(updatedProduct.price),
+                },
+                alert.email
+              );
+              await prisma.stockAlert.update({
+                where: { id: alert.id },
+                data: { notified: true },
+              });
+            })
+          ).catch((err) => console.error('Error sending back-in-stock alerts:', err));
+        }
+      }
+
+      return updatedProduct;
     }),
 
   deleteProduct: adminProcedure
