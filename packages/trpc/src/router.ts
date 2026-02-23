@@ -333,8 +333,12 @@ export const appRouter = router({
         if (alerts.length > 0) {
           const { sendBackInStockAlert } = await import('./services/email');
 
-          // Send emails & mark as notified (fire and forget)
-          Promise.all(
+          // Issue #6 fix: use Promise.allSettled so that a single failed email
+          // delivery does not prevent the remaining alerts from being processed.
+          // With Promise.all, the first rejection would skip every subsequent
+          // alert. allSettled always waits for every promise and we log each
+          // individual failure for observability.
+          Promise.allSettled(
             alerts.map(async (alert) => {
               await sendBackInStockAlert(
                 {
@@ -350,7 +354,16 @@ export const appRouter = router({
                 data: { notified: true },
               });
             })
-          ).catch((err) => console.error('Error sending back-in-stock alerts:', err));
+          ).then((results) => {
+            results.forEach((result, i) => {
+              if (result.status === 'rejected') {
+                console.error(
+                  `Failed to send back-in-stock alert for ${alerts[i].email}:`,
+                  result.reason
+                );
+              }
+            });
+          });
         }
       }
 
@@ -360,8 +373,15 @@ export const appRouter = router({
   deleteProduct: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
-      return await prisma.product.delete({
-        where: { id: input.id },
+      return await prisma.$transaction(async (tx) => {
+        // Delete related OrderItems first to avoid FK constraint violation
+        await tx.orderItem.deleteMany({
+          where: { productId: input.id },
+        });
+
+        return await tx.product.delete({
+          where: { id: input.id },
+        });
       });
     }),
 
@@ -461,20 +481,26 @@ export const appRouter = router({
             data: { stock: { decrement: item.quantity } },
           });
 
-          const itemTotal = Number(product.price) * item.quantity;
+          // Use salePrice when the product is on sale, otherwise use regular price
+          const effectivePrice =
+            product.isSale && product.salePrice
+              ? Number(product.salePrice)
+              : Number(product.price);
+
+          const itemTotal = effectivePrice * item.quantity;
           total += itemTotal;
 
           orderItemsData.push({
             productId: item.productId,
             quantity: item.quantity,
-            price: product.price, 
+            price: effectivePrice,
           });
 
           stripeLineItems.push({
              name: product.name,
              description: product.description || undefined,
              images: product.imageUrl ? [product.imageUrl] : undefined,
-             amount: Number(product.price) * 100, // Stripe expects cents
+             amount: effectivePrice * 100, // Stripe expects cents
              quantity: item.quantity,
              currency: 'usd',
           });
@@ -582,6 +608,18 @@ export const appRouter = router({
       ]);
 
       return { totalProducts, outOfStock, lowStock, totalOrders };
+    }),
+
+  // Issue #3 fix: aggregate total revenue server-side with a single SUM query
+  // instead of shipping every order row to the client and summing in JavaScript.
+  // Prisma's aggregate API maps directly to `SELECT SUM(total) FROM orders`.
+  getTotalRevenue: adminProcedure
+    .query(async () => {
+      const result = await prisma.order.aggregate({
+        _sum: { total: true },
+      });
+      // Prisma returns a Decimal; convert to plain number for JSON serialisation.
+      return { totalRevenue: Number(result._sum.total ?? 0) };
     }),
 });
 

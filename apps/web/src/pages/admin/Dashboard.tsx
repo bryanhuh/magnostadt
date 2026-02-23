@@ -1,40 +1,48 @@
-import { Package, AlertTriangle, ShoppingBag, Boxes, Loader2 } from 'lucide-react';
+import { Package, AlertTriangle, ShoppingBag, Boxes, ClipboardList, Loader2 } from 'lucide-react';
 import { trpc } from '../../utils/trpc';
 import { Link } from 'react-router-dom';
 
 export function Dashboard() {
   const { data: stats, isLoading: statsLoading } = trpc.getInventoryStats.useQuery();
   const { data: lowStockProducts, isLoading: lowStockLoading } = trpc.getLowStockProducts.useQuery();
-  const { data: orders } = trpc.getOrders.useQuery();
 
-  const totalRevenue = orders?.reduce((sum, order) => sum + Number(order.total), 0) ?? 0;
+  // Issue #3 fix: replaced `trpc.getOrders.useQuery()` + client-side
+  // `orders.reduce(…)` with a dedicated server-side aggregate query.
+  // Previously the API serialised and transferred every order row (including
+  // all line-items) just so the browser could sum the `total` column.
+  // Now a single `SELECT SUM(total)` runs on the database and only one number
+  // crosses the wire.
+  const { data: revenueData, isLoading: revenueLoading } = trpc.getTotalRevenue.useQuery();
+
+  const totalRevenue = revenueData?.totalRevenue ?? 0;
+  const isLoadingRevenue = revenueLoading;
 
   const statCards = [
-    { 
-      name: 'Total Revenue', 
-      value: statsLoading ? '...' : `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`, 
-      icon: ShoppingBag, 
+    {
+      name: 'Total Revenue',
+      value: isLoadingRevenue ? '...' : `$${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+      icon: ShoppingBag,
       color: 'text-green-500',
       bgColor: 'bg-green-500/10',
     },
-    { 
-      name: 'Total Products', 
-      value: statsLoading ? '...' : `${stats?.totalProducts ?? 0}`, 
-      icon: Boxes, 
+    {
+      name: 'Total Products',
+      value: statsLoading ? '...' : `${stats?.totalProducts ?? 0}`,
+      icon: Boxes,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
     },
-    { 
-      name: 'Low Stock', 
-      value: statsLoading ? '...' : `${stats?.lowStock ?? 0}`, 
-      icon: AlertTriangle, 
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500/10',
+    {
+      name: 'Total Orders',
+      value: statsLoading ? '...' : `${stats?.totalOrders ?? 0}`,
+      icon: ClipboardList,
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-500/10',
     },
-    { 
-      name: 'Out of Stock', 
-      value: statsLoading ? '...' : `${stats?.outOfStock ?? 0}`, 
-      icon: Package, 
+    {
+      name: 'Out of Stock',
+      value: statsLoading ? '...' : `${stats?.outOfStock ?? 0}`,
+      icon: Package,
       color: 'text-red-500',
       bgColor: 'bg-red-500/10',
     },
@@ -56,7 +64,7 @@ export function Dashboard() {
                 <stat.icon className={`w-5 h-5 ${stat.color}`} />
               </div>
             </div>
-            <p className="text-3xl font-black text-gray-900 dark:text-white font-libre-bodoni transition-colors">{stat.value}</p>
+            <p className="text-3xl font-black text-gray-900 dark:text-white font-exo-2 transition-colors">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -74,7 +82,7 @@ export function Dashboard() {
             {lowStockProducts?.length ?? 0} items need attention
           </span>
         </div>
-        
+
         {lowStockLoading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
@@ -116,15 +124,15 @@ export function Dashboard() {
                     <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 font-exo-2">{product.category.name}</td>
                     <td className="px-6 py-4 text-center">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black font-exo-2 ${
-                        product.stock === 0 
-                          ? 'bg-red-500/10 text-red-500 border border-red-500/20' 
+                        product.stock === 0
+                          ? 'bg-red-500/10 text-red-500 border border-red-500/20'
                           : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                       }`}>
                         {product.stock === 0 ? 'OUT' : product.stock}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link 
+                      <Link
                         to={`/admin/products/edit/${product.id}`}
                         className="text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] uppercase tracking-wider font-exo-2 transition-colors"
                       >
