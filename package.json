@@ -8,10 +8,19 @@
   "scripts": {
     "dev": "bun --filter \"shonen-mart-api\" dev & bun --filter \"web\" dev",
     "build": "bun --filter \"*\" run build",
-    "test": "bun --filter \"*\" run test"
+    "test": "vitest run --config vitest.workspace.ts",
+    "test:watch": "vitest --config vitest.workspace.ts",
+    "test:coverage": "vitest run --config vitest.workspace.ts --coverage",
+    "test:ui": "vitest --config vitest.workspace.ts --ui"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "happy-dom": "^20.6.3",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "stripe": "^20.3.1"

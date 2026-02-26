@@ -22,7 +22,13 @@ if (import.meta.env.VITE_SENTRY_DSN) {
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),
     ],
-    tracesSampleRate: 1.0,
+    // Issue #4 fix: 1.0 (100 % sampling) sends a trace for every single
+    // page-load and navigation, which saturates Sentry's ingest quota and adds
+    // measurable overhead to every user request. 0.1 samples 10 % of
+    // transactions — enough for representative performance data in production
+    // while keeping costs and overhead low. Raise toward 1.0 only in staging
+    // or when actively investigating a regression.
+    tracesSampleRate: 0.1,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
   });

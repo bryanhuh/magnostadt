@@ -4,6 +4,7 @@ import { Filter, X, Check } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 import { useSearchParams } from 'react-router-dom';
 import { SEO } from './SEO';
+import { useUser } from '@clerk/clerk-react';
 
 interface ProductListProps {
   initialFilter?: {
@@ -18,12 +19,12 @@ export function ProductList({ initialFilter }: ProductListProps) {
   const [searchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const searchQuery = searchParams.get('search');
+  const { user } = useUser();
 
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [selectedAnime, setSelectedAnime] = useState<string | undefined>();
   const [isSaleOnly, setIsSaleOnly] = useState(initialFilter?.isSale || false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  // const { addItem } = useCartStore(); // Unused here now
 
   const { data: products, isLoading: isProductsLoading, error } = trpc.getProducts.useQuery({
     categoryId: selectedCategory,
@@ -38,6 +39,24 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
   const { data: categories } = trpc.getCategories.useQuery();
   const { data: animeSeries } = trpc.getAnimeSeries.useQuery();
+
+  // Issue #1 fix: derive the ID arrays needed for the batch status queries.
+  // Extracting these here (in the parent) means we issue exactly 2 queries for
+  // all cards combined instead of 2 queries × N cards.
+  const allProductIds = products?.map((p) => p.id) ?? [];
+  const outOfStockIds = products?.filter((p) => p.stock === 0).map((p) => p.id) ?? [];
+
+  // Batch wishlist status: one query for all visible products.
+  const { data: wishlistStatusMap } = trpc.wishlist.checkStatusBatch.useQuery(
+    { productIds: allProductIds },
+    { enabled: !!user && allProductIds.length > 0 }
+  );
+
+  // Batch stock-alert status: one query only for out-of-stock products.
+  const { data: stockAlertStatusMap } = trpc.stockAlert.checkStatusBatch.useQuery(
+    { productIds: outOfStockIds },
+    { enabled: !!user && outOfStockIds.length > 0 }
+  );
 
   // Sync URL category with selectedCategory state for sidebar highlighting
   useEffect(() => {
@@ -70,7 +89,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
             </div>
           ))}
         </div>
-        
+
         {/* Skeleton Grid */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -141,11 +160,11 @@ export function ProductList({ initialFilter }: ProductListProps) {
                   <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-blue-600 dark:bg-[#F0E6CA] border-blue-600 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-blue-600 dark:group-hover:border-[#F0E6CA]'}`}>
                       {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                   </div>
-                  <input 
-                      type="checkbox" 
-                      className="hidden" 
-                      checked={isSaleOnly} 
-                      onChange={(e) => setIsSaleOnly(e.target.checked)} 
+                  <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={isSaleOnly}
+                      onChange={(e) => setIsSaleOnly(e.target.checked)}
                   />
                   <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-[#F0E6CA]'}`}>
                       On Sale
@@ -163,8 +182,8 @@ export function ProductList({ initialFilter }: ProductListProps) {
               <button
                 onClick={() => setSelectedCategory(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedCategory 
-                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' 
+                  !selectedCategory
+                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
                     : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                 }`}
               >
@@ -195,8 +214,8 @@ export function ProductList({ initialFilter }: ProductListProps) {
               <button
                 onClick={() => setSelectedAnime(undefined)}
                 className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedAnime 
-                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold' 
+                  !selectedAnime
+                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
                     : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
                 }`}
               >
@@ -222,7 +241,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
       {/* Overlay for mobile */}
       {isFilterOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setIsFilterOpen(false)}
         />
@@ -242,17 +261,21 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products?.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              isInWishlist={wishlistStatusMap?.[product.id] ?? false}
+              hasStockAlert={stockAlertStatusMap?.[product.id] ?? false}
+            />
           ))}
-          
+
           {products?.length === 0 && (
             <div className="col-span-full text-center py-20 border-2 border-dashed border-[#F0E6CA]/20 rounded-3xl">
               <p className="text-gray-400 text-lg font-exo-2">No products found matching your filters.</p>
-                 <button 
+                 <button
                 onClick={() => {
                   setSelectedCategory(undefined);
                   setSelectedAnime(undefined);
-                  // Optionally clear URL search params if needed, but simple state reset is often enough for "Clear all"
                 }}
                 className="mt-4 text-gray-900 dark:text-[#F0E6CA] hover:underline font-bold transition-colors"
               >

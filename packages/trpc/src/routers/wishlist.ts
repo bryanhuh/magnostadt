@@ -55,6 +55,30 @@ export const wishlistRouter = router({
       return !!item;
     }),
 
+  // Issue #1 fix: batch endpoint replaces N individual checkStatus calls fired
+  // by each ProductCard. One query fetches all wishlist membership for the
+  // given product IDs and returns a Set-friendly lookup map.
+  checkStatusBatch: protectedProcedure
+    .input(z.object({ productIds: z.array(z.string()) }))
+    .query(async ({ ctx, input }) => {
+      if (input.productIds.length === 0) return {};
+
+      const items = await ctx.prisma.wishlistItem.findMany({
+        where: {
+          userId: ctx.userId,
+          productId: { in: input.productIds },
+        },
+        select: { productId: true },
+      });
+
+      // Return a plain object keyed by productId → boolean so the client can
+      // do an O(1) lookup per card without extra computation.
+      const result: Record<string, boolean> = {};
+      for (const id of input.productIds) result[id] = false;
+      for (const item of items) result[item.productId] = true;
+      return result;
+    }),
+
   // --- Wishlist Sharing ---
   getShareToken: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.prisma.user.findUnique({

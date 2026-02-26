@@ -69,10 +69,10 @@ export function Showcase() {
                         <Star className="w-3 h-3 fill-black" />
                         Spotlight
                      </div>
-                     <div className="h-[1px] w-12 bg-white/50" />
+                     {/* <div className="h-[1px] w-12 bg-white/50" />
                      <span className="text-white/80 uppercase tracking-widest text-xs font-bold shadow-black drop-shadow-md font-exo-2">
                          Premium Edition
-                     </span>
+                     </span> */}
                 </div>
 
                 <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white uppercase italic tracking-tighter leading-[0.9] drop-shadow-xl">

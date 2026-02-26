@@ -15,9 +15,16 @@ type Product = inferRouterOutputs<AppRouter>['getProducts'][number];
 
 interface ProductCardProps {
   product: Product;
+  // Issue #1 fix: batch status values are resolved once in the parent
+  // (ProductList) and passed down here as plain props. This eliminates the
+  // 2×N individual DB round-trips that were previously issued per card.
+  // Both props default to false so the card renders safely even when the
+  // parent hasn't fetched yet (e.g. unauthenticated users).
+  isInWishlist?: boolean;
+  hasStockAlert?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, isInWishlist = false, hasStockAlert = false }: ProductCardProps) {
   const [isAdded, setIsAdded] = useState(false);
   const { addItem } = useCartStore();
   const { user } = useUser();
@@ -26,7 +33,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     addItem({
       id: product.id,
       name: product.name,
@@ -38,7 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     setIsAdded(true);
     toast.success(`Added ${product.name} to cart`);
-    
+
     captureEvent('add_to_cart', {
       product_id: product.id,
       product_name: product.name,
@@ -48,15 +55,12 @@ export function ProductCard({ product }: ProductCardProps) {
     setTimeout(() => setIsAdded(false), 2000);
   };
 
-  const { data: isInWishlist } = trpc.wishlist.checkStatus.useQuery(
-    { productId: product.id },
-    { enabled: !!user }
-  );
-
   const addToWishlist = trpc.wishlist.add.useMutation({
     onSuccess: () => {
       toast.success('Added to wishlist');
-      utils.wishlist.checkStatus.invalidate({ productId: product.id });
+      // Invalidate the batch query so the parent refetches and all cards
+      // reflect the new state without any additional per-card queries.
+      utils.wishlist.checkStatusBatch.invalidate();
       utils.wishlist.getMine.invalidate();
     },
     onError: (err) => toast.error(err.message)
@@ -65,7 +69,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const removeFromWishlist = trpc.wishlist.remove.useMutation({
     onSuccess: () => {
       toast.success('Removed from wishlist');
-      utils.wishlist.checkStatus.invalidate({ productId: product.id });
+      utils.wishlist.checkStatusBatch.invalidate();
       utils.wishlist.getMine.invalidate();
     },
     onError: (err) => toast.error(err.message)
@@ -85,15 +89,12 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   // Stock Alert
-  const { data: hasStockAlert } = trpc.stockAlert.checkStatus.useQuery(
-    { productId: product.id },
-    { enabled: product.stock === 0 && !!user }
-  );
-
   const subscribeAlert = trpc.stockAlert.subscribe.useMutation({
     onSuccess: () => {
       toast.success('You\'ll be notified when back in stock!');
-      utils.stockAlert.checkStatus.invalidate({ productId: product.id });
+      // Invalidate the batch query so the parent propagates the new alert
+      // state down to all affected cards at once.
+      utils.stockAlert.checkStatusBatch.invalidate();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -117,16 +118,16 @@ export function ProductCard({ product }: ProductCardProps) {
          <button
            onClick={toggleWishlist}
            className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-all duration-300 ${
-             isInWishlist 
-               ? 'bg-red-500/10 text-red-500 shadow-sm opacity-100' 
+             isInWishlist
+               ? 'bg-red-500/10 text-red-500 shadow-sm opacity-100'
                : 'bg-white/80 dark:bg-[#0a0f1c]/80 text-gray-400 hover:text-red-500 hover:bg-white opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 backdrop-blur-sm'
            }`}
          >
            <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
          </button>
 
-         <img 
-           src={product.imageUrl ?? undefined} 
+         <img
+           src={product.imageUrl ?? undefined}
            alt={product.name}
            className="w-full h-full object-cover scale-110 transition-transform duration-500 group-hover:scale-125"
            onError={(e) => {
@@ -173,7 +174,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
       </div>
-      
+
       <div className="p-5 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex justify-between items-start mb-2 gap-2">
@@ -187,7 +188,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <span className="text-xs font-bold text-gray-500 uppercase font-exo-2">{product.anime.name}</span>
           </div>
         </div>
-        
+
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-[#F0E6CA]/10 flex items-end justify-between">
           <div>
             {product.isSale && product.salePrice ? (
@@ -199,15 +200,14 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-gray-900 dark:text-[#F0E6CA] font-bold text-lg font-exo-2 transition-colors">{formatPrice(Number(product.price))}</span>
             )}
           </div>
-          <button 
+          <button
             onClick={(e) => {
-              // e.preventDefault(); // Already handled in handleAddToCart
               handleAddToCart(e);
             }}
             disabled={isAdded}
             className={`p-2 rounded-lg transition-all active:scale-95 shadow-lg ${
-              isAdded 
-                ? 'bg-green-500 text-white shadow-green-500/20 scale-110' 
+              isAdded
+                ? 'bg-green-500 text-white shadow-green-500/20 scale-110'
                 : 'bg-[#F0E6CA] hover:bg-white text-[#0a0f1c] dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white shadow-[#F0E6CA]/10'
             }`}
           >
