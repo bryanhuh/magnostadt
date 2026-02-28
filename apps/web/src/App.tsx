@@ -68,7 +68,7 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: 'http://localhost:3000/trpc',
+          url: `${import.meta.env.VITE_API_URL ?? 'http://localhost:3000'}/trpc`,
           async headers() {
             // @ts-ignore - Clerk attaches to window
             const token = await window.Clerk?.session?.getToken();
