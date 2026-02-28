@@ -3,10 +3,15 @@ import { cors } from 'hono/cors';
 import { trpcServer } from '@hono/trpc-server';
 import { appRouter, createContext } from '@shonen-mart/trpc';
 import { prisma } from '@shonen-mart/db';
+import Stripe from 'stripe';
 import { rateLimiter } from 'hono-rate-limiter';
 
 // Issue #5 fix: removed duplicate `new PrismaClient()` — now uses the shared singleton
 // from @shonen-mart/db so the process holds exactly one connection pool.
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2025-01-27.acacia' as any,
+});
 
 const limiter = rateLimiter({
   windowMs: 60 * 1000,
@@ -23,6 +28,58 @@ const app = new Hono();
 app.use('*', cors());
 
 app.use('/trpc/*', limiter);
+
+app.post('/webhook/stripe', async (c) => {
+  const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+  const sig = c.req.header('stripe-signature');
+
+  if (!sig || !STRIPE_WEBHOOK_SECRET) {
+    return c.json({ error: 'Missing signature or webhook secret' }, 400);
+  }
+
+  let event: Stripe.Event;
+  try {
+    const rawBody = await c.req.text();
+    event = stripe.webhooks.constructEvent(rawBody, sig, STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    return c.json({ error: 'Webhook signature verification failed' }, 400);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const orderId = session.metadata?.orderId;
+    if (orderId) {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { paymentStatus: 'PAID' },
+      });
+    }
+  } else if (event.type === 'checkout.session.expired') {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const orderId = session.metadata?.orderId;
+    if (orderId) {
+      await prisma.$transaction(async (tx) => {
+        const order = await tx.order.findUnique({
+          where: { id: orderId },
+          include: { items: true },
+        });
+        if (!order || order.paymentStatus !== 'UNPAID') return;
+        for (const item of order.items) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { increment: item.quantity } },
+          });
+        }
+        await tx.order.update({
+          where: { id: orderId },
+          data: { paymentStatus: 'FAILED', status: 'CANCELLED' },
+        });
+      });
+    }
+  }
+
+  return c.json({ received: true });
+});
 
 app.use(
   '/trpc/*',
