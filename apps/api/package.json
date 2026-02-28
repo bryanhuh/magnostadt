@@ -7,6 +7,7 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@hono/node-server": "latest",
     "@hono/trpc-server": "latest",
     "@react-email/components": "^1.0.7",
     "@react-email/render": "^2.0.4",
