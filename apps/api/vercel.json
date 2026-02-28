@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "installCommand": "cd ../.. && bun install",
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "src/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index" }
+  ]
+}
