@@ -3,13 +3,26 @@ import { cors } from 'hono/cors';
 import { trpcServer } from '@hono/trpc-server';
 import { appRouter, createContext } from '@shonen-mart/trpc';
 import { prisma } from '@shonen-mart/db';
+import { rateLimiter } from 'hono-rate-limiter';
 
 // Issue #5 fix: removed duplicate `new PrismaClient()` — now uses the shared singleton
 // from @shonen-mart/db so the process holds exactly one connection pool.
 
+const limiter = rateLimiter({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: 'draft-6',
+  keyGenerator: (c) =>
+    c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ??
+    c.req.header('x-real-ip') ??
+    'unknown',
+});
+
 const app = new Hono();
 
 app.use('*', cors());
+
+app.use('/trpc/*', limiter);
 
 app.use(
   '/trpc/*',
