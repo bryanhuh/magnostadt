@@ -30,7 +30,7 @@ export function Header() {
                 <span className="text-2xl md:text-3xl font-black font-libre-bodoni uppercase tracking-[0.15em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
                   Magnostadt
                 </span>
-                <span className="text-lg md:text-xl font-bold font-libre-bodoni uppercase tracking-[0.1em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
+                <span className="hidden sm:inline-block text-lg md:text-xl font-bold font-libre-bodoni uppercase tracking-[0.1em] text-gray-900 dark:text-[#F0E6CA] transition-colors">
                   District
                 </span>
               </div>
@@ -49,8 +49,8 @@ export function Header() {
                   key={link.path}
                   to={link.path}
                   className={`text-sm md:text-base uppercase tracking-widest transition-colors font-orbitron ${location.pathname === link.path
-                      ? 'text-gray-900 dark:text-[#F0E6CA] font-bold'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+                    ? 'text-gray-900 dark:text-[#F0E6CA] font-bold'
+                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
                     }`}
                 >
                   {link.name}
@@ -59,11 +59,11 @@ export function Header() {
             </nav>
 
             {/* Actions (Search + Cart) - Tight gap */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0 sm:gap-2">
               {/* Search Icon */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors"
+                className="p-1 sm:p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors"
                 aria-label="Search"
               >
                 <Search className="w-6 h-6" />
@@ -73,7 +73,7 @@ export function Header() {
 
               <button
                 onClick={toggleCart}
-                className="relative p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors group"
+                className="relative p-1 sm:p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors group"
                 aria-label="Cart"
               >
                 <ShoppingBag className="w-6 h-6 group-hover:text-gray-900 dark:group-hover:text-[#F0E6CA] transition-colors" />
