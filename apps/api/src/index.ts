@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import { trpcServer } from '@hono/trpc-server';
 import { appRouter, createContext } from '@shonen-mart/trpc';
 import { prisma } from '@shonen-mart/db';
+import type { Prisma } from '@shonen-mart/db';
 import Stripe from 'stripe';
 import { rateLimiter } from 'hono-rate-limiter';
 
@@ -58,7 +59,7 @@ app.post('/webhook/stripe', async (c) => {
     const session = event.data.object as Stripe.Checkout.Session;
     const orderId = session.metadata?.orderId;
     if (orderId) {
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const order = await tx.order.findUnique({
           where: { id: orderId },
           include: { items: true },
@@ -122,24 +123,24 @@ app.get('/sitemap.xml', async (c) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages
-  .map(
-    (page) => `  <url>
+      .map(
+        (page) => `  <url>
     <loc>${siteUrl}${page.loc}</loc>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 ${products
-  .map(
-    (p) => `  <url>
+      .map(
+        (p: { slug: string; updatedAt: Date }) => `  <url>
     <loc>${siteUrl}/product/${p.slug}</loc>
     <lastmod>${p.updatedAt.toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 </urlset>`;
 
   sitemapCache = { xml, generatedAt: now };

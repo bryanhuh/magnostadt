@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { prisma } from '@shonen-mart/db';
+import { prisma, Prisma } from '@shonen-mart/db';
 import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { wishlistRouter } from './routers/wishlist';
@@ -20,34 +20,34 @@ export const appRouter = router({
     sync: protectedProcedure
       .input(z.object({ email: z.string().optional() }))
       .mutation(async ({ ctx, input }) => {
-       const { email } = input;
-       
-       // 1. Find by ID (Clerk ID)
-       const userById = await ctx.prisma.user.findUnique({ where: { id: ctx.userId } });
-       if (userById) return userById;
+        const { email } = input;
 
-       // 2. If email provided, try to find by email (Account Linking)
-       if (email) {
-         const userByEmail = await ctx.prisma.user.findUnique({ where: { email } });
-         if (userByEmail) {
-           // Link the existing record to the new Clerk ID
-           // Note: This assumes email ownership is verified by Clerk.
-           return await ctx.prisma.user.update({
-             where: { email },
-             data: { id: ctx.userId }, // Update ID to match Clerk ID
-           });
-         }
-       }
+        // 1. Find by ID (Clerk ID)
+        const userById = await ctx.prisma.user.findUnique({ where: { id: ctx.userId } });
+        if (userById) return userById;
 
-       // 3. Create new user
-       return await ctx.prisma.user.create({
-         data: {
+        // 2. If email provided, try to find by email (Account Linking)
+        if (email) {
+          const userByEmail = await ctx.prisma.user.findUnique({ where: { email } });
+          if (userByEmail) {
+            // Link the existing record to the new Clerk ID
+            // Note: This assumes email ownership is verified by Clerk.
+            return await ctx.prisma.user.update({
+              where: { email },
+              data: { id: ctx.userId }, // Update ID to match Clerk ID
+            });
+          }
+        }
+
+        // 3. Create new user
+        return await ctx.prisma.user.create({
+          data: {
             id: ctx.userId,
             email: email || `user_${ctx.userId}@placeholder.com`,
-         }
-       });
-    }),
-    
+          }
+        });
+      }),
+
     getUsers: adminProcedure.query(async ({ ctx }) => {
       return await ctx.prisma.user.findMany({
         orderBy: { createdAt: 'desc' },
@@ -85,7 +85,7 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const { categoryId, categoryName, animeId, isSale, isPreorder, featured, limit, orderBy, search } = input || {};
-      
+
       let orderByClause = {};
       if (orderBy === 'newest') {
         orderByClause = { createdAt: 'desc' };
@@ -170,14 +170,14 @@ export const appRouter = router({
   }),
 
   getAnimeSeries: publicProcedure
-    .input(z.object({ 
+    .input(z.object({
       featured: z.boolean().optional(),
       slug: z.string().optional(),
       names: z.array(z.string()).optional(),
     }).optional())
     .query(async ({ input }) => {
       const { featured, slug, names } = input || {};
-      
+
       const results = await prisma.animeSeries.findMany({
         where: {
           featured,
@@ -197,7 +197,7 @@ export const appRouter = router({
 
       // If specific names were requested, sort the results to match the order of the input array
       if (names && names.length > 0) {
-        return results.sort((a, b) => {
+        return results.sort((a: { name: string }, b: { name: string }) => {
           const indexA = names.indexOf(a.name);
           const indexB = names.indexOf(b.name);
           return indexA - indexB;
@@ -219,7 +219,7 @@ export const appRouter = router({
       return await prisma.animeSeries.create({
         data: {
           ...input,
-          slug, 
+          slug,
         },
       });
     }),
@@ -283,7 +283,7 @@ export const appRouter = router({
         data: {
           ...input,
           slug: `${slug}-${Date.now()}`, // Ensure uniqueness with timestamp
-          price: input.price, 
+          price: input.price,
           salePrice: input.salePrice,
         },
       });
@@ -339,7 +339,7 @@ export const appRouter = router({
           // alert. allSettled always waits for every promise and we log each
           // individual failure for observability.
           Promise.allSettled(
-            alerts.map(async (alert) => {
+            alerts.map(async (alert: { id: string; email: string }) => {
               await sendBackInStockAlert(
                 {
                   name: updatedProduct.name,
@@ -355,7 +355,7 @@ export const appRouter = router({
               });
             })
           ).then((results) => {
-            results.forEach((result, i) => {
+            results.forEach((result: PromiseSettledResult<void>, i: number) => {
               if (result.status === 'rejected') {
                 console.error(
                   `Failed to send back-in-stock alert for ${alerts[i].email}:`,
@@ -373,7 +373,7 @@ export const appRouter = router({
   deleteProduct: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
-      return await prisma.$transaction(async (tx) => {
+      return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Delete related OrderItems first to avoid FK constraint violation
         await tx.orderItem.deleteMany({
           where: { productId: input.id },
@@ -407,7 +407,7 @@ export const appRouter = router({
 
       // Restore stock when an order is cancelled
       if (input.status === 'CANCELLED') {
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           for (const item of order.items) {
             await tx.product.update({
               where: { id: item.productId },
@@ -418,15 +418,15 @@ export const appRouter = router({
       }
 
       if (order.email) {
-          const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email');
-          
-          if (input.status === 'SHIPPED') {
-              await sendShippingUpdate(order, order.email);
-          } else if (input.status === 'DELIVERED') {
-              await sendDeliveredUpdate(order, order.email);
-          } else if (input.status === 'CANCELLED') {
-              await sendCancelledUpdate(order, order.email);
-          }
+        const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email');
+
+        if (input.status === 'SHIPPED') {
+          await sendShippingUpdate(order, order.email);
+        } else if (input.status === 'DELIVERED') {
+          await sendDeliveredUpdate(order, order.email);
+        } else if (input.status === 'CANCELLED') {
+          await sendCancelledUpdate(order, order.email);
+        }
       }
 
       return order;
@@ -451,7 +451,7 @@ export const appRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { items, ...shippingDetails } = input;
 
-      const order = await prisma.$transaction(async (tx) => {
+      const order = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         let total = 0;
         const orderItemsData = [];
         const stripeLineItems = [];
@@ -497,24 +497,24 @@ export const appRouter = router({
           });
 
           stripeLineItems.push({
-             name: product.name,
-             description: product.description || undefined,
-             images: product.imageUrl ? [product.imageUrl] : undefined,
-             amount: effectivePrice * 100, // Stripe expects cents
-             quantity: item.quantity,
-             currency: 'usd',
+            name: product.name,
+            description: product.description || undefined,
+            images: product.imageUrl ? [product.imageUrl] : undefined,
+            amount: effectivePrice * 100, // Stripe expects cents
+            quantity: item.quantity,
+            currency: 'usd',
           });
         }
-        
+
         // Add shipping (Flat rate $10 for now, matching frontend)
         // Ideally this should be passed in or calculated centrally
         const shippingCost = 10;
         total += shippingCost;
         stripeLineItems.push({
-            name: 'Shipping',
-            amount: shippingCost * 100,
-            quantity: 1,
-            currency: 'usd',
+          name: 'Shipping',
+          amount: shippingCost * 100,
+          quantity: 1,
+          currency: 'usd',
         });
 
         const newOrder = await tx.order.create({
@@ -531,23 +531,23 @@ export const appRouter = router({
 
         return { newOrder, stripeLineItems };
       });
-      
+
       // Import dynamically to avoid circular deps if any, or just standard import at top
       const { createCheckoutSession } = await import('./services/stripe');
 
       // Create Stripe Session
       const session = await createCheckoutSession({
-          items: order.stripeLineItems,
-          orderId: order.newOrder.id,
-          customerEmail: input.email,
-          successUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/order/${order.newOrder.id}?success=true`,
-          cancelUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/checkout?canceled=true`,
+        items: order.stripeLineItems,
+        orderId: order.newOrder.id,
+        customerEmail: input.email,
+        successUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/order/${order.newOrder.id}?success=true`,
+        cancelUrl: `${process.env.VITE_APP_URL || 'http://localhost:5173'}/checkout?canceled=true`,
       });
-      
+
       // Update Order with Session ID
       await prisma.order.update({
-          where: { id: order.newOrder.id },
-          data: { stripeSessionId: session.id },
+        where: { id: order.newOrder.id },
+        data: { stripeSessionId: session.id },
       });
 
       // Send Order Confirmation Email (Async/Best Effort)
@@ -557,14 +557,14 @@ export const appRouter = router({
       // Let's send it now as "Order Received" to verify functionality.
       // We need to fetch the full order with product details to match the template props
       const fullOrder = await prisma.order.findUnique({
-          where: { id: order.newOrder.id },
-          include: { items: { include: { product: true } } }
+        where: { id: order.newOrder.id },
+        include: { items: { include: { product: true } } }
       });
-      
+
       if (fullOrder) {
-          // Import from local service
-          const { sendOrderConfirmation } = await import('./services/email'); 
-          await sendOrderConfirmation(fullOrder, input.email);
+        // Import from local service
+        const { sendOrderConfirmation } = await import('./services/email');
+        await sendOrderConfirmation(fullOrder, input.email);
       }
 
       return { orderId: order.newOrder.id, checkoutUrl: session.url };
