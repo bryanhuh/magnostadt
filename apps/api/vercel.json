@@ -3,10 +3,13 @@
   "installCommand": "cd ../.. && bun install",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "src/**"
+      "includeFiles": "{src/**,../../packages/**}"
     }
   },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
   ]
 }

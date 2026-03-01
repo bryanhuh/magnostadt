@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@shonen-mart/db": [
+                "../../packages/db/index.ts"
+            ],
+            "@shonen-mart/trpc": [
+                "../../packages/trpc/src/index.ts"
+            ]
+        }
+    },
+    "include": [
+        "src",
+        "api"
+    ]
+}
