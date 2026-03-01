@@ -109,9 +109,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <div className="mt-auto pt-8 space-y-4">
                 <div className="flex flex-col gap-3">
                   {socialLinks.map((link, i) => (
-                    <a key={i} href={link.href} className="group flex items-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-widest text-sm font-bold">
+                    <a key={i} href="#" onClick={e => e.preventDefault()} className="group flex items-center gap-2 text-gray-400 transition-colors uppercase tracking-widest text-sm font-bold opacity-50 cursor-not-allowed">
                       {link.name}
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="w-4 h-4" />
                     </a>
                   ))}
                 </div>
@@ -133,7 +133,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-wrap gap-x-4 gap-y-3 max-h-[40vh] overflow-y-auto pr-2">
+                    <div className="flex flex-wrap gap-x-4 gap-y-3 max-h-[15vh] md:max-h-[40vh] hover:max-h-[50vh] transition-all duration-500 ease-in-out overflow-y-auto pr-2">
                       {animeSeries?.slice(0, 20).map((series) => (
                         <button
                           key={series.id}
