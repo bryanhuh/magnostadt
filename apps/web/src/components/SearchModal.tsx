@@ -58,29 +58,29 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-x-0 bottom-0 top-20 z-[160] bg-white dark:bg-[#0a0f1c] flex flex-col md:flex-row shadow-2xl overflow-hidden rounded-none"
           >
-             {/* Close Button (Absolute) */}
-             <button 
-                onClick={onClose}
-                className="absolute top-4 right-4 p-2 bg-gray-100 dark:bg-[#1a2333] rounded-full hover:bg-red-500 hover:text-white transition-colors z-50"
-              >
-                <X className="w-6 h-6" />
-              </button>
+            {/* Close Button (Absolute) */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 bg-gray-100 dark:bg-[#1a2333] rounded-full hover:bg-red-500 hover:text-white transition-colors z-50"
+            >
+              <X className="w-6 h-6" />
+            </button>
 
             {/* Sidebar (Left) */}
             <div className="w-full md:w-1/3 lg:w-1/4 bg-gray-50 dark:bg-[#1a2333]/50 p-8 md:p-12 flex flex-col gap-12 border-r border-gray-200 dark:border-[#F0E6CA]/10 overflow-y-auto">
-              
+
               {/* Top Links (4xl/5xl) */}
               <nav className="flex flex-col space-y-6">
                 {topLinks.map((link) => (
                   <button
                     key={link.name}
                     onClick={() => {
-                        if (link.path === '/cart') {
-                            openCart();
-                        } else {
-                            navigate(link.path);
-                        }
-                        onClose();
+                      if (link.path === '/cart') {
+                        openCart();
+                      } else {
+                        navigate(link.path);
+                      }
+                      onClose();
                     }}
                     className="text-left text-4xl md:text-5xl font-black text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-tighter font-exo-2 leading-[0.8]"
                   >
@@ -91,49 +91,49 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
               {/* Middle Links (2xl) */}
               <nav className="flex flex-col space-y-4">
-                 {middleLinks.map((link) => (
-                    <button
-                        key={link.name}
-                        onClick={() => {
-                            navigate(link.path);
-                            onClose();
-                        }}
-                        className="text-left text-2xl font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-tight font-exo-2"
-                    >
-                        {link.name}
-                    </button>
-                 ))}
+                {middleLinks.map((link) => (
+                  <button
+                    key={link.name}
+                    onClick={() => {
+                      navigate(link.path);
+                      onClose();
+                    }}
+                    className="text-left text-2xl font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-tight font-exo-2"
+                  >
+                    {link.name}
+                  </button>
+                ))}
               </nav>
 
               {/* Social Links (Text + Arrow) */}
               <div className="mt-auto pt-8 space-y-4">
-                 <div className="flex flex-col gap-3">
-                    {socialLinks.map((link, i) => (
-                      <a key={i} href={link.href} className="group flex items-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-widest text-sm font-bold">
-                        {link.name}
-                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      </a>
-                    ))}
-                 </div>
+                <div className="flex flex-col gap-3">
+                  {socialLinks.map((link, i) => (
+                    <a key={i} href={link.href} className="group flex items-center gap-2 text-gray-400 hover:text-gray-900 dark:hover:text-[#F0E6CA] transition-colors uppercase tracking-widest text-sm font-bold">
+                      {link.name}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Main Content (Right) */}
             <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-white dark:bg-[#0a0f1c]">
               <div className="max-w-5xl mx-auto space-y-12">
-                
+
                 {/* 1. Search by Anime (Grid) - First */}
                 <div className="space-y-6">
                   <h3 className="text-sm font-bold uppercase text-gray-500 tracking-wider font-exo-2">Search by Anime</h3>
-                  
+
                   {isLoading ? (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-pulse">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
                       {[...Array(8)].map((_, i) => (
                         <div key={i} className="h-8 bg-gray-200 dark:bg-[#1a2333] rounded-none" />
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-wrap gap-x-8 gap-y-4">
+                    <div className="flex flex-wrap gap-x-4 gap-y-3 max-h-[40vh] overflow-y-auto pr-2">
                       {animeSeries?.slice(0, 20).map((series) => (
                         <button
                           key={series.id}
@@ -141,7 +141,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             navigate(`/shop?search=${encodeURIComponent(series.name)}`);
                             onClose();
                           }}
-                          className="text-lg md:text-xl font-bold text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] transition-colors font-exo-2"
+                          className="text-base md:text-xl font-bold text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] transition-colors font-exo-2 text-left"
                         >
                           {series.name}
                         </button>
@@ -154,10 +154,10 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                 {/* 2. Search by Keyword - Second */}
                 <div className="space-y-6">
-                   <h3 className="text-sm font-bold uppercase text-gray-500 tracking-wider font-exo-2">Search by Keyword</h3>
-                   <div className="max-w-2xl">
-                      <SearchBar onSearchSubmit={onClose} />
-                   </div>
+                  <h3 className="text-sm font-bold uppercase text-gray-500 tracking-wider font-exo-2">Search by Keyword</h3>
+                  <div className="max-w-2xl">
+                    <SearchBar onSearchSubmit={onClose} />
+                  </div>
                 </div>
 
               </div>

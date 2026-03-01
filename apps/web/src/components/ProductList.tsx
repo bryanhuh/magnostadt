@@ -98,12 +98,12 @@ export function ProductList({ initialFilter }: ProductListProps) {
               <div className="p-5 space-y-3">
                 <div className="h-6 w-3/4 bg-gray-200 rounded" />
                 <div className="flex gap-2">
-                   <div className="h-4 w-16 bg-gray-200 rounded" />
-                   <div className="h-4 w-16 bg-gray-200 rounded" />
+                  <div className="h-4 w-16 bg-gray-200 rounded" />
+                  <div className="h-4 w-16 bg-gray-200 rounded" />
                 </div>
                 <div className="pt-4 flex justify-between">
-                   <div className="h-8 w-20 bg-gray-200 rounded" />
-                   <div className="h-8 w-8 bg-gray-200 rounded" />
+                  <div className="h-8 w-20 bg-gray-200 rounded" />
+                  <div className="h-8 w-8 bg-gray-200 rounded" />
                 </div>
               </div>
             </div>
@@ -129,7 +129,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
         url="/shop"
       />
       <button
-        className="lg:hidden flex items-center gap-2 bg-gray-800 p-3 rounded-lg text-yellow-500 mb-4"
+        className="lg:hidden flex items-center justify-center gap-2 bg-[#F0E6CA] text-[#0a0f1c] font-bold py-3 px-4 rounded-xl mb-4 shadow-lg active:scale-95 transition-transform font-exo-2"
         onClick={() => setIsFilterOpen(!isFilterOpen)}
       >
         <Filter className="w-5 h-5" />
@@ -138,14 +138,14 @@ export function ProductList({ initialFilter }: ProductListProps) {
 
       {/* Sidebar Filters */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#0a0f1c] p-6 transform transition-transform duration-300 ease-in-out border-r border-gray-200 dark:border-[#F0E6CA]/10
-        lg:static lg:translate-x-0 lg:bg-transparent lg:p-0 lg:border-none lg:w-64 lg:block
+        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#0a0f1c] p-6 pt-24 transform transition-transform duration-300 ease-in-out border-r border-gray-200 dark:border-[#F0E6CA]/10 overflow-y-auto
+        lg:static lg:translate-x-0 lg:bg-transparent lg:p-0 lg:border-none lg:w-64 lg:block lg:overflow-visible
         ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex justify-between items-center lg:hidden mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-[#F0E6CA]">Filters</h2>
+          <h2 className="text-sm font-bold text-gray-900 font-exo-2 dark:text-[#F0E6CA]">Filters</h2>
           <button onClick={() => setIsFilterOpen(false)} className="text-gray-400">
-            <X className="w-6 h-6" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -156,20 +156,20 @@ export function ProductList({ initialFilter }: ProductListProps) {
               Status
             </h3>
             <div className="space-y-2">
-               <label className="flex items-center gap-3 cursor-pointer group">
-                  <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-blue-600 dark:bg-[#F0E6CA] border-blue-600 dark:border-[#F0E6CA] text-white dark:text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-blue-600 dark:group-hover:border-[#F0E6CA]'}`}>
-                      {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                  </div>
-                  <input
-                      type="checkbox"
-                      className="hidden"
-                      checked={isSaleOnly}
-                      onChange={(e) => setIsSaleOnly(e.target.checked)}
-                  />
-                  <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-[#F0E6CA]'}`}>
-                      On Sale
-                  </span>
-               </label>
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSaleOnly ? 'bg-[#F1E6CA] border-[#F1E6CA] text-[#0a0f1c]' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-[#1a2333] group-hover:border-[#F1E6CA]'}`}>
+                  {isSaleOnly && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                </div>
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={isSaleOnly}
+                  onChange={(e) => setIsSaleOnly(e.target.checked)}
+                />
+                <span className={`text-sm font-bold uppercase tracking-wide transition-colors font-exo-2 ${isSaleOnly ? 'text-gray-900 dark:text-[#F0E6CA]' : 'text-gray-500 dark:text-gray-400 group-hover:text-[#F1E6CA]'}`}>
+                  On Sale
+                </span>
+              </label>
             </div>
           </div>
 
@@ -181,11 +181,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedCategory(undefined)}
-                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedCategory
-                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
+                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${!selectedCategory
+                  ? 'bg-[#F1E6CA] text-[#0a0f1c] font-bold'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-[#F1E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
+                  }`}
               >
                 All Categories
               </button>
@@ -193,11 +192,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
-                      : 'text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
-                  }`}
+                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${selectedCategory === category.id
+                    ? 'bg-[#F1E6CA] text-[#0a0f1c] font-bold'
+                    : 'text-gray-400 hover:text-[#F1E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
+                    }`}
                 >
                   {category.name}
                 </button>
@@ -213,11 +211,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
             <div className="space-y-2">
               <button
                 onClick={() => setSelectedAnime(undefined)}
-                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                  !selectedAnime
-                    ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
+                className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${!selectedAnime
+                  ? 'bg-[#F1E6CA] text-[#0a0f1c] font-bold'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-[#F1E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
+                  }`}
               >
                 All Series
               </button>
@@ -225,11 +222,10 @@ export function ProductList({ initialFilter }: ProductListProps) {
                 <button
                   key={anime.id}
                   onClick={() => setSelectedAnime(anime.id)}
-                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${
-                    selectedAnime === anime.id
-                      ? 'bg-blue-600 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold'
-                      : 'text-gray-400 hover:text-blue-600 dark:hover:text-[#F0E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
-                  }`}
+                  className={`block w-full text-left px-3 py-2 rounded-lg transition-colors font-exo-2 ${selectedAnime === anime.id
+                    ? 'bg-[#F1E6CA] text-[#0a0f1c] font-bold'
+                    : 'text-gray-400 hover:text-[#F1E6CA] hover:bg-gray-50 dark:hover:bg-white/5'
+                    }`}
                 >
                   {anime.name}
                 </button>
@@ -272,7 +268,7 @@ export function ProductList({ initialFilter }: ProductListProps) {
           {products?.length === 0 && (
             <div className="col-span-full text-center py-20 border-2 border-dashed border-[#F0E6CA]/20 rounded-3xl">
               <p className="text-gray-400 text-lg font-exo-2">No products found matching your filters.</p>
-                 <button
+              <button
                 onClick={() => {
                   setSelectedCategory(undefined);
                   setSelectedAnime(undefined);
