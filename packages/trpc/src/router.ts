@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { prisma, Prisma } from '@shonen-mart/db';
-import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc';
+import { router, publicProcedure, adminProcedure, protectedProcedure } from './trpc.js';
 import { TRPCError } from '@trpc/server';
-import { wishlistRouter } from './routers/wishlist';
-import { addressRouter } from './routers/address';
-import { stockAlertRouter } from './routers/stockAlert';
+import { wishlistRouter } from './routers/wishlist.js';
+import { addressRouter } from './routers/address.js';
+import { stockAlertRouter } from './routers/stockAlert.js';
 
 // Force rebuild for headerImage schema update
 export const appRouter = router({
@@ -331,7 +331,7 @@ export const appRouter = router({
         });
 
         if (alerts.length > 0) {
-          const { sendBackInStockAlert } = await import('./services/email');
+          const { sendBackInStockAlert } = await import('./services/email/index.js');
 
           // Issue #6 fix: use Promise.allSettled so that a single failed email
           // delivery does not prevent the remaining alerts from being processed.
@@ -418,7 +418,7 @@ export const appRouter = router({
       }
 
       if (order.email) {
-        const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email');
+        const { sendShippingUpdate, sendDeliveredUpdate, sendCancelledUpdate } = await import('./services/email/index.js');
 
         if (input.status === 'SHIPPED') {
           await sendShippingUpdate(order, order.email);
@@ -533,7 +533,7 @@ export const appRouter = router({
       });
 
       // Import dynamically to avoid circular deps if any, or just standard import at top
-      const { createCheckoutSession } = await import('./services/stripe');
+      const { createCheckoutSession } = await import('./services/stripe.js');
 
       // Create Stripe Session
       const session = await createCheckoutSession({
@@ -563,7 +563,7 @@ export const appRouter = router({
 
       if (fullOrder) {
         // Import from local service
-        const { sendOrderConfirmation } = await import('./services/email');
+        const { sendOrderConfirmation } = await import('./services/email/index.js');
         await sendOrderConfirmation(fullOrder, input.email);
       }
 

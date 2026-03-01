@@ -1,10 +1,10 @@
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
-import { OrderConfirmation } from './templates/OrderConfirmation';
-import { ShippingUpdate } from './templates/ShippingUpdate';
-import { Delivered } from './templates/Delivered';
-import { Cancelled } from './templates/Cancelled';
-import { BackInStock } from './templates/BackInStock';
+import { OrderConfirmation } from './templates/OrderConfirmation.js';
+import { ShippingUpdate } from './templates/ShippingUpdate.js';
+import { Delivered } from './templates/Delivered.js';
+import { Cancelled } from './templates/Cancelled.js';
+import { BackInStock } from './templates/BackInStock.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
