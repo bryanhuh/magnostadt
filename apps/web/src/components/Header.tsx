@@ -4,6 +4,7 @@ import { ShoppingBag, Search } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import { useUser } from '@clerk/clerk-react';
 import { SearchModal } from './SearchModal';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const { toggleCart, getTotalItems } = useCartStore();
@@ -35,7 +36,7 @@ export function Header() {
               </div>
             </Link>
           </div>
-          
+
           {/* Spacer to push everything else to the right */}
           <div className="flex-1" />
 
@@ -47,11 +48,10 @@ export function Header() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-sm md:text-base uppercase tracking-widest transition-colors font-orbitron ${
-                    location.pathname === link.path 
-                      ? 'text-gray-900 dark:text-[#F0E6CA] font-bold' 
+                  className={`text-sm md:text-base uppercase tracking-widest transition-colors font-orbitron ${location.pathname === link.path
+                      ? 'text-gray-900 dark:text-[#F0E6CA] font-bold'
                       : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -69,7 +69,9 @@ export function Header() {
                 <Search className="w-6 h-6" />
               </button>
 
-              <button 
+              <ThemeToggle />
+
+              <button
                 onClick={toggleCart}
                 className="relative p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors group"
                 aria-label="Cart"

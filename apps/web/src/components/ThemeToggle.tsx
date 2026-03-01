@@ -19,13 +19,13 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="fixed cursor-pointer bottom-6 right-6 z-[100] p-2 rounded-full bg-white dark:bg-[#1a2333] text-gray-900 dark:text-[#F0E6CA] shadow-2xl hover:scale-110 transition-all border border-gray-200 dark:border-[#F0E6CA]/20"
+      className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors"
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        <Sun className="w-4 h-4" />
+        <Sun className="w-6 h-6" />
       ) : (
-        <Moon className="w-4 h-4" />
+        <Moon className="w-6 h-6" />
       )}
     </button>
   );

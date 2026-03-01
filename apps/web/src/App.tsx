@@ -42,7 +42,6 @@ import { CollectionPage } from './pages/CollectionPage';
 import { CollectionsPage } from './pages/CollectionsPage'; // [NEW]
 import { AuthCallback } from './pages/AuthCallback';
 import { ThemeProvider } from './context/ThemeContext';
-import { ThemeToggle } from './components/ThemeToggle';
 import { Header } from './components/Header';
 
 function MainLayout({ children }: { children: React.ReactNode }) {
@@ -83,158 +82,157 @@ export default function App() {
 
   return (
     <HelmetProvider>
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-          <BrowserRouter>
-            <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1c] text-gray-900 dark:text-gray-100 font-exo-2 transition-colors duration-300">
-              <ThemeToggle />
-              <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={
-                 <>
-                   <Header />
-                   <main><HomePage /></main>
-                 </>
-              } />
-              <Route 
-                path="/collection/:slug" 
-                element={
-                  <>
-                    <Header />
-                    <CollectionPage />
-                  </>
-                } 
-              />
-              <Route 
-                path="/collections" 
-                element={
-                  <>
-                    <Header />
-                    <CollectionsPage />
-                  </>
-                } 
-              />
-              <Route 
-                path="/flash-sale" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList initialFilter={{ isSale: true }} /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/pre-orders" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList initialFilter={{ isPreorder: true }} /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/figures" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList initialFilter={{ categoryName: 'Figures' }} /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/manga" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList initialFilter={{ categoryName: 'Manga' }} /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/latest" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList initialFilter={{ sortBy: 'newest' }} /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/shop" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductList /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/product/:slug" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><ProductDetails /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/checkout" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><CheckoutPage /></MainLayout>
-                  </>
-                } 
-              />
-              <Route 
-                path="/order/:id" 
-                element={
-                  <>
-                    <Header />
-                    <MainLayout><OrderConfirmationPage /></MainLayout>
-                  </>
-                } 
-              />
-              <Route path="/auth-callback" element={<AuthCallback />} />
-              <Route path="/wishlist/:token" element={
-                <>
-                  <Header />
-                  <SharedWishlist />
-                </>
-              } />
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <BrowserRouter>
+              <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1c] text-gray-900 dark:text-gray-100 font-exo-2 transition-colors duration-300">
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={
+                    <>
+                      <Header />
+                      <main><HomePage /></main>
+                    </>
+                  } />
+                  <Route
+                    path="/collection/:slug"
+                    element={
+                      <>
+                        <Header />
+                        <CollectionPage />
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/collections"
+                    element={
+                      <>
+                        <Header />
+                        <CollectionsPage />
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/flash-sale"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList initialFilter={{ isSale: true }} /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/pre-orders"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList initialFilter={{ isPreorder: true }} /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/figures"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList initialFilter={{ categoryName: 'Figures' }} /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/manga"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList initialFilter={{ categoryName: 'Manga' }} /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/latest"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList initialFilter={{ sortBy: 'newest' }} /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/shop"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductList /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/product/:slug"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><ProductDetails /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><CheckoutPage /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route
+                    path="/order/:id"
+                    element={
+                      <>
+                        <Header />
+                        <MainLayout><OrderConfirmationPage /></MainLayout>
+                      </>
+                    }
+                  />
+                  <Route path="/auth-callback" element={<AuthCallback />} />
+                  <Route path="/wishlist/:token" element={
+                    <>
+                      <Header />
+                      <SharedWishlist />
+                    </>
+                  } />
 
-              {/* Profile Routes */}
-              <Route path="/profile" element={
-                <>
-                  <Header />
-                  <ProfileLayout />
-                </>
-              }>
-                <Route index element={<Navigate to="orders" replace />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="wishlist" element={<Wishlist />} />
-                <Route path="addresses" element={<Addresses />} />
-              </Route>
+                  {/* Profile Routes */}
+                  <Route path="/profile" element={
+                    <>
+                      <Header />
+                      <ProfileLayout />
+                    </>
+                  }>
+                    <Route index element={<Navigate to="orders" replace />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="wishlist" element={<Wishlist />} />
+                    <Route path="addresses" element={<Addresses />} />
+                  </Route>
 
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="products/new" element={<AdminProductForm />} />
-                <Route path="products/:id/edit" element={<AdminProductForm />} />
-                <Route path="series" element={<AdminSeries />} />
-                <Route path="orders" element={<AdminOrders />} />
-                <Route path="customers" element={<AdminCustomers />} />
-              </Route>
-            </Routes>
-          </div>
-          <CartDrawer />
-          <Toaster position="bottom-right" theme="light" />
-          </BrowserRouter>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </trpc.Provider>
+                  {/* Admin Routes */}
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="products" element={<AdminProducts />} />
+                    <Route path="products/new" element={<AdminProductForm />} />
+                    <Route path="products/:id/edit" element={<AdminProductForm />} />
+                    <Route path="series" element={<AdminSeries />} />
+                    <Route path="orders" element={<AdminOrders />} />
+                    <Route path="customers" element={<AdminCustomers />} />
+                  </Route>
+                </Routes>
+              </div>
+              <CartDrawer />
+              <Toaster position="bottom-right" theme="light" />
+            </BrowserRouter>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </trpc.Provider>
     </HelmetProvider>
   );
 }

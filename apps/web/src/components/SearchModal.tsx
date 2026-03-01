@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight } from 'lucide-react';
+import { X, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { SearchBar } from './SearchBar';
@@ -11,6 +12,7 @@ interface SearchModalProps {
 }
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  const [isAnimeListExpanded, setIsAnimeListExpanded] = useState(false);
   const navigate = useNavigate();
   const { data: animeSeries, isLoading } = trpc.getAnimeSeries.useQuery();
   const openCart = useCartStore((state) => state.openCart);
@@ -124,7 +126,16 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                 {/* 1. Search by Anime (Grid) - First */}
                 <div className="space-y-6">
-                  <h3 className="text-sm font-bold uppercase text-gray-500 tracking-wider font-exo-2">Search by Anime</h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase text-gray-500 tracking-wider font-exo-2 flex-1">Search by Anime</h3>
+                    <button
+                      onClick={() => setIsAnimeListExpanded(!isAnimeListExpanded)}
+                      className="p-1 rounded hover:bg-gray-100 dark:hover:bg-[#1a2333] transition-colors text-gray-500 hover:text-gray-900 dark:hover:text-[#F0E6CA]"
+                      title={isAnimeListExpanded ? "Show Less" : "Show More"}
+                    >
+                      {isAnimeListExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    </button>
+                  </div>
 
                   {isLoading ? (
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
@@ -133,7 +144,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-wrap gap-x-4 gap-y-3 max-h-[15vh] md:max-h-[40vh] hover:max-h-[50vh] transition-all duration-500 ease-in-out overflow-y-auto pr-2">
+                    <div className={`flex flex-wrap gap-x-4 gap-y-3 transition-all duration-500 ease-in-out overflow-y-auto pr-2 ${isAnimeListExpanded ? 'max-h-[50vh]' : 'max-h-[15vh] md:max-h-[40vh]'}`}>
                       {animeSeries?.slice(0, 20).map((series) => (
                         <button
                           key={series.id}
