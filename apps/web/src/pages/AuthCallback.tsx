@@ -8,7 +8,7 @@ export function AuthCallback() {
   const navigate = useNavigate();
   const useUserResult = useUser();
   const { isLoaded, isSignedIn } = useUserResult;
-  
+
   // We force a refetch to ensure we get the latest role, possibly after a sync
   const { data: user, isError, isLoading } = trpc.auth.me.useQuery(undefined, {
     enabled: isLoaded && isSignedIn,
@@ -37,9 +37,9 @@ export function AuthCallback() {
     } else if (isError || user === null) {
       // If error or user is null (authenticated in Clerk but not in DB), try syncing
       if (!syncMutation.isPending && !syncMutation.isSuccess) {
-         // Pass the email so the backend can link to the pre-seeded admin user if it exists
-         const userEmail = useUserResult.user?.primaryEmailAddress?.emailAddress;
-         syncMutation.mutate({ email: userEmail }); 
+        // Pass the email so the backend can link to the pre-seeded admin user if it exists
+        const userEmail = useUserResult.user?.primaryEmailAddress?.emailAddress;
+        syncMutation.mutate({ email: userEmail });
       }
     }
   }, [user, isError, isLoading, navigate, syncMutation, useUserResult.user]);
@@ -47,11 +47,11 @@ export function AuthCallback() {
   // Handle sync success
   useEffect(() => {
     if (syncMutation.isSuccess && syncMutation.data) {
-       if (syncMutation.data.role === 'ADMIN') {
-         navigate('/admin');
-       } else {
-         navigate('/');
-       }
+      if (syncMutation.data.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
   }, [syncMutation.isSuccess, syncMutation.data, navigate]);
 
@@ -59,7 +59,7 @@ export function AuthCallback() {
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center bg-gray-950 gap-4">
       <Loader2 className="w-16 h-16 text-yellow-500 animate-spin" />
-      <h2 className="text-xl font-bold text-white tracking-widest uppercase italic animate-pulse">
+      <h2 className="text-xl font-bold text-white tracking-widest uppercase animate-pulse">
         Authenticating...
       </h2>
     </div>

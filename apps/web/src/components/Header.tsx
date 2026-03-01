@@ -43,7 +43,7 @@ export function Header() {
           {/* Right: Navigation + Actions */}
           <div className="flex items-center gap-6">
             {/* Navigation Links */}
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center gap-6">
               {links.map((link) => (
                 <Link
                   key={link.path}
@@ -59,14 +59,14 @@ export function Header() {
             </nav>
 
             {/* Actions (Search + Cart) - Tight gap */}
-            <div className="flex items-center gap-0 sm:gap-2">
+            <div className="flex items-center gap-2">
               {/* Search Icon */}
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className="p-1 sm:p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors"
                 aria-label="Search"
               >
-                <Search className="w-6 h-6" />
+                <Search className="w-6 h-6" strokeWidth={1.5} />
               </button>
 
               <ThemeToggle />
@@ -76,7 +76,7 @@ export function Header() {
                 className="relative p-1 sm:p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-[#F0E6CA] transition-colors group"
                 aria-label="Cart"
               >
-                <ShoppingBag className="w-6 h-6 group-hover:text-gray-900 dark:group-hover:text-[#F0E6CA] transition-colors" />
+                <ShoppingBag className="w-6 h-6 group-hover:text-gray-900 dark:group-hover:text-[#F0E6CA] transition-colors" strokeWidth={1.5} />
                 {totalItems > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] font-bold text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-white dark:border-[#0a0f1c]">
                     {totalItems}
