@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "cd ../.. && bun install",
+  "installCommand": "cd ../.. && bun install && cd packages/db && npx prisma generate",
   "functions": {
     "api/index.ts": {
       "includeFiles": "{src/**,../../packages/**}"
