@@ -5,11 +5,18 @@ export const wishlistRouter = router({
   add: protectedProcedure
     .input(z.object({ productId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.wishlistItem.create({
-        data: {
+      return await ctx.prisma.wishlistItem.upsert({
+        where: {
+          userId_productId: {
+            userId: ctx.userId,
+            productId: input.productId,
+          },
+        },
+        create: {
           userId: ctx.userId,
           productId: input.productId,
         },
+        update: {},
       });
     }),
 

@@ -16,7 +16,7 @@ export function ProductDetails() {
   const [isAdded, setIsAdded] = useState(false);
   const { user } = useUser();
   const utils = trpc.useUtils();
-  
+
   const { data: product, isLoading, error } = trpc.getProductBySlug.useQuery(
     { slug: slug! },
     { enabled: !!slug }
@@ -98,8 +98,8 @@ export function ProductDetails() {
     return (
       <div className="flex flex-col items-center justify-center py-20 min-h-[50vh]">
         <div className="text-red-500 mb-6 text-2xl font-black uppercase">Product Not Found</div>
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="px-8 py-3 bg-gray-900 text-white dark:bg-[#F0E6CA] dark:text-[#0a0f1c] hover:bg-gray-700 dark:hover:bg-white hover:text-white dark:hover:text-black transition-all font-bold uppercase tracking-wider rounded-lg font-exo-2"
         >
           Return to Base
@@ -130,23 +130,23 @@ export function ProductDetails() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
-          
+
           {/* Gallery Section */}
           <div className="space-y-6">
             <div className="relative group bg-white dark:bg-[#1a2333]/30 hover:bg-gray-50 dark:hover:bg-[#1a2333]/50 rounded-2xl p-8 border border-gray-200 dark:border-[#F0E6CA]/10 overflow-hidden hover:shadow-xl hover:shadow-gray-200 dark:hover:shadow-[#F0E6CA]/5 transition-all duration-300">
-               {/* Badges */}
-               <div className="absolute top-6 left-6 z-10 flex gap-2">
-                  {product.stock <= 5 && product.stock > 0 && (
-                    <span className="bg-red-500 text-white text-[10px] font-black uppercase px-2 py-1 tracking-widest rounded-sm">
-                      Low Stock
-                    </span>
-                  )}
-                  {product.isSale && (
-                    <span className="bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] text-[10px] font-black uppercase px-2 py-1 tracking-widest rounded-sm border border-transparent dark:border-[#F0E6CA]/50">
-                      Sale
-                    </span>
-                  )}
-               </div>
+              {/* Badges */}
+              <div className="absolute top-6 left-6 z-10 flex gap-2">
+                {product.stock <= 5 && product.stock > 0 && (
+                  <span className="bg-red-500 text-white text-[10px] font-black uppercase px-2 py-1 tracking-widest rounded-sm">
+                    Low Stock
+                  </span>
+                )}
+                {product.isSale && (
+                  <span className="bg-gray-900 dark:bg-[#F0E6CA] text-white dark:text-[#0a0f1c] text-[10px] font-black uppercase px-2 py-1 tracking-widest rounded-sm border border-transparent dark:border-[#F0E6CA]/50">
+                    Sale
+                  </span>
+                )}
+              </div>
 
               <div className="relative aspect-[4/5] flex items-center justify-center">
                 <img
@@ -156,7 +156,7 @@ export function ProductDetails() {
                 />
               </div>
             </div>
-            
+
             {/* Thumbnails */}
             {allImages.length > 1 && (
               <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
@@ -164,11 +164,10 @@ export function ProductDetails() {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 bg-white dark:bg-[#1a2333]/50 ${
-                      selectedImage === img 
-                        ? 'border-gray-900 dark:border-[#F0E6CA] ring-1 ring-gray-900/20 dark:ring-[#F0E6CA]/20' 
+                    className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 bg-white dark:bg-[#1a2333]/50 ${selectedImage === img
+                        ? 'border-gray-900 dark:border-[#F0E6CA] ring-1 ring-gray-900/20 dark:ring-[#F0E6CA]/20'
                         : 'border-transparent hover:border-gray-300 dark:hover:border-[#F0E6CA]/50'
-                    }`}
+                      }`}
                   >
                     <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-contain p-2" />
                   </button>
@@ -217,7 +216,7 @@ export function ProductDetails() {
             {/* Actions */}
             <div className="flex flex-col gap-4 mt-auto">
               <div className="flex gap-4">
-                 <button 
+                <button
                   onClick={() => {
                     addItem({
                       id: product.id,
@@ -239,18 +238,19 @@ export function ProductDetails() {
                   }}
                   disabled={product.stock === 0 || isAdded}
                   className={`flex-1 py-5 rounded-xl font-black uppercase tracking-widest text-base transition-all flex items-center justify-center gap-3 font-exo-2 
-                    ${product.stock > 0 
+                    ${product.stock > 0
                       ? isAdded
                         ? 'bg-green-500 text-white shadow-lg shadow-green-500/20 scale-105'
-                        : 'bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white dark:hover:text-black hover:shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20 shadow-md' 
+                        : 'bg-gray-900 text-white hover:bg-gray-800 dark:bg-[#F0E6CA] dark:text-[#0a0f1c] dark:hover:bg-white dark:hover:text-black hover:shadow-lg shadow-gray-200 dark:shadow-[#F0E6CA]/20 shadow-md'
                       : 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500 cursor-not-allowed'}`}
                 >
                   {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
                   {product.stock > 0 ? (isAdded ? 'Added to Cart' : 'Add to Cart') : 'Out of Stock'}
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => {
+                    if (addToWishlist.isPending || removeFromWishlist.isPending) return;
                     if (!user) {
                       toast.error('Please sign in to add to wishlist');
                       return;
@@ -263,18 +263,22 @@ export function ProductDetails() {
                   }}
                   disabled={addToWishlist.isPending || removeFromWishlist.isPending}
                   className={`w-16 h-auto rounded-xl border-2 flex items-center justify-center transition-colors
-                    ${isInWishlist 
-                      ? 'border-red-500/20 bg-red-500/10 text-red-500' 
+                    ${isInWishlist
+                      ? 'border-red-500/20 bg-red-500/10 text-red-500'
                       : 'border-gray-200 dark:border-[#1a2333] hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-500 bg-white dark:bg-[#1a2333]/50'
-                    }`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                  <Heart className={`w-6 h-6 ${isInWishlist ? 'fill-current' : ''}`} />
+                  {addToWishlist.isPending || removeFromWishlist.isPending ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Heart className={`w-6 h-6 ${isInWishlist ? 'fill-current' : ''}`} />
+                  )}
                 </button>
               </div>
-              
+
               <div className="flex items-center gap-2 justify-center mt-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
-                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                 Free Shipping on orders over $50
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Free Shipping on orders over $50
               </div>
 
               {/* Back in Stock Alert */}
@@ -292,11 +296,10 @@ export function ProductDetails() {
                     }
                   }}
                   disabled={subscribeAlert.isPending || unsubscribeAlert.isPending}
-                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-3 font-exo-2 mt-3 ${
-                    hasStockAlert
+                  className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-3 font-exo-2 mt-3 ${hasStockAlert
                       ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-2 border-amber-500/20 hover:bg-amber-500/20'
                       : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-2 border-blue-500/20 hover:bg-blue-500/20'
-                  }`}
+                    }`}
                 >
                   {hasStockAlert ? (
                     <>
@@ -323,7 +326,7 @@ export function ProductDetails() {
                 More from {product.anime.name}
               </h2>
             </div>
-            
+
             {/* Reuse the ProductCarousel component including its scroll handling */}
             <ProductCarousel products={relatedProducts} />
           </div>
