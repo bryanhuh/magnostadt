@@ -1,4 +1,7 @@
-// Type declarations for packages that may not resolve properly in all environments
+// Ambient type declarations for @react-email/components
+// Provides fallback types on Vercel where bun's monorepo hoisting
+// prevents TypeScript from resolving the package's own type exports
+
 declare module '@react-email/components' {
     import type { FC, ReactNode } from 'react';
 
