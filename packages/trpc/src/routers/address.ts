@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../trpc';
+import { router, protectedProcedure } from '../trpc.js';
 
 export const addressRouter = router({
   create: protectedProcedure
@@ -22,7 +22,7 @@ export const addressRouter = router({
           data: { isDefault: false },
         });
       }
-      
+
       // Check if it's the first address, make it default automatically if so
       const count = await ctx.prisma.address.count({ where: { userId: ctx.userId } });
       const isDefault = count === 0 ? true : input.isDefault;
