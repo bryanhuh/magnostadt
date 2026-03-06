@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { SectionHeader } from '../components/home/SectionHeader';
 import { ProductCard } from '../components/ProductCard';
+import { Sparkles } from 'lucide-react';
 
 export function CollectionPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -69,8 +70,22 @@ export function CollectionPage() {
                ))}
              </div>
            ) : (
-             <div className="text-center py-20 text-gray-400">
-               <p className="text-xl">No products available yet.</p>
+             <div className="flex flex-col items-center justify-center py-24 gap-6">
+               <div className="relative">
+                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-500/10 to-amber-500/5 dark:from-[#F0E6CA]/10 dark:to-amber-500/5 border border-yellow-500/20 dark:border-[#F0E6CA]/10 flex items-center justify-center">
+                   <Sparkles className="w-12 h-12 text-yellow-500/40 dark:text-[#F0E6CA]/30" />
+                 </div>
+                 <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-yellow-500/30 dark:bg-[#F0E6CA]/20 animate-ping" />
+                 <div className="absolute -bottom-2 -left-2 w-3 h-3 rounded-full bg-amber-500/20 dark:bg-[#F0E6CA]/10 animate-pulse" />
+               </div>
+               <div className="text-center">
+                 <p className="text-gray-900 dark:text-[#F0E6CA] font-black uppercase tracking-widest text-lg font-exo-2 mb-2">
+                   Coming Soon
+                 </p>
+                 <p className="text-gray-400 dark:text-gray-500 text-sm font-medium max-w-xs">
+                   Products for this collection are on their way. Check back soon.
+                 </p>
+               </div>
              </div>
            )}
         </div>
