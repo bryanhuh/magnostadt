@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
-import { Loader2 } from 'lucide-react';
 import { trpc } from '../utils/trpc';
 
 export function AuthCallback() {
@@ -57,11 +56,8 @@ export function AuthCallback() {
 
 
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center bg-gray-950 gap-4">
-      <Loader2 className="w-16 h-16 text-yellow-500 animate-spin" />
-      <h2 className="text-xl font-bold text-white tracking-widest uppercase animate-pulse">
-        Authenticating...
-      </h2>
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1c] flex items-center justify-center transition-colors duration-300">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500 dark:border-[#F0E6CA]"></div>
     </div>
   );
 }
