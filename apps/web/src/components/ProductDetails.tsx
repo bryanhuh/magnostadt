@@ -87,9 +87,8 @@ export function ProductDetails() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 min-h-[60vh]">
-        <Loader2 className="w-12 h-12 animate-spin text-[#F0E6CA]" />
-        <p className="mt-4 text-gray-400 font-medium animate-pulse tracking-wide font-exo-2">SUMMONING PRODUCT DATA...</p>
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1c] flex items-center justify-center transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500 dark:border-[#F0E6CA]"></div>
       </div>
     );
   }
@@ -114,7 +113,7 @@ export function ProductDetails() {
     <div className="animate-in fade-in duration-500 pb-20">
       <SEO
         title={product.name}
-        description={product.description?.slice(0, 160) || `Shop ${product.name} — anime figures and collectibles at Magnostadt.`}
+        description={`Shop ${product.name} — premium ${product.anime.name} collectible at Magnostadt.`}
         image={product.imageUrl || undefined}
         url={`/product/${product.slug}`}
         type="product"
@@ -209,7 +208,9 @@ export function ProductDetails() {
             <div className="mb-10">
               <h3 className="text-xs font-black uppercase text-gray-500 tracking-widest mb-4 font-exo-2">Description</h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium max-w-xl transition-colors">
-                {product.description}
+                {product.description && !product.description.toLowerCase().includes('imported from aniplex')
+                  ? product.description
+                  : `A premium collectible figure from the ${product.anime.name} series. A must-have for any fan of the franchise.`}
               </p>
             </div>
 
